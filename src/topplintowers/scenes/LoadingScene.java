@@ -1,5 +1,6 @@
 package topplintowers.scenes;
 
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
@@ -18,11 +19,12 @@ public class LoadingScene extends BaseScene {
 	
 	@Override
 	public void createScene() {
-//		mFlatBlueBackground = new Background(0.3411f, 0.6156f, 0.9921f);
-//		setBackground(mFlatBlueBackground);
-		
 		Sprite newSprite = new Sprite(0, 0, ResourceManager.mBackgroundTextureRegion, vbom);
-		newSprite.attachChild(newSprite);
+		attachChild(newSprite);
+		
+		Rectangle rect = new Rectangle(0, 0, 800, 480, vbom);
+		rect.setColor(0,0,0,0.75f);
+		attachChild(rect);
 		
 		mText = new Text(0, 0, resourceManager.mFontButton, "Loading...", vbom);
 		float textX = 800 - mText.getWidth() - 10;
