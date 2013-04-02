@@ -135,14 +135,14 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	private void createClouds() {	
 		int randomCloud = (int)((float)Math.random() * 6);	
-		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(1);
+		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(randomCloud);
 		
 		//TODO: change this to use a sprite pool!
 		Sprite newCloud = new Sprite(0, 0, cloudTexture, vbom);
 		newCloud.setCullingEnabled(true);
 		container.attachChild(newCloud);
 		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -900) - 700;
+		float startPosY = ((float)Math.random() * -1300) - 800;
 		newCloud.setPosition(startPosX, startPosY);
 		newCloud.setAlpha((float)Math.random());
 
