@@ -13,23 +13,29 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.color.Color;
+import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
 
@@ -53,20 +59,30 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	public static PhysicsWorld mPhysicsWorld;
 	
 	public Platform mPlatform;
+	private Entity container;
 		
 	public static Hashtable<CrateType, ArrayList<Crate>> activeCrates = new Hashtable<CrateType, ArrayList<Crate>>();
     
-    private SurfaceScrollDetector mScrollDetector;	
-    
-    private static Sprite mBottomGradient, mSky, mMidGradient, mSpace;
+    private static Sprite mSky;
     private static float mBackgroundHeight;
+    private Color mBackgroundColor;
     
     public static MyHUD mHud;
     
     private Level level;
     
     private boolean isInFreeMode = false;
-    private ArrayList<Sprite> twinklingStars = new ArrayList<Sprite>();
+    private ArrayList<Sprite> twinklingStars;
+    
+    // Scrolling
+    private SurfaceScrollDetector mScrollDetector;
+	private float mMinY = 0;
+    private float mMaxY = 3200;
+    private float mCurrentY = 0;
+    private float lastMove;
+    private static float INERTIA_DURATION = 0.5f;
+    private static float INERTIA_COEF = 5;
+    private MoveYModifier inertiaMove;
     
 
 	public Camera getCamera() { return camera; }
@@ -89,57 +105,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		
 		createHUD();
 	}
-    
-//	public GameScene(Level level) {
-//		camera.setCenter(camera.getWidth()/2, camera.getHeight()/2);
-//		
-//		this.level = level;
-//		
-//		if (level.getLevelType() == Levels.FREEMODE) {
-//			isInFreeMode = true;
-//		}
-//		
-//		setOnSceneTouchListener(this);
-//		this.mScrollDetector = new SurfaceScrollDetector(this);
-//		
-//		platform = new Platform();
-//		createBackground();		
-//		attachChild(platform.getSprite());
-//		
-//		initializeActiveCrateList();
-//		
-//		if (!isInFreeMode) {
-//			this.level.setGoal(this);
-//		}
-//		
-//		mHud = new MyHUD(this.isInFreeMode, this.level, this.backgroundHeight);
-//		camera.setHUD(mHud);
-//		
-//		createStars();
-//		
-//		registerUpdateHandler(mActivity.mPhysicsWorld);
-//		registerUpdateHandler(new TimerHandler(1f / 30.0f, true, new ITimerCallback() {
-//            @Override
-//            public void onTimePassed(final TimerHandler pTimerHandler) {
-//            	cleaner();
-//            	mHud.updateCounts();
-//            }
-//    	}));
-//		
-//		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
-//            @Override
-//            public void onTimePassed(final TimerHandler pTimerHandler) {
-//            	createClouds();
-//            }
-//    	}));
-//		
-//		registerUpdateHandler(new TimerHandler(3f, true, new ITimerCallback() {
-//			@Override
-//			public void onTimePassed(final TimerHandler pTimerHandler) {
-//				twinkleStars();
-//			}
-//		}));
-//	}
 	
 	private void twinkleStars() {
 		for (Sprite current : this.twinklingStars) {
@@ -168,43 +133,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		}
 	}
 	
-
-	
-	private Sprite drawGradient(TextureRegion tr, Sprite previous, float height){
-		Sprite sprite = new Sprite(0, 0, tr, vbom) {
-			@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-		};
-		
-		if (height != 0) sprite.setHeight(height);
-		
-		float posY = 0;
-		if (previous == null) { 
-			posY = camera.getHeight() - sprite.getHeight();
-		} else { 
-			posY = previous.getY() - sprite.getHeight();// + 2;
-		}
-		
-		sprite.setPosition(0, posY);
-		
-		attachChild(sprite);
-		return sprite;
-	}
-	
 	private void createClouds() {	
 		int randomCloud = (int)((float)Math.random() * 6);	
-		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(randomCloud);
+		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(1);
 		
 		//TODO: change this to use a sprite pool!
 		Sprite newCloud = new Sprite(0, 0, cloudTexture, vbom);
 		newCloud.setCullingEnabled(true);
-		attachChild(newCloud);
+		container.attachChild(newCloud);
 		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -700) - 250;
+		float startPosY = ((float)Math.random() * -900) - 700;
 		newCloud.setPosition(startPosX, startPosY);
 		newCloud.setAlpha((float)Math.random());
 
@@ -215,13 +153,13 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void createStars() {
+		this.twinklingStars = new ArrayList<Sprite>();
 		for (int i = 0; i < 300; i++) {
 			int randomStar = (int)((float)Math.random() * 3);
 			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
-			//TODO: change this to use a sprite pool!
 			Sprite newStar = new Sprite(0, 0, starTexture, vbom);
 			newStar.setCullingEnabled(true);
-			attachChild(newStar);
+			container.attachChild(newStar);
 			
 			newStar.setScaleCenter(0, 0);
 			
@@ -229,7 +167,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			newStar.setScale(randomScale);
 			
 			float starPosX = ((float)Math.random() * camera.getWidth());
-			float starPosY = ((float)Math.random() * -1000) - 800;
+			float starPosY = ((float)Math.random() * -2500) - 2000;
 			newStar.setPosition(starPosX, starPosY);
 			
 			float randomAlpha = (float)Math.random();			
@@ -269,9 +207,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	@Override
 	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {	
-		//right.onSceneTouchEvent(pScene, pSceneTouchEvent);
-		//left.onSceneTouchEvent(pScene, pSceneTouchEvent);
-		
 		Enumeration<CrateType> crateTypes = activeCrates.keys();
 		while (crateTypes.hasMoreElements()) {
 			CrateType type = (CrateType) crateTypes.nextElement();
@@ -306,6 +241,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			current.registerEntityModifier(alphaMod);
 		}
 		scrollBar.registerEntityModifier(alphaMod);
+		
+		container.unregisterEntityModifier(inertiaMove);
+		inertiaMove = null;
+		mCurrentY = container.getY();
 	}
 
 	@Override
@@ -319,6 +258,18 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			mHud.updateWithScroll(pDistanceY, mBackgroundHeight);
 //			mHud.updateScrollBar(pDistanceY, backgroundHeight);
 		}
+		
+		lastMove = pDistanceY;
+		
+        //Return if ends are reached
+		float next = mCurrentY + pDistanceY;
+		
+		if (next < mMinY) 	  next = mMinY;  
+		else if(next > mMaxY) next = mMaxY;
+        
+        //Center camera to the current point
+		mCurrentY = next;
+        container.setPosition(0, mCurrentY);
 	}
 
 	@Override
@@ -338,6 +289,19 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	    		scrollBar.registerEntityModifier(alphaMod);
 	        }
 		}));
+		
+		float next = mCurrentY + lastMove*INERTIA_COEF;
+		if ( (next < mMinY)  ){    
+			next = mMinY;  
+	    }else if(next > mMaxY){  
+			next = mMaxY;
+	    }
+		
+		final float next_final = next;
+				 
+		inertiaMove = new MoveYModifier(INERTIA_DURATION, mCurrentY, next, EaseCubicOut.getInstance());
+		inertiaMove.setAutoUnregisterWhenFinished(true);
+		container.registerEntityModifier(inertiaMove);
 	}
 	
 	public void cleaner() {
@@ -369,12 +333,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 
 	@Override
 	public void createScene() {
+		container = new Entity();
 		createPhysics();
 		createBackground();
 		createPlatform();
 		
     	setOnSceneTouchListener(this);
 		this.mScrollDetector = new SurfaceScrollDetector(this);
+		
+		createStars();
 		
 		registerUpdateHandler(new TimerHandler(1f / 30.0f, true, new ITimerCallback() {
 	          @Override
@@ -383,17 +350,42 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          	mHud.updateCounts();
 	          }
 	  	}));
+		
+		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+				createClouds();
+			}
+		}));
+		
+		registerUpdateHandler(new TimerHandler(3f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+				twinkleStars();
+			}
+		}));
+		attachChild(container);
 	}
 	
 	private void createBackground() {
-	    mSky = new Sprite(0, -1120, ResourceManager.mGameBackgroundTextureRegion, vbom);
-	    attachChild(mSky);
-		mBackgroundHeight = 1600;
+		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
+		setBackground(new Background(mBackgroundColor));
+		
+	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, vbom) {
+	    	@Override
+		     protected void preDraw(GLState pGLState, Camera pCamera)
+		     {
+		            super.preDraw(pGLState, pCamera);
+		            pGLState.enableDither();
+		     }
+	    };
+	    container.attachChild(mSky);
+		mBackgroundHeight = 3200;
 	}
 	
 	private void createPlatform() {
 		mPlatform = new Platform(this);
-		attachChild(mPlatform.getSprite());
+		container.attachChild(mPlatform.getSprite());
 	}
 	
 	private void createHUD() {

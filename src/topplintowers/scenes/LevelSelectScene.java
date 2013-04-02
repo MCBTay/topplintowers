@@ -15,9 +15,6 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
-import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
-import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
@@ -29,7 +26,6 @@ import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.color.Color;
-import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import topplintowers.ResourceManager;
@@ -64,6 +60,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
     private MenuScene mChildMenuScene;
 
     public ArrayList<Sprite> getButtons() { return mButtons; }
+    public HUD getHUD() { return mHud; }
 
 	public void createLevelButtons() {
 		container = new Entity();
@@ -321,6 +318,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
 		if (iItemClicked != -1) {
 			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
+			mHud.setVisible(false);
 			SceneManager.getInstance().loadGameScene(engine, newLevel);
 		}
 	}	
