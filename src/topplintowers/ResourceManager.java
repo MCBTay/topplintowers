@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.Texture;
@@ -26,7 +27,7 @@ public class ResourceManager
     
     public Engine mEngine;
     public MainActivity mActivity;
-    public Camera mCamera;
+    public SmoothCamera mCamera;
     public VertexBufferObjectManager vbom;
     
 	// Crate Textures
@@ -132,7 +133,6 @@ public class ResourceManager
     private void loadMenuGraphics()
     {
     	loadMainMenuGraphics();
-    	loadLevelSelectGraphics();
     	loadLoadingSceneTextures();
     }
     
@@ -158,7 +158,7 @@ public class ResourceManager
     	mBackgroundTexture.load();
     }
     
-    private void loadLevelSelectGraphics() { 
+    public void loadLevelSelectGraphics() { 
     	mLevelSelectButtonTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 484, 75, TextureOptions.BILINEAR);
     	mLevelSelectButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectButtonTexture, mActivity, "gfx/levelselect/levelSelectButton.png", 0, 0);
     	mLevelSelectButtonTexture.load();
@@ -183,6 +183,12 @@ public class ResourceManager
     	} catch (final TextureAtlasBuilderException e) {
     		Debug.e(e);
     	}
+    }
+    
+    public void unloadLevelSelectGraphics() {
+    	mLevelSelectButtonTexture.unload();
+    	mLockTexture.unload();
+    	mLevelSelectCrateThumbnailsTextureAtlas.unload();
     }
     
     private void loadMenuFonts() {
@@ -354,7 +360,7 @@ public class ResourceManager
     	mSplashTextureRegion = null;
     }
     
-    public static void prepareManager(Engine engine, MainActivity activity, Camera camera, VertexBufferObjectManager vbom) {
+    public static void prepareManager(Engine engine, MainActivity activity, SmoothCamera camera, VertexBufferObjectManager vbom) {
         getInstance().mEngine = engine;
         getInstance().mActivity = activity;
         getInstance().mCamera = camera;

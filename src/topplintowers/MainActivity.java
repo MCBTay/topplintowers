@@ -1,6 +1,7 @@
 package topplintowers;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
@@ -32,7 +33,7 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 public class MainActivity extends BaseGameActivity {
 	private static MainActivity instance;
 
-	public Camera mCamera;
+	public SmoothCamera mCamera;
 
 	public Scene mCurrentScene;
 
@@ -51,12 +52,7 @@ public class MainActivity extends BaseGameActivity {
 		float cameraWidth = instance.getWindowManager().getDefaultDisplay().getWidth();   // deprecated
 		float cameraHeight = instance.getWindowManager().getDefaultDisplay().getHeight(); // deprecated
 		
-		mCamera = new Camera(0f, 0f, 800, 480) {
-			@Override
-			public void setCenter(float x, float y) {
-				super.setCenter((int)x, (int)y);
-			}
-		};
+		mCamera = new SmoothCamera(0, 0, 800, 480, 0, 1500, 0);
 		mLevelManager = new LevelMgr();
 		
 
