@@ -90,7 +90,6 @@ public class SceneManager
     	mMenuScene = new MainMenuScene();
     	mLoadingScene = new LoadingScene();
     	mQuitPopupScene = new QuitPopupScene();
-    	mLevelSelectScene = new LevelSelectScene();
     	setScene(mMenuScene);
     	disposeSplashScene();
     }
@@ -127,8 +126,16 @@ public class SceneManager
     public void loadMenuScene(final Engine mEngine) {
     	((LoadingScene)mLoadingScene).setCrateTexture();
     	setScene(mLoadingScene);
-    	mGameScene.disposeScene();
-    	ResourceManager.getInstance().unloadGameTextures();
+    	
+    	try {
+    		mGameScene.disposeScene();
+    		ResourceManager.getInstance().unloadGameTextures();
+    	} catch (Exception e) {
+    		mLevelSelectScene.disposeScene();
+    		ResourceManager.getInstance().unloadLevelSelectGraphics();
+    	}
+    	
+    	
     	mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
     		public void onTimePassed(final TimerHandler pTimerHandler) {
     			mEngine.unregisterUpdateHandler(pTimerHandler);
@@ -142,6 +149,40 @@ public class SceneManager
     			MenuScene childScene = ((MainMenuScene)mMenuScene).getMenuChildScene();
     			mMenuScene.setChildScene(childScene);		
     			setScene(mMenuScene);
+    		}
+    	}));
+    }
+    
+//    public void loadMenuScene(final Engine mEngine, LevelSelectScene lss) {
+//    	((LoadingScene)mLoadingScene).setCrateTexture();
+//    	setScene(mLoadingScene);
+//    	lss.disposeScene();
+//    	ResourceManager.getInstance().unloadLevelSelectGraphics();
+//    	mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+//    		public void onTimePassed(final TimerHandler pTimerHandler) {
+//    			mEngine.unregisterUpdateHandler(pTimerHandler);
+//    			ResourceManager.getInstance().loadMenuTextures();
+//    			
+//    			MenuScene childScene = ((MainMenuScene)mMenuScene).getMenuChildScene();
+//    			mMenuScene.setChildScene(childScene);		
+//    			setScene(mMenuScene);
+//    		}
+//    	}));
+//    }
+    
+    public void loadLevelSelect(final Engine mEngine) {
+    	((LoadingScene)mLoadingScene).setCrateTexture();
+    	setScene(mLoadingScene);
+    	mMenuScene.disposeScene();
+    	ResourceManager.getInstance().unloadMenuTextures();
+    	mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+    		public void onTimePassed(final TimerHandler pTimerHandler) {
+    			mEngine.unregisterUpdateHandler(pTimerHandler);
+    			
+    			ResourceManager.getInstance().loadLevelSelectGraphics();
+    			
+    			mLevelSelectScene = new LevelSelectScene();
+    			setScene(mLevelSelectScene);
     		}
     	}));
     }
@@ -165,12 +206,5 @@ public class SceneManager
     	
     	SceneCommon.fadeIn(pms.getRectangle(), pms.getButtons(), pms.getText());
     	
-    }
-    
-    public void loadLevelSelect(final Engine mEngine) {
-    	mCurrentScene.setChildScene(mLevelSelectScene);
-    	LevelSelectScene lss = (LevelSelectScene) mLevelSelectScene;
-    	lss.mHud.setVisible(true);
-    	SceneCommon.fadeIn(lss.getRectangle(), lss.getButtons());
     }
 }

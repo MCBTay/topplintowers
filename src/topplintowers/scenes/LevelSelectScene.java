@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Line;
@@ -28,6 +29,7 @@ import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.color.Color;
+import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
@@ -36,37 +38,46 @@ import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
 import topplintowers.scenes.SceneManager.SceneType;
 
-public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListener, IScrollDetectorListener, IClickDetectorListener, IOnSceneTouchListener {
-	private SurfaceScrollDetector mScrollDetector;
-	private ClickDetector mClickDetector;	
+public class LevelSelectScene extends BaseScene implements IClickDetectorListener, IScrollDetectorListener, IOnSceneTouchListener {
 	
-	private Rectangle mRectangle;
-	private ArrayList<SpriteMenuItem> mButtons; 
 	
+	private ArrayList<Sprite> mButtons; 	
 	public HUD mHud;
 	
-	private float mMinY = -50;
-    private float mMaxY = 1150;
+	private Entity container;
+	protected MoveYModifier inertiaMove;
+	
+    // Scrolling
+    private SurfaceScrollDetector mScrollDetector;
+    private ClickDetector mClickDetector;
+	private float mMinY = -1100;
+    private float mMaxY = 75;
     private float mCurrentY = 0;
+    private int iItemClicked = -1;
+    private float lastMove;
+    private static float INERTIA_DURATION = 0.5f;
+    private static float INERTIA_COEF = 5;
     
     private static Color dimmed = new Color(0.2f, 0.2f, 0.2f, 0.2f);
     
     private MenuScene mChildMenuScene;
 
-    public Rectangle getRectangle() { return mRectangle; }
-    public ArrayList<SpriteMenuItem> getButtons() { return mButtons; }
+    public ArrayList<Sprite> getButtons() { return mButtons; }
 
 	public void createLevelButtons() {
+		container = new Entity();
 		for (Levels level : Levels.values()) {
-			if (level != Levels.FREEMODE)
-				createButton(level);
+			if (level != Levels.FREEMODE) {
+				Sprite button = createButton(level);
+				container.attachChild(button);
+			}
+			
 		}
 		createSelectedLines();
+		attachChild(container);
 	}
 	
-	public void createButton(Levels level) {
-
-		
+	public Sprite createButton(Levels level) {
 		Sprite button = createButtonBackground(level);
 		createLevelText(level, button);
 		createGoalText(level, button);
@@ -87,16 +98,25 @@ public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListe
 			lock.setPosition(lockX, lockY);
 			button.attachChild(lock);
 		}
+		return button;
 	}
 	
 	private Sprite createButtonBackground(final Levels level) {
-		SpriteMenuItem menuButton = new SpriteMenuItem(level.ordinal(), ResourceManager.mLevelSelectButtonTextureRegion, vbom) {
+//		Sprite menuButton = new Sprite(level.ordinal(), ResourceManager.mLevelSelectButtonTextureRegion, vbom) {
+//			@Override
+//			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+//				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
+//				return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+//			}
+//		};
+		Sprite menuButton = new Sprite(0, 0, ResourceManager.mLevelSelectButtonTextureRegion, vbom) { 
 			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
-				return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreayLocalY) {
+				iItemClicked = level.ordinal();
+				return true;
 			}
 		};
+		
 		float posX = 158;
 		float posY = 202;
 		
@@ -107,7 +127,7 @@ public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListe
 		menuButton.setPosition(posX, posY);
 		menuButton.setCullingEnabled(true);
 		mButtons.add(menuButton);
-		mChildMenuScene.addMenuItem(menuButton);
+		//mChildMenuScene.addMenuItem(menuButton);
 		return menuButton;
 	}
 	
@@ -121,7 +141,6 @@ public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListe
 		linePosY = camera.getHeight()/2;
 		createLine(linePosX, linePosY, 75);
 		camera.setHUD(mHud);
-		mHud.setVisible(false);
 	}
 	
 	private void createLine(float posX, float posY, float offset) {
@@ -184,86 +203,42 @@ public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListe
 		}
 	}
 	
-	@Override
-	public boolean onMenuItemClicked(MenuScene arg0, IMenuItem arg1, float arg2, float arg3) {
-		//SceneCommon.deleteExistingCrates();
-		Level newLevel = activity.mLevelManager.getLevel(Levels.values()[arg1.getID()]);
-		mHud.setVisible(false);
-		SceneManager.getInstance().loadGameScene(engine, newLevel);
-	    return true;
-	}	
-
-	@Override
-	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {					
-        this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
-		return true;
-	}
-
-	@Override
-	public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-		
-	}
-	
-	@Override
-	public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-		if ( ((mCurrentY - pDistanceY) < mMinY) || ((mCurrentY - pDistanceY) > mMaxY) )
-			return;
-	
-		//TODO: get away from scrolling the scene and actually move the camera instead?  would involve ensuring the logo and dimmed bg didn't scroll.  (HUD?)
-		mRectangle.setPosition(0, mRectangle.getY()-pDistanceY);
-		setPosition(0, getY()+pDistanceY);
-		mChildMenuScene.setPosition(0, getY()+pDistanceY);
-		//camera.offsetCenter(0, -pDistanceY);
-		mCurrentY -= pDistanceY;	
-	}
-
-	@Override
-	public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-		float lowest = Float.MAX_VALUE;
-		for (Sprite button : mButtons) {
-			float middle = camera.getHeight()/2 - getY();
-			float current = middle - (button.getY() + button.getHeightScaled()/2);
-			
-			if (Math.abs(current) < lowest) lowest = current;
-		}
-		
-		registerEntityModifier(new MoveYModifier(0.1f, getY(), getY()+lowest));
-		mRectangle.registerEntityModifier(new MoveYModifier(0.1f, mRectangle.getY(), mRectangle.getY()-lowest));
-	}
+//	@Override
+//	public boolean onMenuItemClicked(MenuScene arg0, IMenuItem arg1, float arg2, float arg3) {
+//		//SceneCommon.deleteExistingCrates();
+//		Level newLevel = activity.mLevelManager.getLevel(Levels.values()[arg1.getID()]);
+//		mHud.setVisible(false);
+//		SceneManager.getInstance().loadGameScene(engine, newLevel);
+//	    return true;
+//	}	
 
 	@Override
 	public void createScene() {
+		Sprite newSprite = new Sprite(0, 0, ResourceManager.mBackgroundTextureRegion, vbom);
+		attachChild(newSprite);
 		
-		mButtons = new ArrayList<SpriteMenuItem>();	
-		mRectangle = SceneCommon.createBackground(this);
-		setBackgroundEnabled(false);
+		Rectangle rect = new Rectangle(0, 0, 800, 480, vbom);
+		rect.setColor(0,0,0,0.75f);
+		attachChild(rect);
 		
-		mChildMenuScene = new MenuScene(camera);
-		mChildMenuScene.setPosition(0, 0);
-		mChildMenuScene.setBackgroundEnabled(false);
+		mButtons = new ArrayList<Sprite>();
 		createLevelButtons();
-		mChildMenuScene.setOnMenuItemClickListener(this);
-		setChildScene(mChildMenuScene);
 		
 		this.mScrollDetector = new SurfaceScrollDetector(this);
-		this.mScrollDetector.setEnabled(true);
+		this.mClickDetector = new ClickDetector(this);
 		this.setOnSceneTouchListener(this);
-		//mChildMenuScene.setOnSceneTouchListener(this);
-
 	}
 
 	@Override
 	public void onBackKeyPressed() {
-		SceneCommon.fadeOut(mRectangle, mButtons);
 		mHud.setVisible(false);
+		clearChildScene();
 		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
         {                      
             @Override
             public void onTimePassed(final TimerHandler pTimerHandler)
-            {            	
-            	MainMenuScene mms = (MainMenuScene) SceneManager.getInstance().getCurrentScene();
-            	mms.setChildScene(mms.getMenuChildScene());
-            	SceneCommon.repositionButtons(mms.getQuitButton().getWidth(), mms.getQuitButton().getHeight(), mms.getButtons());
+            {            	            	
+            	 SceneManager.getInstance().loadMenuScene(engine);
             }
         }));
 	}
@@ -276,20 +251,80 @@ public class LevelSelectScene extends BaseScene implements IOnMenuItemClickListe
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
+		this.mClickDetector.onTouchEvent(pSceneTouchEvent);
+		this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
+        return true;
+	}
+
+	@Override
+	public void onScrollStarted(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+		container.unregisterEntityModifier(inertiaMove);
+		inertiaMove = null;
+		mCurrentY = container.getY();
+	}
+
+	@Override
+	public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+//		if ( ((mCurrentY - pDistanceY) < mMinY) || ((mCurrentY - pDistanceY) > mMaxY) )
+//            return;
+//
+//		camera.offsetCenter(0, -pDistanceY);
+//	    mCurrentY -= pDistanceY;
+	    
+		lastMove = pDistanceY;
+		
+        //Return if ends are reached
+		float next = mCurrentY + pDistanceY;
+		if ( ((mCurrentY + pDistanceY) < mMinY)  ){    
+			next = mMinY;  
+	    }else if((mCurrentY + pDistanceY) > mMaxY){  
+			next = mMaxY;
+	    }
+        
+        //Center camera to the current point
+		mCurrentY = next;
+        container.setPosition(0, mCurrentY);
+	}
+
+	@Override
+	public void onScrollFinished(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
+		float next = mCurrentY + lastMove*INERTIA_COEF;
+		if ( (next < mMinY)  ){    
+			next = mMinY;  
+	    }else if(next > mMaxY){  
+			next = mMaxY;
+	    }
+		
+		final float next_final = next;
+				 
+		inertiaMove = new MoveYModifier(INERTIA_DURATION, mCurrentY, next, EaseCubicOut.getInstance());
+		inertiaMove.setAutoUnregisterWhenFinished(true);
+		container.registerEntityModifier(inertiaMove);
+		
+		registerUpdateHandler(new TimerHandler(INERTIA_DURATION + 0.1f, new ITimerCallback() {
+    		public void onTimePassed(final TimerHandler pTimerHandler) {
+    			float lowest = Float.MAX_VALUE;
+    			for (Sprite button : mButtons) {
+    				float middle = camera.getCenterY() - next_final;
+    				float current = middle - (button.getY() + button.getHeightScaled()/2);
+
+    				if (Math.abs(current) < lowest) lowest = current;
+    			}
+
+    			container.registerEntityModifier(new MoveYModifier(0.1f, container.getY(), container.getY()+lowest));
+    			//mRectangle.registerEntityModifier(new MoveYModifier(0.1f, mRectangle.getY(), mRectangle.getY()-lowest));
+    		}
+    	}));
+	}
+
 	@Override
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
-//		float sceneY = pSceneY + mCurrentY;
-//		int x = 15;
-//		x++;
-//		for (SpriteMenuItem button : mButtons) {
-//			//if (mCurrentY == 0) mCurrentY = pSceneY;
-//			if (button.contains(pSceneX, sceneY)) {
-//				Level newLevel = activity.mLevelManager.getLevel(Levels.values()[button.getID()]);
-//				SceneManager.getInstance().loadGameScene(engine, newLevel);
-//			}
-//		}
-		return;
-	}
-	
-	
+		if (iItemClicked != -1) {
+			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
+			SceneManager.getInstance().loadGameScene(engine, newLevel);
+		}
+	}	
 }

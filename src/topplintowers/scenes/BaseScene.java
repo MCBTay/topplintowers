@@ -2,6 +2,7 @@ package topplintowers.scenes;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
@@ -21,7 +22,7 @@ public abstract class BaseScene extends Scene
     protected MainActivity activity;
     protected ResourceManager resourceManager;
     protected VertexBufferObjectManager vbom;
-    protected Camera camera;
+    protected SmoothCamera camera;
     
     //---------------------------------------------
     // CONSTRUCTOR
