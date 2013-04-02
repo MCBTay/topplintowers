@@ -154,7 +154,7 @@ public class MainActivity extends BaseGameActivity {
 	}
 
 	public void onPauseGame() {
-		super.onPause();
+//		super.onPause();  // causes crash when pressing homebutton?
 		
 		if (mCurrentScene instanceof GameScene) {
 			final PauseMenuScene pms = new PauseMenuScene();
