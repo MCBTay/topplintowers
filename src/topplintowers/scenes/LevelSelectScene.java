@@ -29,6 +29,7 @@ import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.color.Color;
+import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import topplintowers.ResourceManager;
@@ -105,17 +106,22 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 //		Sprite menuButton = new Sprite(level.ordinal(), ResourceManager.mLevelSelectButtonTextureRegion, vbom) {
 //			@Override
 //			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-//				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
+//				
 //				return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
 //			}
 //		};
 		Sprite menuButton = new Sprite(0, 0, ResourceManager.mLevelSelectButtonTextureRegion, vbom) { 
 			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreayLocalY) {
-				iItemClicked = level.ordinal();
+			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
+				//super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+				//SceneCommon.deleteExistingCrates();
+				Level newLevel = activity.mLevelManager.getLevel(Levels.values()[level.ordinal()]);
+				SceneManager.getInstance().loadGameScene(engine, newLevel);
 				return true;
 			}
 		};
+		registerTouchArea(menuButton);
 		
 		float posX = 158;
 		float posY = 202;
@@ -268,21 +274,13 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 
 	@Override
 	public void onScroll(ScrollDetector pScollDetector, int pPointerID, float pDistanceX, float pDistanceY) {
-//		if ( ((mCurrentY - pDistanceY) < mMinY) || ((mCurrentY - pDistanceY) > mMaxY) )
-//            return;
-//
-//		camera.offsetCenter(0, -pDistanceY);
-//	    mCurrentY -= pDistanceY;
-	    
 		lastMove = pDistanceY;
 		
         //Return if ends are reached
 		float next = mCurrentY + pDistanceY;
-		if ( ((mCurrentY + pDistanceY) < mMinY)  ){    
-			next = mMinY;  
-	    }else if((mCurrentY + pDistanceY) > mMaxY){  
-			next = mMaxY;
-	    }
+		
+		if (next < mMinY) 	  next = mMinY;  
+		else if(next > mMaxY) next = mMaxY;
         
         //Center camera to the current point
 		mCurrentY = next;
@@ -315,16 +313,16 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
     			}
 
     			container.registerEntityModifier(new MoveYModifier(0.1f, container.getY(), container.getY()+lowest));
-    			//mRectangle.registerEntityModifier(new MoveYModifier(0.1f, mRectangle.getY(), mRectangle.getY()-lowest));
     		}
     	}));
 	}
 
 	@Override
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
-		if (iItemClicked != -1) {
-			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
-			SceneManager.getInstance().loadGameScene(engine, newLevel);
-		}
+//		if (iItemClicked != -1) {
+//			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
+//			SceneManager.getInstance().loadGameScene(engine, newLevel);
+//		}
+		Debug.d("On click item "+iItemClicked);
 	}	
 }
