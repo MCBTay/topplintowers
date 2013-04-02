@@ -116,9 +116,9 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
 				//super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
 				//SceneCommon.deleteExistingCrates();
-				Level newLevel = activity.mLevelManager.getLevel(Levels.values()[level.ordinal()]);
-				SceneManager.getInstance().loadGameScene(engine, newLevel);
-				return true;
+				mScrollDetector.onTouchEvent(pSceneTouchEvent);
+				iItemClicked = level.ordinal();
+				return false;
 			}
 		};
 		registerTouchArea(menuButton);
@@ -260,8 +260,8 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
-		this.mClickDetector.onTouchEvent(pSceneTouchEvent);
 		this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
+		this.mClickDetector.onTouchEvent(pSceneTouchEvent);
         return true;
 	}
 
@@ -319,10 +319,9 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 
 	@Override
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
-//		if (iItemClicked != -1) {
-//			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
-//			SceneManager.getInstance().loadGameScene(engine, newLevel);
-//		}
-		Debug.d("On click item "+iItemClicked);
+		if (iItemClicked != -1) {
+			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
+			SceneManager.getInstance().loadGameScene(engine, newLevel);
+		}
 	}	
 }
