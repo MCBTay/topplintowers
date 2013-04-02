@@ -50,15 +50,13 @@ public class ResourceManager
 	
 	// Cloud Textures
 	public static ArrayList<TextureRegion> mCloudTextureRegions;
-	
-	private static Texture mCloudTexture1, mCloudTexture2, mCloudTexture3, mCloudTexture4, mCloudTexture5, mCloudTexture6, mCloudTexture7;
-	public static TextureRegion mCloudTextureRegion1, mCloudTextureRegion2, mCloudTextureRegion3, mCloudTextureRegion4, mCloudTextureRegion5, 
-								mCloudTextureRegion6, mCloudTextureRegion7;
+	public BuildableBitmapTextureAtlas mCloudTextureAtlas;
+	private static TextureRegion mCloudTextureRegion1, mCloudTextureRegion2, mCloudTextureRegion3, mCloudTextureRegion4, 
+								 mCloudTextureRegion5, mCloudTextureRegion6, mCloudTextureRegion7;
 
 	// Star Textures
 	public static ArrayList<TextureRegion> mStarTextureRegions;
-	
-	private static Texture mStarTexture1, mStarTexture2, mStarTexture3;
+	public BuildableBitmapTextureAtlas mStarTextureAtlas;
 	private static TextureRegion mStarTextureRegion1, mStarTextureRegion2, mStarTextureRegion3;
 	
 	// Loading Scene Textures
@@ -238,10 +236,12 @@ public class ResourceManager
     	loadPlatformTexture();
     	loadCrateTextures();
     	loadHUDTextures();
+    	loadStarTextures();
+    	loadCloudTextures();
     }
     
     private void loadBackgroundTextures() {
-    	mGameBackgroundTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 800, 1600, TextureOptions.BILINEAR);
+    	mGameBackgroundTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 800, 3200, TextureOptions.BILINEAR);
     	mGameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mGameBackgroundTexture, mActivity, "gfx/background/background.png", 0, 0);
     	mGameBackgroundTexture.load();
     }
@@ -294,6 +294,54 @@ public class ResourceManager
     	try {
     		mHUDTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
     		mHUDTextureAtlas.load();
+    	} catch (final TextureAtlasBuilderException e) {
+    		Debug.e(e);
+    	}
+    }
+    
+    private void loadStarTextures() {
+    	mStarTextureRegions = new ArrayList<TextureRegion>();
+    	mStarTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 200, 70);
+    	
+    	mStarTextureRegion1	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mStarTextureAtlas, mActivity, "gfx/background/stars/blue_star.png");
+    	mStarTextureRegion2	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mStarTextureAtlas, mActivity, "gfx/background/stars/purple_star.png");
+    	mStarTextureRegion3	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mStarTextureAtlas, mActivity, "gfx/background/stars/yellow_star.png");
+    	
+    	mStarTextureRegions.add(mStarTextureRegion1);
+    	mStarTextureRegions.add(mStarTextureRegion2);
+    	mStarTextureRegions.add(mStarTextureRegion3);
+    	
+    	try {
+    		mStarTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
+    		mStarTextureAtlas.load();
+    	} catch (final TextureAtlasBuilderException e) {
+    		Debug.e(e);
+    	}
+    }
+    
+    private void loadCloudTextures() { 
+    	mCloudTextureRegions = new ArrayList<TextureRegion>();
+    	mCloudTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 1032, 1032);
+    	
+    	mCloudTextureRegion1 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud1.png");
+    	mCloudTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud2.png");
+    	mCloudTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud3.png");
+    	mCloudTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud4.png");
+    	mCloudTextureRegion5 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud5.png");
+    	mCloudTextureRegion6 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud6.png");
+    	mCloudTextureRegion7 = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCloudTextureAtlas, mActivity, "gfx/background/clouds/cloud7.png");
+   	
+    	mCloudTextureRegions.add(mCloudTextureRegion1);
+    	mCloudTextureRegions.add(mCloudTextureRegion2);
+    	mCloudTextureRegions.add(mCloudTextureRegion3);
+    	mCloudTextureRegions.add(mCloudTextureRegion4);
+    	mCloudTextureRegions.add(mCloudTextureRegion5);
+    	mCloudTextureRegions.add(mCloudTextureRegion6);
+    	mCloudTextureRegions.add(mCloudTextureRegion7);
+    	
+    	try {
+    		mCloudTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
+    		mCloudTextureAtlas.load();
     	} catch (final TextureAtlasBuilderException e) {
     		Debug.e(e);
     	}
