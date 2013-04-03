@@ -45,7 +45,7 @@ public class Crate implements IOnAreaTouchListener {
 
 		GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(this.sprite, this.box, true, true));
 	
-	    GameScene.getScene().attachChild(this.sprite);
+	    GameScene.getScene().getContainer().attachChild(this.sprite);
 		GameScene.activeCrates.get(this.type).add(this);
 	}
 	

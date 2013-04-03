@@ -89,6 +89,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public PhysicsWorld getPhysicsWorld() { return mPhysicsWorld; }
     public VertexBufferObjectManager getVBOM() { return vbom; }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
+    public Entity getContainer() { return container; }
     
     public GameScene(Level level) {
 		this.level = level;
@@ -142,7 +143,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		newCloud.setCullingEnabled(true);
 		container.attachChild(newCloud);
 		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -1300) - 800;
+		float startPosY = ((float)Math.random() * -1300) - 1000;
 		newCloud.setPosition(startPosX, startPosY);
 		newCloud.setAlpha((float)Math.random());
 
@@ -379,6 +380,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		            pGLState.enableDither();
 		     }
 	    };
+	    
 	    container.attachChild(mSky);
 		mBackgroundHeight = 3200;
 	}
