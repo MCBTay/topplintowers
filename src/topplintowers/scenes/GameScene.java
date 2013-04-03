@@ -91,7 +91,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 
 	public Camera getCamera() { return camera; }
     public PhysicsWorld getPhysicsWorld() { return mPhysicsWorld; }
-    public VertexBufferObjectManager getVBOM() { return getVbom(); }
+    public VertexBufferObjectManager getVBOM() { return vbom; }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
     public Entity getContainer() { return container; }
     
@@ -165,7 +165,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		for (int i = 0; i < 300; i++) {
 			int randomStar = (int)((float)Math.random() * 3);
 			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
-			Sprite newStar = new Sprite(0, 0, starTexture, getVbom());
+			Sprite newStar = new Sprite(0, 0, starTexture, vbom);
 			newStar.setCullingEnabled(true);
 			container.attachChild(newStar);
 			
@@ -395,7 +395,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
-	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, getVbom()) {
+	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion,vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
