@@ -35,6 +35,7 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.color.Color;
+import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
@@ -52,6 +53,7 @@ import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
 import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
+import topplintowers.pools.CloudPool;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener, IScrollDetectorListener  {
@@ -84,10 +86,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     private static float INERTIA_COEF = 5;
     private MoveYModifier inertiaMove;
     
+    private CloudPool mCloudPool;
+    private ArrayList<Sprite> mActiveCloudList;
 
 	public Camera getCamera() { return camera; }
     public PhysicsWorld getPhysicsWorld() { return mPhysicsWorld; }
-    public VertexBufferObjectManager getVBOM() { return vbom; }
+    public VertexBufferObjectManager getVBOM() { return getVbom(); }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
     public Entity getContainer() { return container; }
     
@@ -139,11 +143,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(randomCloud);
 		
 		//TODO: change this to use a sprite pool!
-		Sprite newCloud = new Sprite(0, 0, cloudTexture, vbom);
+		Sprite newCloud = mCloudPool.obtainPoolItem();
+		
 		newCloud.setCullingEnabled(true);
 		container.attachChild(newCloud);
 		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -1300) - 1000;
+		float startPosY = ((float)Math.random() * -700) - 600;
 		newCloud.setPosition(startPosX, startPosY);
 		newCloud.setAlpha((float)Math.random());
 
@@ -151,6 +156,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		MoveXModifier moveToRight = new MoveXModifier(randomSpeed, newCloud.getX(), camera.getWidth());
 		moveToRight.setAutoUnregisterWhenFinished(true);
 		newCloud.registerEntityModifier(moveToRight);
+		
+		mActiveCloudList.add(newCloud);
 	}
 	
 	private void createStars() {
@@ -158,7 +165,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		for (int i = 0; i < 300; i++) {
 			int randomStar = (int)((float)Math.random() * 3);
 			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
-			Sprite newStar = new Sprite(0, 0, starTexture, vbom);
+			Sprite newStar = new Sprite(0, 0, starTexture, getVbom());
 			newStar.setCullingEnabled(true);
 			container.attachChild(newStar);
 			
@@ -203,8 +210,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			activeCrates.put(type, new ArrayList<Crate>());
 		}
 	}
-	
-
 	
 	@Override
 	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {	
@@ -298,8 +303,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			next = mMaxY;
 	    }
 		
-		final float next_final = next;
-				 
 		inertiaMove = new MoveYModifier(INERTIA_DURATION, mCurrentY, next, EaseCubicOut.getInstance());
 		inertiaMove.setAutoUnregisterWhenFinished(true);
 		container.registerEntityModifier(inertiaMove);
@@ -307,6 +310,24 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	public void cleaner() {
 	    synchronized (this) {
+	    	ArrayList<Sprite> removeList = new ArrayList<Sprite>();
+	    	
+    		int cloudCount = mActiveCloudList.size();
+    		for (int i = 0; i < cloudCount; i++) {
+    			Sprite currentCloud = mActiveCloudList.get(i);
+    			if (currentCloud.getX() >= 800) {
+    				container.detachChild(currentCloud);
+    				removeList.add(currentCloud);
+    				mCloudPool.recyclePoolItem(currentCloud);
+    			}
+    		}	
+    		
+    		int removeCount = removeList.size();
+    		for (int i = 0; i < removeCount; i++) {
+    			Sprite currentCloud = removeList.get(i);
+				mActiveCloudList.remove(currentCloud);
+    		}
+	    	
 	    	Enumeration<CrateType> crateTypes = activeCrates.keys();
     		while (crateTypes.hasMoreElements()) {
     			CrateType type = (CrateType) crateTypes.nextElement();
@@ -344,7 +365,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		
 		createStars();
 		
-		registerUpdateHandler(new TimerHandler(1f / 30.0f, true, new ITimerCallback() {
+		registerUpdateHandler(new TimerHandler(1f / 10.0f, true, new ITimerCallback() {
 	          @Override
 	          public void onTimePassed(final TimerHandler pTimerHandler) {
 	          	cleaner();
@@ -352,6 +373,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          }
 	  	}));
 		
+		mCloudPool = new CloudPool();
+		mActiveCloudList = new ArrayList<Sprite>();
 		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(final TimerHandler pTimerHandler) {
@@ -372,7 +395,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
-	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, vbom) {
+	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, getVbom()) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
