@@ -165,7 +165,7 @@ public class ResourceManager
     	mLockTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLockTexture, mActivity, "gfx/levelselect/lock.png", 0, 0);
     	mLockTexture.load();
     	
-    	mLevelSelectCrateThumbnailsTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 2056, 2056, TextureOptions.NEAREST);  // TODO resize this atlas
+    	mLevelSelectCrateThumbnailsTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 128, 256, TextureOptions.NEAREST);
 
     	mLevelSelectWoodThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/wood.png");
     	mLevelSelectStoneThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/stone.png");
