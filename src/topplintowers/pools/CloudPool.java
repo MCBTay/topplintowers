@@ -5,7 +5,7 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
 import topplintowers.ResourceManager;
-import topplintowers.scenes.SceneManager;
+import topplintowers.scenes.GameScene;
 
 public class CloudPool extends GenericPool<Sprite> {
 
@@ -17,7 +17,7 @@ public class CloudPool extends GenericPool<Sprite> {
 	protected Sprite onAllocatePoolItem() {
 		int randomCloud = (int)((float)Math.random() * 6);	
 		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(randomCloud);
-		Sprite newCloud = new Sprite(0, 0, cloudTexture, SceneManager.getInstance().getCurrentScene().getVbom());
+		Sprite newCloud = new Sprite(0, 0, cloudTexture, GameScene.getScene().getVBOM());
 		return newCloud;
 	}
 	
