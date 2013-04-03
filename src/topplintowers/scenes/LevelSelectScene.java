@@ -100,18 +100,9 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	}
 	
 	private Sprite createButtonBackground(final Levels level) {
-//		Sprite menuButton = new Sprite(level.ordinal(), ResourceManager.mLevelSelectButtonTextureRegion, vbom) {
-//			@Override
-//			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-//				
-//				return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
-//			}
-//		};
 		Sprite menuButton = new Sprite(0, 0, ResourceManager.mLevelSelectButtonTextureRegion, vbom) { 
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				//TODO, fix scrolling issue when over buttons? mScrollDetector.onTouchEvent(pSceneTouchEvent);
-				//super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
 				//SceneCommon.deleteExistingCrates();
 				mScrollDetector.onTouchEvent(pSceneTouchEvent);
 				iItemClicked = level.ordinal();
@@ -130,7 +121,6 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		menuButton.setPosition(posX, posY);
 		menuButton.setCullingEnabled(true);
 		mButtons.add(menuButton);
-		//mChildMenuScene.addMenuItem(menuButton);
 		return menuButton;
 	}
 	
@@ -189,7 +179,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 				if (previousCrate != null && previousText != null) 
 					crateX = previousCrate.getX() + previousCrate.getWidthScaled() + previousText.getWidthScaled() + 12;
 				
-				float crateY = button.getHeightScaled() - crate.getHeightScaled() - 5;
+				float crateY = button.getHeightScaled() - crate.getHeightScaled() - 3;
 				crate.setPosition(crateX, crateY);
 				button.attachChild(crate);
 				previousCrate = crate;
@@ -205,15 +195,6 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 			}
 		}
 	}
-	
-//	@Override
-//	public boolean onMenuItemClicked(MenuScene arg0, IMenuItem arg1, float arg2, float arg3) {
-//		//SceneCommon.deleteExistingCrates();
-//		Level newLevel = activity.mLevelManager.getLevel(Levels.values()[arg1.getID()]);
-//		mHud.setVisible(false);
-//		SceneManager.getInstance().loadGameScene(engine, newLevel);
-//	    return true;
-//	}	
 
 	@Override
 	public void createScene() {
