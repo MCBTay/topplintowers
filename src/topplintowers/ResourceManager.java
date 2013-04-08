@@ -104,8 +104,8 @@ public class ResourceManager
     public static Font mLoadingFont;
     
     // GameScene Textures
-    private BitmapTextureAtlas mGameBackgroundTexture;
-    public static TextureRegion mGameBackgroundTextureRegion;
+    public BuildableBitmapTextureAtlas mGameBackgroundTextureAtlas;
+    public static TextureRegion mGameBackgroundTopTextureRegion, mGameBackgroundMiddleTextureRegion, mGameBackgroundBottomTextureRegion;
     
     //---------------------------------------------
     // CLASS LOGIC
@@ -249,9 +249,18 @@ public class ResourceManager
     }
     
     private void loadBackgroundTextures() {
-    	mGameBackgroundTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 800, 3200, TextureOptions.BILINEAR);
-    	mGameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mGameBackgroundTexture, mActivity, "gfx/background/background.png", 0, 0);
-    	mGameBackgroundTexture.load();
+    	mGameBackgroundTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 64, 1024, TextureOptions.NEAREST);
+    	
+    	mGameBackgroundTopTextureRegion		= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mGameBackgroundTextureAtlas, mActivity, "gfx/background/background_top.png");
+    	mGameBackgroundMiddleTextureRegion	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mGameBackgroundTextureAtlas, mActivity, "gfx/background/background_middle.png");
+    	mGameBackgroundBottomTextureRegion  = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mGameBackgroundTextureAtlas, mActivity, "gfx/background/background_bottom.png");
+
+    	try {
+    		mGameBackgroundTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+    		mGameBackgroundTextureAtlas.load();
+    	} catch (final TextureAtlasBuilderException e) {
+    		Debug.e(e);
+    	}
     }
     
     private void loadPlatformTexture() {
@@ -385,26 +394,28 @@ public class ResourceManager
     }
     
     public void unloadGameTextures() {
-    	mGameBackgroundTexture.unload();
-    	mGameBackgroundTextureRegion = null;
+    	mGameBackgroundTextureAtlas.unload();
+    	mGameBackgroundTopTextureRegion 	= null;
+    	mGameBackgroundMiddleTextureRegion 	= null;
+    	mGameBackgroundBottomTextureRegion 	= null;
     	
     	mPlatformTexture.unload();
     	mPlatformTextureRegion = null;
     	
     	mCrateTextureAtlas.unload();
-    	mWoodCrateTextureRegion = null;
-    	mStoneCrateTextureRegion = null;
-    	mMetalCrateTextureRegion = null;
-    	mMagnetCrateTextureRegion = null;
-    	mElectromagnetCrateTextureRegion = null;
-    	mStickyCrateTextureRegion = null;
-    	mTransformerCrateTextureRegion = null;
+    	mWoodCrateTextureRegion 			= null;
+    	mStoneCrateTextureRegion 			= null;
+    	mMetalCrateTextureRegion 			= null;
+    	mMagnetCrateTextureRegion 			= null;
+    	mElectromagnetCrateTextureRegion 	= null;
+    	mStickyCrateTextureRegion 			= null;
+    	mTransformerCrateTextureRegion 		= null;
     	
     	mHUDTextureAtlas.unload();
-    	mCrateContainerMiddleTextureRegion = null;
-    	mCrateContainerEndTextureRegion = null;
-    	mScrollBarTextureRegion = null;
-    	mScrollBarEndTextureRegion = null;
+    	mCrateContainerMiddleTextureRegion 	= null;
+    	mCrateContainerEndTextureRegion 	= null;
+    	mScrollBarTextureRegion 			= null;
+    	mScrollBarEndTextureRegion 			= null;
     	
     	mStarTextureAtlas.unload();
     	mStarTextureRegions = null;
