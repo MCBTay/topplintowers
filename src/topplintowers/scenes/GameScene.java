@@ -3,14 +3,11 @@ package topplintowers.scenes;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.ListIterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import org.andengine.engine.camera.Camera;
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
@@ -27,7 +24,6 @@ import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
@@ -35,23 +31,18 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.color.Color;
-import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
 
-import topplintowers.MainActivity;
 import topplintowers.Platform;
 import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
-import topplintowers.hud.CrateContainer;
-import topplintowers.hud.CrateThumbnail;
 import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
-import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
 import topplintowers.pools.CloudPool;
 import topplintowers.scenes.SceneManager.SceneType;
@@ -395,7 +386,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
-	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion,vbom) {
+	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
