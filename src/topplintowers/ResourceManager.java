@@ -31,8 +31,7 @@ public class ResourceManager
     public VertexBufferObjectManager vbom;
     
 	// Crate Textures
-	private static BitmapTextureAtlas mWoodCrateTexture, mStoneCrateTexture, mMetalCrateTexture, mMagnetCrateTexture,
-									  mElectromagnetCrateTexture, mStickyCrateTexture, mTransformerCrateTexture;
+    public BuildableBitmapTextureAtlas mCrateTextureAtlas;
     public static TextureRegion mWoodCrateTextureRegion, mStoneCrateTextureRegion, mMetalCrateTextureRegion, mMagnetCrateTextureRegion,
     						    mElectromagnetCrateTextureRegion, mStickyCrateTextureRegion, mTransformerCrateTextureRegion;
 
@@ -116,8 +115,7 @@ public class ResourceManager
     {
         loadMenuGraphics();
         loadMenuFonts();
-        loadMenuAudio();
-        
+        loadMenuAudio();  
     }
     
     public void loadGameResources()
@@ -167,13 +165,13 @@ public class ResourceManager
     	
     	mLevelSelectCrateThumbnailsTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 128, 256, TextureOptions.NEAREST);
 
-    	mLevelSelectWoodThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/wood.png");
-    	mLevelSelectStoneThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/stone.png");
-    	mLevelSelectMetalThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/metal.png");
-    	mLevelSelectMagnetThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/magnet.png");
-    	mLevelSelectElectromagnetThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/electromagnet.png");
-    	mLevelSelectStickyThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/sticky.png");
-    	mLevelSelectTransformerThumb = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/transformer.png");
+    	mLevelSelectWoodThumb 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/wood.png");
+    	mLevelSelectStoneThumb 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/stone.png");
+    	mLevelSelectMetalThumb 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/metal.png");
+    	mLevelSelectMagnetThumb 		= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/magnet.png");
+    	mLevelSelectElectromagnetThumb 	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/electromagnet.png");
+    	mLevelSelectStickyThumb 		= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/sticky.png");
+    	mLevelSelectTransformerThumb 	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectCrateThumbnailsTextureAtlas, mActivity, "gfx/levelselect/cratethumbnails/transformer.png");
 
     	try {
     		mLevelSelectCrateThumbnailsTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
@@ -185,8 +183,19 @@ public class ResourceManager
     
     public void unloadLevelSelectGraphics() {
     	mLevelSelectButtonTexture.unload();
-    	mLockTexture.unload();
+    	mLevelSelectButtonTextureRegion = null;
+    	
     	mLevelSelectCrateThumbnailsTextureAtlas.unload();
+    	mLevelSelectWoodThumb = null;
+    	mLevelSelectStoneThumb = null;
+    	mLevelSelectMetalThumb = null;
+    	mLevelSelectMagnetThumb = null;
+    	mLevelSelectElectromagnetThumb = null;
+    	mLevelSelectStickyThumb = null;
+    	mLevelSelectTransformerThumb = null;
+    	
+    	mLockTexture.unload();
+    	mLockTextureRegion = null; 
     }
     
     private void loadMenuFonts() {
@@ -212,19 +221,18 @@ public class ResourceManager
     }
     
     public void unloadMenuTextures() {
-    	//mBackgroundTexture.unload();
     	mParallaxTexture1.unload();
     	mParallaxTexture2.unload();
     	mParallaxTexture3.unload();
-    	// don't unload button texture as it's used in the pause scene
     }
     
     public void loadMenuTextures() {
     	mBackgroundTexture.load();
+    	mMenuButtonTexture.load();
+    	
     	mParallaxTexture1.load();
     	mParallaxTexture2.load();
     	mParallaxTexture3.load();
-    	mMenuButtonTexture.load();
     }
     
     private void loadMenuAudio() {
@@ -253,33 +261,22 @@ public class ResourceManager
     }
     
     private void loadCrateTextures() { 
-    	mWoodCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-    	mWoodCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTexture, mActivity, "gfx/crates/wood.png", 0, 0);
-        mWoodCrateTexture.load();
+    	mCrateTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 256, 512, TextureOptions.NEAREST);
     	
-        mStoneCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mStoneCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mStoneCrateTexture, mActivity, "gfx/crates/stone.png", 0, 0);
-        mStoneCrateTexture.load();
-    	
-        mMetalCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mMetalCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mMetalCrateTexture, mActivity, "gfx/crates/metal.png", 0, 0);
-        mMetalCrateTexture.load();
-    	
-        mMagnetCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mMagnetCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mMagnetCrateTexture, mActivity, "gfx/crates/magnet.png", 0, 0);
-        mMagnetCrateTexture.load();
-    	
-        mElectromagnetCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mElectromagnetCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mElectromagnetCrateTexture, mActivity, "gfx/crates/electromagnet.png", 0, 0);
-        mElectromagnetCrateTexture.load();
-    	
-        mStickyCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mStickyCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mStickyCrateTexture, mActivity, "gfx/crates/sticky.png", 0, 0);
-        mStickyCrateTexture.load();
-    	
-        mTransformerCrateTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 128, 128, TextureOptions.BILINEAR);
-        mTransformerCrateTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mTransformerCrateTexture, mActivity, "gfx/crates/transformer.png", 0, 0);
-        mTransformerCrateTexture.load();
+    	mWoodCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/wood.png");
+    	mStoneCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/stone.png");
+    	mMetalCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/metal.png");
+    	mMagnetCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/magnet.png");
+    	mElectromagnetCrateTextureRegion 	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/electromagnet.png");
+    	mStickyCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/sticky.png");
+    	mTransformerCrateTextureRegion 		= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "gfx/crates/transformer.png");
+
+    	try {
+    		mCrateTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
+    		mCrateTextureAtlas.load();
+    	} catch (final TextureAtlasBuilderException e) {
+    		Debug.e(e);
+    	}
     }
     
     private void loadHUDTextures() { 
@@ -375,16 +372,63 @@ public class ResourceManager
     	}
     }
     
+    public void unloadLoadingSceneTextures() {
+    	mLoadingCrateTextureRegions = null;
+    	
+    	mLoadingCratesTextureAtlas.unload();
+    	mLoadingStoneTextureRegion = null;
+    	mLoadingMetalTextureRegion = null;
+    	mLoadingMagnetTextureRegion = null;
+    	mLoadingElectromagnetTextureRegion = null;
+    	mLoadingStickyTextureRegion = null;
+    	mLoadingTransformerTextureRegion = null;
+    }
+    
     public void unloadGameTextures() {
     	mGameBackgroundTexture.unload();
+    	mGameBackgroundTextureRegion = null;
+    	
+    	mPlatformTexture.unload();
+    	mPlatformTextureRegion = null;
+    	
+    	mCrateTextureAtlas.unload();
+    	mWoodCrateTextureRegion = null;
+    	mStoneCrateTextureRegion = null;
+    	mMetalCrateTextureRegion = null;
+    	mMagnetCrateTextureRegion = null;
+    	mElectromagnetCrateTextureRegion = null;
+    	mStickyCrateTextureRegion = null;
+    	mTransformerCrateTextureRegion = null;
+    	
+    	mHUDTextureAtlas.unload();
+    	mCrateContainerMiddleTextureRegion = null;
+    	mCrateContainerEndTextureRegion = null;
+    	mScrollBarTextureRegion = null;
+    	mScrollBarEndTextureRegion = null;
+    	
+    	mStarTextureAtlas.unload();
+    	mStarTextureRegions = null;
+    	mStarTextureRegion1 = null;
+    	mStarTextureRegion2 = null;
+    	mStarTextureRegion3 = null;
+    	
+    	mCloudTextureAtlas.unload();
+    	mCloudTextureRegions = null;
+    	mCloudTextureRegion1 = null;
+    	mCloudTextureRegion2 = null;
+    	mCloudTextureRegion3 = null;
+    	mCloudTextureRegion4 = null;
+    	mCloudTextureRegion5 = null;
+    	mCloudTextureRegion6 = null;
+    	mCloudTextureRegion7 = null;
     }
     
     public void loadPauseTextures() {
-    	
+    	// atm there really aren't pause textures that aren't already loaded
     }
     
     public void unloadPauseTextures() {
-    	
+    	// atm there really aren't pause textures that aren't already loaded
     }
     
     private void loadGameFonts() {
@@ -394,7 +438,7 @@ public class ResourceManager
     }
     
     private void loadGameAudio() {
-        
+        //TODO: add loading of audio (when we get some)
     }
     
     public void loadSplashScreen() {
