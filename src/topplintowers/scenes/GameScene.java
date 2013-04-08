@@ -56,7 +56,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		
 	public static Hashtable<CrateType, ArrayList<Crate>> activeCrates = new Hashtable<CrateType, ArrayList<Crate>>();
     
-    private static Sprite mSky;
+    private static Sprite mBackgroundTop, mBackgroundMiddle, mBackgroundBottom;
     private static float mBackgroundHeight;
     private Color mBackgroundColor;
     
@@ -386,7 +386,23 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
-	    mSky = new Sprite(0, -2720, ResourceManager.mGameBackgroundTextureRegion, vbom) {
+		mBackgroundTop 		= new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, vbom) {
+	    	@Override
+		     protected void preDraw(GLState pGLState, Camera pCamera)
+		     {
+		            super.preDraw(pGLState, pCamera);
+		            pGLState.enableDither();
+		     }
+	    };
+		mBackgroundMiddle	= new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, vbom) {
+	    	@Override
+		     protected void preDraw(GLState pGLState, Camera pCamera)
+		     {
+		            super.preDraw(pGLState, pCamera);
+		            pGLState.enableDither();
+		     }
+	    };
+		mBackgroundBottom 	= new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
@@ -395,8 +411,19 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		     }
 	    };
 	    
-	    container.attachChild(mSky);
-		mBackgroundHeight = 3200;
+	    mBackgroundBottom.setWidth(800);
+	    mBackgroundMiddle.setWidth(800);
+	    mBackgroundTop.setWidth(800);
+	    
+	    mBackgroundBottom.setPosition(0, -544);
+	    mBackgroundMiddle.setPosition(0, mBackgroundBottom.getY() - 1024);
+	    mBackgroundTop.setPosition(0, mBackgroundMiddle.getY() - 1024);
+	    
+	    container.attachChild(mBackgroundTop);
+	    container.attachChild(mBackgroundMiddle);
+	    container.attachChild(mBackgroundBottom);
+
+		mBackgroundHeight = 3072;
 	}
 	
 	private void createPlatform() {
