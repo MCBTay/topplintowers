@@ -34,6 +34,7 @@ import org.andengine.util.color.Color;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
+import android.opengl.GLES20;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -41,10 +42,12 @@ import topplintowers.Platform;
 import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
+import topplintowers.crates.WoodCrate;
 import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
 import topplintowers.levels.Levels;
 import topplintowers.pools.CloudPool;
+import topplintowers.pools.PoolManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener, IScrollDetectorListener  {
@@ -327,7 +330,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     			ListIterator<Crate> it = currentList.listIterator();
     			if (it.hasNext()) {
     				Crate currentCrate = it.next();
-    				if (currentCrate.getSprite().getY() > camera.getHeight()) {
+    				Sprite currentCrateSprite = currentCrate.getSprite();
+    				if (currentCrateSprite.getY() > camera.getHeight()) {
     					currentList.remove(currentCrate);
     					
     					int crateCount = mHud.availableCrateCounts.get(type);
@@ -335,8 +339,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 							mHud.updateHUDWithReturningBlock(type);
     					}
     					mHud.availableCrateCounts.put(type, crateCount + 1);
-    					PhysicsConnector physicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(currentCrate.getSprite());
+    					PhysicsConnector physicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(currentCrateSprite);
     					mPhysicsWorld.unregisterPhysicsConnector(physicsConnector);
+    					
+    					currentCrateSprite.detachSelf();
+    					currentCrate.getSpritePool().recyclePoolItem(currentCrateSprite);
+    					
     					continue;
     				}
     			}
@@ -369,7 +377,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(final TimerHandler pTimerHandler) {
-				createClouds();
+				//createClouds();
 			}
 		}));
 		
@@ -383,7 +391,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void createBackground() {
-		mBackgroundColor = new Color(0.03529f, 0.031372f, 0.14902f, 1);
+		mBackgroundColor = new Color(0.06667f, 0.07059f, 0.18823f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
 		mBackgroundTop 		= new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, vbom) {
@@ -391,7 +399,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
+		            //pGLState.enableDither();
 		     }
 	    };
 		mBackgroundMiddle	= new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, vbom) {
@@ -399,7 +407,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
+		            //pGLState.enableDither();
 		     }
 	    };
 		mBackgroundBottom 	= new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, vbom) {
@@ -407,7 +415,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
+		            //pGLState.enableDither();
 		     }
 	    };
 	    
