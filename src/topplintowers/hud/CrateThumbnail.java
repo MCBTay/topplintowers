@@ -20,6 +20,13 @@ import topplintowers.MainActivity;
 import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
+import topplintowers.crates.ElectromagnetCrate;
+import topplintowers.crates.MagnetCrate;
+import topplintowers.crates.MetalCrate;
+import topplintowers.crates.StickyCrate;
+import topplintowers.crates.StoneCrate;
+import topplintowers.crates.TransformerCrate;
+import topplintowers.crates.WoodCrate;
 import topplintowers.scenes.GameScene;
 
 
@@ -111,7 +118,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 			crateEdge = parent.getX();
 			spaceToFill = crateEdge - this.parent.getSprite().getX();
 			textWidth = countText.getWidth();
-			posX = -(spaceToFill/2) - (textWidth/2); //this.parent.getSprite().getX() + (spaceToFill - textWidth)/2 + 5;
+			posX = -(spaceToFill/2) - (textWidth/2);
 		}
 		float textPosY = parent.getHeight()/2 - countText.getHeight()/2;
 		countText.setPosition(posX, textPosY);
@@ -167,7 +174,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 		float curX = pSceneTouchEvent.getX() - 5;
         float curY = pSceneTouchEvent.getY() - 5;
-        float offset = instance.mCamera.getCenterY() - instance.mCamera.getHeight()/2;
+        float offset = instance.mCamera.getCenterY() - 240;
         curY += offset;
         float dX = 0, dY = 0, lastX = 0, lastY = 0;
         
@@ -175,9 +182,8 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 			
 			int crateCount = MyHUD.availableCrateCounts.get(type);
 			if (crateCount > 0) {
-				newCrate = new Crate(0, 0, type);
-				GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(newCrate.getSprite(), newCrate.getBox(), true, true));
 				
+				newCrate = createCrate(type);
 				newCrate.setPosition(curX, curY);
 				if (newCrate != null) {
 					int newCrateCount = crateCount - 1;
@@ -207,5 +213,38 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 			newCrate.getBox().setLinearVelocity(dX, dY);
 		}
 		return false;
+	}
+	
+	private Crate createCrate(CrateType type) {
+		Crate crate;
+		
+		switch (type) {
+			case WOOD:
+				crate = new WoodCrate(0, 0);
+				break;
+			case STONE:
+				crate = new StoneCrate(0, 0);
+				break;
+			case METAL:
+				crate = new MetalCrate(0, 0);
+				break;
+			case MAGNET:
+				crate = new MagnetCrate(0, 0);
+				break;
+			case ELECTROMAGNET:
+				crate = new ElectromagnetCrate(0, 0);
+				break;
+			case STICKY:
+				crate = new StickyCrate(0, 0);
+				break;
+			case TRANSFORMER:
+				crate = new TransformerCrate(0, 0);
+				break;
+			default:
+				crate = new WoodCrate(0, 0);
+				break;
+		}
+		
+		return crate;
 	}
 }
