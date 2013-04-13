@@ -3,19 +3,19 @@ package topplintowers.crates;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+
 import topplintowers.pools.PoolManager;
 import topplintowers.scenes.GameScene;
 
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
-public class StickyCrate extends Crate {
+public class WoodCrate extends Crate {
 	// TODO: customize this crate's density, elasticity, and friction
 	private static final FixtureDef FIXTURE_DEF_WOOD = PhysicsFactory.createFixtureDef(1, 0.25f, 0.3f);  
 
-	public StickyCrate(float x, float y) {
-		type = CrateType.STICKY;
-		spritePool = PoolManager.getInstance().mStickyPool;
+	public WoodCrate(float x, float y) {
+		type = CrateType.WOOD;
+		spritePool = PoolManager.getInstance().mWoodPool;
 		sprite = spritePool.obtainPoolItem();
 		
 		box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, FIXTURE_DEF_WOOD);
