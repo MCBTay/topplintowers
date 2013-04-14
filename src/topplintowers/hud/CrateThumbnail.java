@@ -208,30 +208,15 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 		Crate crate;
 		
 		switch (type) {
-			case WOOD:
-				crate = new WoodCrate(0, 0);
-				break;
-			case STONE:
-				crate = new StoneCrate(0, 0);
-				break;
-			case METAL:
-				crate = new MetalCrate(0, 0);
-				break;
-			case MAGNET:
-				crate = new MagnetCrate(0, 0);
-				break;
-			case ELECTROMAGNET:
-				crate = new ElectromagnetCrate(0, 0);
-				break;
-			case STICKY:
-				crate = new StickyCrate(0, 0);
-				break;
-			case TRANSFORMER:
-				crate = new TransformerCrate(0, 0);
-				break;
-			default:
-				crate = new WoodCrate(0, 0);
-				break;
+			case WOOD:			crate = new WoodCrate();			break;
+			case STONE:			crate = new StoneCrate();			break;
+			case METAL:			crate = new MetalCrate();			break;
+			case MAGNET:		crate = new MagnetCrate();			break;
+			case ELECTROMAGNET:	crate = new ElectromagnetCrate(); 	break;
+			case STICKY:		crate = new StickyCrate();			break;
+			case TRANSFORMER: 	crate = new TransformerCrate(); 	break;
+			
+			default: crate = new WoodCrate(); break;
 		}
 		
 		return crate;

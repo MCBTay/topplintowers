@@ -10,6 +10,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
+import topplintowers.pools.PoolManager;
 import topplintowers.scenes.GameScene;
 
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,9 +28,22 @@ public abstract class Crate implements IOnAreaTouchListener {
 	
 	private static float size = 65;
     
-    protected static final FixtureDef FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.25f, 0.3f);
-    
-    public Crate() { /* could probably move some of the duplicate code out of subclasses into this */ }
+    public Crate(CrateType crateType, GenericPool<Sprite> pool, FixtureDef fd) { 
+    	/* could probably move some of the duplicate code out of subclasses into this */ 
+    	type = crateType;
+		spritePool = pool;
+		sprite = spritePool.obtainPoolItem();
+		
+		box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, fd);
+		box.setBullet(true);
+		
+		sprite.setUserData(box);
+		sprite.setVisible(true);
+		
+		GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, box, true, true));
+		GameScene.getScene().getContainer().attachChild(sprite);
+		GameScene.activeCrates.get(type).add(this);		
+    }
     
 	public Body getBox() { return box; }
 	public void setBox(Body box) { this.box = box; }
@@ -54,7 +68,6 @@ public abstract class Crate implements IOnAreaTouchListener {
 	public void dispose() {
 		PhysicsConnector physicsConnector = GameScene.mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(sprite);
 		GameScene.mPhysicsWorld.unregisterPhysicsConnector(physicsConnector);
-		
 		
 		sprite.detachSelf();
 		spritePool.recyclePoolItem(sprite);
