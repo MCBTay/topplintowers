@@ -463,6 +463,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			SceneManager.getInstance().loadPauseScene(engine);
 		}
 	}
+	
+	@Override
+	public void onMenuKeyPressed() { }
 
 	@Override
 	public SceneType getSceneType() { return SceneType.SCENE_GAME; }
@@ -473,5 +476,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		camera.setCenter(400, 240);
 		//remove all game scene objs
 	}
+
 
 }

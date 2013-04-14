@@ -179,4 +179,9 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 		container.resizeContainer(container.getSprite().getHeight());
 		container.repositionCrates();
 	}
+	@Override
+	public void onMenuKeyPressed() {
+		// TODO Auto-generated method stub
+		
+	}
 }

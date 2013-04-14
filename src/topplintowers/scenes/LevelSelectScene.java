@@ -56,8 +56,6 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
     private static float INERTIA_COEF = 5;
     
     private static Color dimmed = new Color(0.2f, 0.2f, 0.2f, 0.2f);
-    
-    private MenuScene mChildMenuScene;
 
     public ArrayList<Sprite> getButtons() { return mButtons; }
     public HUD getHUD() { return mHud; }
@@ -302,5 +300,10 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 			mHud.setVisible(false);
 			SceneManager.getInstance().loadGameScene(engine, newLevel);
 		}
+	}
+	@Override
+	public void onMenuKeyPressed() {
+		// TODO Auto-generated method stub
+		
 	}	
 }

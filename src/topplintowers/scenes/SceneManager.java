@@ -1,7 +1,6 @@
 package topplintowers.scenes;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -10,7 +9,6 @@ import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
 import topplintowers.ResourceManager;
 import topplintowers.levels.Level;
-import topplintowers.levels.Levels;
 
 public class SceneManager
 {

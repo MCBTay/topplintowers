@@ -18,9 +18,6 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
-import org.andengine.util.color.Color;
-
-import topplintowers.MainActivity;
 import topplintowers.ResourceManager;
 import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
@@ -178,6 +175,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
         }));
 	    return true;
 	}
-	
-	
+	@Override
+	public void onMenuKeyPressed() {
+
+	}
 }

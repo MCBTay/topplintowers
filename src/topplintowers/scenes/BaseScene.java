@@ -1,7 +1,6 @@
 package topplintowers.scenes;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -10,23 +9,13 @@ import topplintowers.MainActivity;
 import topplintowers.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
-import android.app.Activity;
-
 public abstract class BaseScene extends Scene
-{
-    //---------------------------------------------
-    // VARIABLES
-    //---------------------------------------------
-    
+{    
     protected Engine engine;
     protected MainActivity activity;
     protected ResourceManager resourceManager;
     protected VertexBufferObjectManager vbom;
     protected SmoothCamera camera;
-    
-    //---------------------------------------------
-    // CONSTRUCTOR
-    //---------------------------------------------
     
     public BaseScene()
     {
@@ -38,12 +27,9 @@ public abstract class BaseScene extends Scene
         createScene();
     }
     
-    //---------------------------------------------
-    // ABSTRACTION
-    //---------------------------------------------
-    
     public abstract void createScene();
-    public abstract void onBackKeyPressed();   
+    public abstract void onBackKeyPressed();
+    public abstract void onMenuKeyPressed();
     public abstract SceneType getSceneType();  
     public abstract void disposeScene();
 }

@@ -1,7 +1,6 @@
 package topplintowers.scenes;
 
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.texture.region.TextureRegion;
@@ -12,7 +11,6 @@ import topplintowers.scenes.SceneManager.SceneType;
 public class LoadingScene extends BaseScene {
 
 	private Text mText;
-	private Background mFlatBlueBackground;
 	private TextureRegion mTexture;
 	private Sprite mSprite;
 	
@@ -55,6 +53,12 @@ public class LoadingScene extends BaseScene {
 	public void disposeScene() {
 		mText.detachSelf();
 		mText.dispose();
+	}
+
+	@Override
+	public void onMenuKeyPressed() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

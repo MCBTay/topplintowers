@@ -1,6 +1,5 @@
 package topplintowers;
 
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -11,23 +10,15 @@ import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.ui.activity.BaseGameActivity;
-import org.andengine.ui.activity.SimpleBaseGameActivity;
 import topplintowers.levels.LevelMgr;
 import topplintowers.scenes.BaseScene;
 import topplintowers.scenes.GameScene;
-import topplintowers.scenes.LevelSelectScene;
-import topplintowers.scenes.MainMenuScene;
 import topplintowers.scenes.PauseMenuScene;
-import topplintowers.scenes.QuitPopupScene;
 import topplintowers.scenes.SceneCommon;
 import topplintowers.scenes.SceneManager;
-import topplintowers.scenes.SplashScene;
-import android.hardware.SensorManager;
 import android.view.KeyEvent;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 
 public class MainActivity extends BaseGameActivity {
@@ -61,61 +52,19 @@ public class MainActivity extends BaseGameActivity {
 
 	@Override
 	public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
-//		if (pKeyCode == KeyEvent.KEYCODE_MENU && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-//			if (mCurrentScene instanceof GameScene) {
-//				if (mCurrentScene.hasChildScene()) onResumeGame();
-//				else onPauseGame();
-//			}
-//			return true;
-//		} else if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-//			if (mCurrentScene instanceof MainMenuScene) {
-//				final MainMenuScene mms = (MainMenuScene) mCurrentScene;
-//				if (mCurrentScene.hasChildScene()) {
-//					
-//					if (mCurrentScene.getChildScene() instanceof LevelSelectScene) {
-//						LevelSelectScene lss = (LevelSelectScene) mCurrentScene.getChildScene();
-//						SceneCommon.fadeOut(lss.mRectangle, lss.mButtons);
-//						lss.mHud.setVisible(false);
-//						instance.getEngine().registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback()
-//				        {                      
-//				            @Override
-//				            public void onTimePassed(final TimerHandler pTimerHandler)
-//				            {     	
-//				            	mCurrentScene.clearChildScene();
-//				            	SceneCommon.reenableButton(mms.getLevelsButton());
-//				            }
-//				        }));	
-//					} else if (mCurrentScene.getChildScene() instanceof QuitPopup) {
-//						QuitPopup qp = (QuitPopup) mCurrentScene.getChildScene();
-//						SceneCommon.fadeOut(qp.mRectangle, qp.mButtons, qp.mText);
-//						instance.getEngine().registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback()
-//				        {                      
-//				            @Override
-//				            public void onTimePassed(final TimerHandler pTimerHandler)
-//				            {     	
-//				            	mCurrentScene.clearChildScene();
-//				            	SceneCommon.reenableButton(mms.getQuitButton());
-//				            }
-//				        }));
-//					}
-//					
-//				} else {
-//					mCurrentScene.setChildScene(new QuitPopup());
-//				}
-//			} else if (mCurrentScene instanceof GameScene) {
-//				if (mCurrentScene.hasChildScene())
-//	            	onResumeGame();
-//				else
-//					onPauseGame();
-//			}
-//			return true;
-//		} else {
-//			return super.onKeyDown(pKeyCode, pEvent);
-//		}
-		if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN)
-	    {
-	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
-	    }
+		if (pEvent.getAction() == KeyEvent.ACTION_DOWN)
+		{
+			switch (pKeyCode) {
+				case KeyEvent.KEYCODE_BACK:
+						SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+						break;
+					case KeyEvent.KEYCODE_MENU:
+						SceneManager.getInstance().getCurrentScene().onMenuKeyPressed();
+						break;
+					default:
+						break;
+				}
+		}
 	    return false; 
 	}
 

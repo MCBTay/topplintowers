@@ -16,7 +16,6 @@ import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 
-import topplintowers.MainActivity;
 import topplintowers.scenes.SceneManager.SceneType;
 
 import com.topplintowers.R;
@@ -49,6 +48,9 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 
 	@Override
 	public void onBackKeyPressed() { returnToMainMenu(); }
+	
+	@Override
+	public void onMenuKeyPressed() { return; }
 
 	@Override
 	public SceneType getSceneType() { return SceneType.SCENE_QUIT_POPUP; }
@@ -130,5 +132,4 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
             }
         }));
 	}
-
 }
