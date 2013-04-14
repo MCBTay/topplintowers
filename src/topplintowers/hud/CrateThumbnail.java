@@ -8,7 +8,6 @@ import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
-import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.ClickDetector.IClickDetectorListener;
@@ -18,17 +17,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import topplintowers.MainActivity;
 import topplintowers.ResourceManager;
-import topplintowers.crates.Crate;
-import topplintowers.crates.CrateType;
-import topplintowers.crates.ElectromagnetCrate;
-import topplintowers.crates.MagnetCrate;
-import topplintowers.crates.MetalCrate;
-import topplintowers.crates.StickyCrate;
-import topplintowers.crates.StoneCrate;
-import topplintowers.crates.TransformerCrate;
-import topplintowers.crates.WoodCrate;
-import topplintowers.scenes.GameScene;
-
+import topplintowers.crates.*;
 
 public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorListener, IOnAreaTouchListener {
 	private static MainActivity instance = MainActivity.getSharedInstance();
@@ -105,7 +94,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 	}
 	
 	private void createCounter(Sprite parent, String side, String crateCount) {
-		float posX = 0, posY = 0;
+		float posX = 0;
 		float crateEdge = 0, spaceToFill = 0, textWidth = 0;
 		
 		countText = new Text(0, 0, ResourceManager.mFontLevelSelect, crateCount, instance.getVertexBufferObjectManager());

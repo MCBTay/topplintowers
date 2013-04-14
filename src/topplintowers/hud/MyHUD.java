@@ -9,16 +9,12 @@ import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
 
-import topplintowers.MainActivity;
-import topplintowers.Platform;
 import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
 import topplintowers.levels.Level;
 import topplintowers.scenes.GameScene;
 
 public class MyHUD extends HUD implements IOnAreaTouchListener {
-	private static MainActivity instance = MainActivity.getSharedInstance();
-	
     public static HUD mHud;
     private Sprite mScrollBar;
     private CrateContainer mLeftContainer;
@@ -49,8 +45,6 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
     public Sprite getScrollBar() { return mScrollBar; }
 	
     private void createScrollBar(float backgroundHeight) {
-    	float scrollBarHeight = (480/backgroundHeight) * 480;
-		
     	mScrollBar = new Sprite(0, 0, ResourceManager.mScrollBarTextureRegion, mGameScene.getVBOM());
     	
     	Sprite top = new Sprite(0, 0, ResourceManager.mScrollBarEndTextureRegion, mGameScene.getVBOM());
