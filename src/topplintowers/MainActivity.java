@@ -56,14 +56,14 @@ public class MainActivity extends BaseGameActivity {
 		{
 			switch (pKeyCode) {
 				case KeyEvent.KEYCODE_BACK:
-						SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
-						break;
-					case KeyEvent.KEYCODE_MENU:
-						SceneManager.getInstance().getCurrentScene().onMenuKeyPressed();
-						break;
-					default:
-						break;
-				}
+					SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+					break;
+				case KeyEvent.KEYCODE_MENU:
+					SceneManager.getInstance().getCurrentScene().onMenuKeyPressed();
+					break;
+				default:
+					break;
+			}
 		}
 	    return false; 
 	}
