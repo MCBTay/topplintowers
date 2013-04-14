@@ -25,7 +25,7 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
     
     public static float mCameraOffset;
     
-    public static LinkedHashMap<CrateType, Integer> availableCrateCounts = new LinkedHashMap<CrateType, Integer>();
+    public static LinkedHashMap<CrateType, Integer> mAvailableCrateCounts = new LinkedHashMap<CrateType, Integer>();
 	
 	public MyHUD(GameScene gameScene, boolean isInFreeMode, Level level, float backgroundHeight) {
 		super();
@@ -68,10 +68,10 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
 		mRightContainer = new CrateContainer(this, "right", isInFreeMode);
 		mRightContainer.getSprite().setVisible(false);
 		
-		Iterator<CrateType> it = availableCrateCounts.keySet().iterator();
+		Iterator<CrateType> it = mAvailableCrateCounts.keySet().iterator();
 		while (it.hasNext()) {
 			CrateType type = it.next();
-			int count = availableCrateCounts.get(type);
+			int count = mAvailableCrateCounts.get(type);
 			if (count > 0) {
 				if (totalThumbs < 4)
 					new CrateThumbnail(this, mLeftContainer, type);
@@ -98,7 +98,7 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
 	private void updateSingleContainerCounts(CrateContainer container) {
 		for (CrateThumbnail currentThumb : container.thumbs) {
 			CrateType type = currentThumb.getType();
-			String newCount = availableCrateCounts.get(type).toString();
+			String newCount = mAvailableCrateCounts.get(type).toString();
 			if (currentThumb.getCounterText() != null) {
 				currentThumb.getCounterText().setText(newCount);
 			}
@@ -134,9 +134,9 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
 	}
 	
 	private void initializeAvailableCrateCounts(Level level) {
-		availableCrateCounts = new LinkedHashMap<CrateType, Integer>();
+		mAvailableCrateCounts = new LinkedHashMap<CrateType, Integer>();
 		for (CrateType type : CrateType.values()) {
-			availableCrateCounts.put(type, level.getCounts().get(type));
+			mAvailableCrateCounts.put(type, level.getCounts().get(type));
 		}
 	}
 

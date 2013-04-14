@@ -55,7 +55,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 		parent.thumbs.add(this);
 		setThumbPosition(parent, sprite);
 		
-		Integer count = MyHUD.availableCrateCounts.get(type);
+		Integer count = MyHUD.mAvailableCrateCounts.get(type);
 		if (count < 100)
 			createCounter(sprite, side, count.toString());
 	
@@ -169,7 +169,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
         
 		if (pSceneTouchEvent.isActionDown()) {
 			
-			int crateCount = MyHUD.availableCrateCounts.get(type);
+			int crateCount = MyHUD.mAvailableCrateCounts.get(type);
 			if (crateCount > 0) {
 				
 				newCrate = createCrate(type);
@@ -181,7 +181,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 						parent.resizeContainer(parent.getSprite().getHeight());
 						parent.repositionCrates();
 					}
-					MyHUD.availableCrateCounts.put(type, newCrateCount);
+					MyHUD.mAvailableCrateCounts.put(type, newCrateCount);
 				}
 			}
 			
