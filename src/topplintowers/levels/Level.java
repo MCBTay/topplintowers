@@ -2,22 +2,10 @@ package topplintowers.levels;
 
 import java.util.LinkedHashMap;
 
-import org.andengine.entity.primitive.Line;
-import org.andengine.entity.text.Text;
-import org.andengine.util.color.Color;
-
-import topplintowers.MainActivity;
-import topplintowers.ResourceManager;
-import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.scenes.GameScene;
 
-import com.topplintowers.R;
-
-
 public class Level {
-	private static MainActivity instance = MainActivity.getSharedInstance();
-	
 	private float goalHeight;
 	private LinkedHashMap<CrateType, Integer> crateCounts;
 	private Levels level;
