@@ -5,8 +5,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.ListIterator;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import org.andengine.engine.camera.Camera;
@@ -15,41 +13,28 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.IEntityModifier;
-import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.modifier.MoveYModifier;
-import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
-import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
-import org.andengine.opengl.texture.region.TextureRegion;
-import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.color.Color;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
-import android.opengl.GLES20;
-
 import com.badlogic.gdx.math.Vector2;
 
 import topplintowers.Platform;
-import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
-import topplintowers.crates.WoodCrate;
 import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
 import topplintowers.levels.Levels;
-import topplintowers.pools.CloudPool;
-import topplintowers.pools.PoolManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener, IScrollDetectorListener  {
