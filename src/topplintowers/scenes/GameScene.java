@@ -61,17 +61,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		
 	public static Hashtable<CrateType, ArrayList<Crate>> activeCrates = new Hashtable<CrateType, ArrayList<Crate>>();
     
-    private static Sprite mBackgroundTop, mBackgroundMiddle, mBackgroundBottom;
-    private static float mBackgroundHeight;
-    private Color mBackgroundColor;
-    
     public static MyHUD mHud;
+    private GameSceneBackground mBackground;
     
     private Level level;
-    
-    //private boolean isInFreeMode = false;
-    private ArrayList<Sprite> twinklingStars;
-    
+
     // Scrolling
     private SurfaceScrollDetector mScrollDetector;
 	private float mMinY = 0;
@@ -82,7 +76,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     private static float INERTIA_COEF = 5;
     private MoveYModifier inertiaMove;
     
-    private ArrayList<Sprite> mActiveCloudList;
 
 	public Camera getCamera() { return camera; }
     public PhysicsWorld getPhysicsWorld() { return mPhysicsWorld; }
@@ -99,80 +92,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		
 		initializeActiveCrateList();	
 		createHUD();
-	}
-	
-	private void twinkleStars() {
-		for (Sprite current : this.twinklingStars) {
-			AlphaModifier am_1, am_2;
-			
-			float oldAlpha = current.getAlpha();
-			float newAlpha = 0;
-			
-			if (oldAlpha >= 0.5f) {
-				newAlpha = oldAlpha - 0.5f;
-			} else {
-				newAlpha = oldAlpha + 0.5f;
-			}
-			
-			am_1 = new AlphaModifier(1.5f, oldAlpha, newAlpha);
-			am_2 = new AlphaModifier(1.5f, newAlpha, oldAlpha);
-			
-			am_1.setAutoUnregisterWhenFinished(true);
-			am_2.setAutoUnregisterWhenFinished(true);
-			
-			SequenceEntityModifier sem = new SequenceEntityModifier(am_1, am_2);
-			sem.setAutoUnregisterWhenFinished(true);
-			current.clearEntityModifiers();
-			current.registerEntityModifier(sem);
-			
-		}
-	}
-	
-	private void createClouds() {	
-		Sprite newCloud = PoolManager.getInstance().mCloudPool.obtainPoolItem();
-		
-		newCloud.setCullingEnabled(true);
-		container.attachChild(newCloud);
-		
-		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -700) - 600;
-		newCloud.setPosition(startPosX, startPosY);
-		
-		newCloud.setAlpha((float)Math.random());
-
-		float randomSpeed = ((float)Math.random() * 20) + 40;
-		MoveXModifier moveToRight = new MoveXModifier(randomSpeed, newCloud.getX(), camera.getWidth());
-		moveToRight.setAutoUnregisterWhenFinished(true);
-		newCloud.registerEntityModifier(moveToRight);
-		
-		mActiveCloudList.add(newCloud);
-	}
-	
-	private void createStars() {
-		twinklingStars = new ArrayList<Sprite>();
-		for (int i = 0; i < 300; i++) {
-			int randomStar = (int)((float)Math.random() * 3);
-			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
-			Sprite newStar = new Sprite(0, 0, starTexture, vbom);
-			newStar.setCullingEnabled(true);
-			container.attachChild(newStar);
-			
-			newStar.setScaleCenter(0, 0);
-			
-			float randomScale = ((float)Math.random() * 0.3f) + 0.2f;
-			newStar.setScale(randomScale);
-			
-			float starPosX = ((float)Math.random() * camera.getWidth());
-			float starPosY = ((float)Math.random() * -2500) - 2000;
-			newStar.setPosition(starPosX, starPosY);
-			
-			float randomAlpha = (float)Math.random();			
-			newStar.setAlpha(randomAlpha);
-			
-			if (i % 5 == 0) {
-				twinklingStars.add(newStar);
-			}
-		}
 	}
 	
 	public float getHighestCrate() {
@@ -244,10 +163,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		float screenBottom = camera.getCenterY() + camera.getHeight()/2;
 		float screenTop = camera.getCenterY() - camera.getHeight()/2;
 		if (screenBottom - pDistanceY < camera.getHeight() &&
-			screenTop - pDistanceY > camera.getHeight() - mBackgroundHeight)
+			screenTop - pDistanceY > camera.getHeight() - mBackground.getHeight())
 		{	
 			camera.offsetCenter(0, -pDistanceY);
-			mHud.updateWithScroll(pDistanceY, mBackgroundHeight);
+			mHud.updateWithScroll(pDistanceY, mBackground.getHeight());
 //			mHud.updateScrollBar(pDistanceY, backgroundHeight);
 		}
 		
@@ -296,29 +215,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	public void cleaner() {
 	    synchronized (this) {
-	    	cleanClouds();
+	    	mBackground.cleanClouds();
 	    	cleanCrates();
 	    }
 	}
 	
-	private void cleanClouds() {
-		cleanClouds(false);
-	}
-	
-	private void cleanClouds(boolean dispose) {
-    	Iterator<Sprite> it = mActiveCloudList.iterator();
-    	
-    	while (it.hasNext()) {
-    		Sprite currentCloud = it.next();
-    		
-    		if (dispose || currentCloud.getX() >= 800) {
-    			container.detachChild(currentCloud);
-    			PoolManager.getInstance().mCloudPool.recyclePoolItem(currentCloud);
-    			mActiveCloudList.remove(currentCloud);
-    		}
-    	}
-	}
-
 	private void cleanCrates() {
 		cleanCrates(false);
 	}
@@ -355,13 +256,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	public void createScene() {
 		container = new Entity();
 		createPhysics();
-		createBackground();
+		mBackground = new GameSceneBackground(this);
 		createPlatform();
 		
     	setOnSceneTouchListener(this);
 		this.mScrollDetector = new SurfaceScrollDetector(this);
-		
-		createStars();
 		
 		registerUpdateHandler(new TimerHandler(1f / 10.0f, true, new ITimerCallback() {
 	          @Override
@@ -370,66 +269,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          	mHud.updateCounts();
 	          }
 	  	}));
-		
-		mActiveCloudList = new ArrayList<Sprite>();
-		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
-			@Override
-			public void onTimePassed(final TimerHandler pTimerHandler) {
-				//createClouds();
-			}
-		}));
-		
-		registerUpdateHandler(new TimerHandler(3f, true, new ITimerCallback() {
-			@Override
-			public void onTimePassed(final TimerHandler pTimerHandler) {
-				twinkleStars();
-			}
-		}));
-		attachChild(container);
-	}
 	
-	private void createBackground() {
-		mBackgroundColor = new Color(0.06667f, 0.07059f, 0.18823f, 1);
-		setBackground(new Background(mBackgroundColor));
-		
-		mBackgroundTop = new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-		mBackgroundMiddle = new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-		mBackgroundBottom = new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-	    
-	    mBackgroundBottom.setWidth(800);
-	    mBackgroundMiddle.setWidth(800);
-	    mBackgroundTop.setWidth(800);
-	    
-	    mBackgroundBottom.setPosition(0, -544);
-	    mBackgroundMiddle.setPosition(0, mBackgroundBottom.getY() - 1024);
-	    mBackgroundTop.setPosition(0, mBackgroundMiddle.getY() - 1024);
-	    
-	    container.attachChild(mBackgroundTop);
-	    container.attachChild(mBackgroundMiddle);
-	    container.attachChild(mBackgroundBottom);
-
-		mBackgroundHeight = 3072;
+		attachChild(container);
 	}
 	
 	private void createPlatform() {
@@ -439,7 +280,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	private void createHUD() {
 		boolean freeMode = this.level.getLevelType() == Levels.FREEMODE;
-		mHud = new MyHUD(this, freeMode, this.level, mBackgroundHeight);
+		mHud = new MyHUD(this, freeMode, this.level, mBackground.getHeight());
 		camera.setHUD(mHud);
 	}
 	
@@ -469,9 +310,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		camera.setHUD(null);
 		camera.setCenter(400, 240);
 		
-		cleanClouds(true);
+		mBackground.cleanClouds(true);
+		mBackground.cleanStars();
 		cleanCrates(true);
-		//remove all game scene objs
 	}
 
 
