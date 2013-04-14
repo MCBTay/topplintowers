@@ -106,7 +106,8 @@ public class GameSceneBackground {
     		if (dispose || currentCloud.getX() >= 800) {
     			scene.getContainer().detachChild(currentCloud);
     			PoolManager.getInstance().mCloudPool.recyclePoolItem(currentCloud);
-    			mActiveCloudList.remove(currentCloud);
+    			//mActiveCloudList.remove(currentCloud);
+    			it.remove();
     		}
     	}
 	}
