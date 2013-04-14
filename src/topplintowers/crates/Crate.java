@@ -35,26 +35,8 @@ public class Crate implements IOnAreaTouchListener {
     
     protected static final FixtureDef FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.25f, 0.3f);
     
-    public Crate() { }
+    public Crate() { /* could probably move some of the duplicate code out of subclasses into this */ }
     
-	public Crate(float x, float y, CrateType type) {  
-		this.type = type;
-		
-		this.texture = CrateType.getTextureRegion(this.type);
-		
-		this.sprite = new Sprite(x, y, this.texture, instance.getVertexBufferObjectManager());
-		
-		this.box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, this.sprite, BodyType.DynamicBody, FIXTURE_DEF);
-		this.sprite.setUserData(box);
-		this.sprite.setVisible(true);
-		this.box.setBullet(true);
-
-		GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(this.sprite, this.box, true, true));
-	
-	    GameScene.getScene().getContainer().attachChild(this.sprite);
-		GameScene.activeCrates.get(this.type).add(this);
-	}
-	
 	public Body getBox() { return box; }
 	public void setBox(Body box) { this.box = box; }
 	
