@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
@@ -32,49 +34,46 @@ public class GameSceneBackground {
 		mBackgroundColor = new Color(0.06667f, 0.07059f, 0.18823f, 1);
 		scene.setBackground(new Background(mBackgroundColor));
 		
-		mBackgroundTop = new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, scene.vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-		mBackgroundMiddle = new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, scene.vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-		mBackgroundBottom = new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, scene.vbom) {
-	    	@Override
-		     protected void preDraw(GLState pGLState, Camera pCamera)
-		     {
-		            super.preDraw(pGLState, pCamera);
-		            pGLState.enableDither();
-		     }
-	    };
-	    
-	    mBackgroundBottom.setWidth(800);
-	    mBackgroundMiddle.setWidth(800);
-	    mBackgroundTop.setWidth(800);
-	    
-	    mBackgroundBottom.setPosition(0, -544);
-	    mBackgroundMiddle.setPosition(0, mBackgroundBottom.getY() - 1024);
-	    mBackgroundTop.setPosition(0, mBackgroundMiddle.getY() - 1024);
-	    
-	    scene.getContainer().attachChild(mBackgroundTop);
-	    scene.getContainer().attachChild(mBackgroundMiddle);
-	    scene.getContainer().attachChild(mBackgroundBottom);
+		mBackgroundBottom 	= createBackgroundPortion(ResourceManager.mGameBackgroundBottomTextureRegion, -544);
+		mBackgroundMiddle 	= createBackgroundPortion(ResourceManager.mGameBackgroundMiddleTextureRegion, mBackgroundBottom.getY() - 1024);
+		mBackgroundTop 		= createBackgroundPortion(ResourceManager.mGameBackgroundTopTextureRegion, mBackgroundMiddle.getY() - 1024);
 
 		mBackgroundHeight = 3072;
+		
+		createClouds();
+		createStars();
+    }
+    
+    private Sprite createBackgroundPortion(TextureRegion tr, float posY) {
+		Sprite backgroundSprite = new Sprite(0, 0, tr, scene.vbom) {
+	    	@Override
+		     protected void preDraw(GLState pGLState, Camera pCamera)
+		     {
+		            super.preDraw(pGLState, pCamera);
+		            pGLState.enableDither();
+		     }
+	    };
+	    
+	    backgroundSprite.setWidth(800);
+	    backgroundSprite.setPosition(0, posY);
+	    scene.getContainer().attachChild(backgroundSprite);
+	    
+	    return backgroundSprite;
     }
     
     public int getHeight() { return mBackgroundHeight; }
 	
 	private void createClouds() {	
+		mActiveCloudList = new ArrayList<Sprite>();
+		scene.registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+				spawnCloud();
+			}
+		}));
+	}
+	
+	private void spawnCloud() {
 		Sprite newCloud = PoolManager.getInstance().mCloudPool.obtainPoolItem();
 		
 		newCloud.setCullingEnabled(true);
@@ -137,6 +136,13 @@ public class GameSceneBackground {
 				twinklingStars.add(newStar);
 			}
 		}
+		
+		scene.registerUpdateHandler(new TimerHandler(3f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+				twinkleStars();
+			}
+		}));
 	}
 	
 	public void cleanStars() {
