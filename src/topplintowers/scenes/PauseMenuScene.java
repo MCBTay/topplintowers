@@ -153,7 +153,7 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 			for (Crate currentCrate : currentList) {
 				gameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
 				currentCrate.getSprite().detachSelf();
-				MyHUD.availableCrateCounts.put(type, MyHUD.availableCrateCounts.get(type) + 1);
+				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
 			}
 			currentList.clear();
 		}

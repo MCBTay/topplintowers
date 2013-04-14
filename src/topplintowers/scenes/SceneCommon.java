@@ -1,7 +1,7 @@
 package topplintowers.scenes;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.AlphaModifier;
@@ -172,17 +172,20 @@ public class SceneCommon {
 	}
 	
 	public static void deleteExistingCrates() {
-		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
-		while (crateTypes.hasMoreElements()) {
-			CrateType type = (CrateType) crateTypes.nextElement();
-			ArrayList<Crate> currentList = GameScene.activeCrates.get(type);
-			for (Crate currentCrate : currentList) {
-				instance.mPhysicsWorld.destroyBody(currentCrate.getBox());
-				currentCrate.getSprite().detachSelf();
-				MyHUD.availableCrateCounts.put(type, MyHUD.availableCrateCounts.get(type) + 1);
+		Iterator<CrateType> it = GameScene.activeCrates.keySet().iterator();
+		while (it.hasNext()) {
+			CrateType type = it.next();
+			
+			Iterator<Crate> crateIt = GameScene.activeCrates.get(type).iterator();
+			while (crateIt.hasNext()) {
+				Crate currentCrate = crateIt.next();
+				currentCrate.dispose();
+				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
+				GameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
+				GameScene.activeCrates.get(type).remove(currentCrate);
 			}
-			currentList.clear();
 		}
+
 		instance.mPhysicsWorld.clearPhysicsConnectors();
 	}	
 }

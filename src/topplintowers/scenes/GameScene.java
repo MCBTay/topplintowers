@@ -3,6 +3,8 @@ package topplintowers.scenes;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.ListIterator;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -67,7 +69,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     
     private Level level;
     
-    private boolean isInFreeMode = false;
+    //private boolean isInFreeMode = false;
     private ArrayList<Sprite> twinklingStars;
     
     // Scrolling
@@ -80,7 +82,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     private static float INERTIA_COEF = 5;
     private MoveYModifier inertiaMove;
     
-    private CloudPool mCloudPool;
     private ArrayList<Sprite> mActiveCloudList;
 
 	public Camera getCamera() { return camera; }
@@ -92,16 +93,11 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public GameScene(Level level) {
 		this.level = level;
 		
-		if (level.getLevelType() == Levels.FREEMODE) {
-			isInFreeMode = true;
+		if (level.getLevelType() != Levels.FREEMODE) {
+			level.setGoal(this);
 		}
 		
-		if (!isInFreeMode) {
-			this.level.setGoal(this);
-		}
-		
-		initializeActiveCrateList();
-		
+		initializeActiveCrateList();	
 		createHUD();
 	}
 	
@@ -133,17 +129,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void createClouds() {	
-		int randomCloud = (int)((float)Math.random() * 6);	
-		TextureRegion cloudTexture = ResourceManager.mCloudTextureRegions.get(randomCloud);
-		
-		//TODO: change this to use a sprite pool!
-		Sprite newCloud = mCloudPool.obtainPoolItem();
+		Sprite newCloud = PoolManager.getInstance().mCloudPool.obtainPoolItem();
 		
 		newCloud.setCullingEnabled(true);
 		container.attachChild(newCloud);
+		
 		float startPosX = -newCloud.getWidth();
 		float startPosY = ((float)Math.random() * -700) - 600;
 		newCloud.setPosition(startPosX, startPosY);
+		
 		newCloud.setAlpha((float)Math.random());
 
 		float randomSpeed = ((float)Math.random() * 20) + 40;
@@ -155,7 +149,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void createStars() {
-		this.twinklingStars = new ArrayList<Sprite>();
+		twinklingStars = new ArrayList<Sprite>();
 		for (int i = 0; i < 300; i++) {
 			int randomStar = (int)((float)Math.random() * 3);
 			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
@@ -176,7 +170,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			newStar.setAlpha(randomAlpha);
 			
 			if (i % 5 == 0) {
-				this.twinklingStars.add(newStar);
+				twinklingStars.add(newStar);
 			}
 		}
 	}
@@ -190,7 +184,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			int size = currentList.size();
 			for (int j = 0; j < size; j++) {
 				Crate currentCrate = currentList.get(j);
-				if (currentCrate.getSprite().getY() > highest) { // && currentCrate.getBox().getLinearVelocity().y == 0) { 
+				if (currentCrate.getSprite().getY() > highest) {  
 					highest = currentCrate.getSprite().getY(); 
 				}
 			}
@@ -199,7 +193,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void initializeActiveCrateList() {
-		//SceneCommon.deleteExistingCrates();
 		for (CrateType type : CrateType.values()) {
 			activeCrates.put(type, new ArrayList<Crate>());
 		}
@@ -215,7 +208,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			for (int j = 0; j < size; j++) {
 				Crate currentCrate = currentList.get(j);
 				if (currentCrate.getSprite().contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
-					//currentCrate.onSceneTouchEvent(pScene, pSceneTouchEvent);
 					currentCrate.onAreaTouched(pSceneTouchEvent, currentCrate.getSprite(), pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
 					return false;
 				}
@@ -304,54 +296,61 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	public void cleaner() {
 	    synchronized (this) {
-	    	ArrayList<Sprite> removeList = new ArrayList<Sprite>();
-	    	
-    		int cloudCount = mActiveCloudList.size();
-    		for (int i = 0; i < cloudCount; i++) {
-    			Sprite currentCloud = mActiveCloudList.get(i);
-    			if (currentCloud.getX() >= 800) {
-    				container.detachChild(currentCloud);
-    				removeList.add(currentCloud);
-    				mCloudPool.recyclePoolItem(currentCloud);
-    			}
-    		}	
-    		
-    		int removeCount = removeList.size();
-    		for (int i = 0; i < removeCount; i++) {
-    			Sprite currentCloud = removeList.get(i);
-				mActiveCloudList.remove(currentCloud);
-    		}
-	    	
-	    	Enumeration<CrateType> crateTypes = activeCrates.keys();
-    		while (crateTypes.hasMoreElements()) {
-    			CrateType type = (CrateType) crateTypes.nextElement();
-    			
-    			ArrayList<Crate> currentList = activeCrates.get(type);
-    			ListIterator<Crate> it = currentList.listIterator();
-    			if (it.hasNext()) {
-    				Crate currentCrate = it.next();
-    				Sprite currentCrateSprite = currentCrate.getSprite();
-    				if (currentCrateSprite.getY() > camera.getHeight()) {
-    					currentList.remove(currentCrate);
-    					
-    					int crateCount = mHud.availableCrateCounts.get(type);
-    					if (crateCount == 0) {
-							mHud.updateHUDWithReturningBlock(type);
-    					}
-    					mHud.availableCrateCounts.put(type, crateCount + 1);
-    					PhysicsConnector physicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(currentCrateSprite);
-    					mPhysicsWorld.unregisterPhysicsConnector(physicsConnector);
-    					
-    					currentCrateSprite.detachSelf();
-    					currentCrate.getSpritePool().recyclePoolItem(currentCrateSprite);
-    					
-    					continue;
-    				}
-    			}
-    		}
+	    	cleanClouds();
+	    	cleanCrates();
 	    }
 	}
+	
+	private void cleanClouds() {
+		cleanClouds(false);
+	}
+	
+	private void cleanClouds(boolean dispose) {
+    	Iterator<Sprite> it = mActiveCloudList.iterator();
+    	
+    	while (it.hasNext()) {
+    		Sprite currentCloud = it.next();
+    		
+    		if (dispose || currentCloud.getX() >= 800) {
+    			container.detachChild(currentCloud);
+    			PoolManager.getInstance().mCloudPool.recyclePoolItem(currentCloud);
+    			mActiveCloudList.remove(currentCloud);
+    		}
+    	}
+	}
 
+	private void cleanCrates() {
+		cleanCrates(false);
+	}
+	
+	private void cleanCrates(boolean dispose) {
+		LinkedHashMap<CrateType, Integer> crateCounts = MyHUD.mAvailableCrateCounts;
+		
+		Iterator<CrateType> it = crateCounts.keySet().iterator();
+		
+		while (it.hasNext()) {
+			CrateType type = it.next();
+			
+			Iterator<Crate> crateIt = activeCrates.get(type).iterator();
+			while (crateIt.hasNext()) {
+				Crate currentCrate = crateIt.next();
+				Sprite currentSprite = currentCrate.getSprite();
+				
+				if (dispose || currentSprite.getY() > camera.getHeight()) {
+					activeCrates.get(type).remove(currentCrate);
+					
+					int crateCount = crateCounts.get(type);
+					if (crateCount == 0) {
+						mHud.updateHUDWithReturningBlock(type);
+					}
+					
+					crateCounts.put(type, crateCount + 1);
+					currentCrate.dispose();
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void createScene() {
 		container = new Entity();
@@ -372,7 +371,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          }
 	  	}));
 		
-		mCloudPool = new CloudPool();
 		mActiveCloudList = new ArrayList<Sprite>();
 		registerUpdateHandler(new TimerHandler(1.5f, true, new ITimerCallback() {
 			@Override
@@ -394,28 +392,28 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mBackgroundColor = new Color(0.06667f, 0.07059f, 0.18823f, 1);
 		setBackground(new Background(mBackgroundColor));
 		
-		mBackgroundTop 		= new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, vbom) {
+		mBackgroundTop = new Sprite(0, 0, ResourceManager.mGameBackgroundTopTextureRegion, vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            //pGLState.enableDither();
+		            pGLState.enableDither();
 		     }
 	    };
-		mBackgroundMiddle	= new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, vbom) {
+		mBackgroundMiddle = new Sprite(0, 0, ResourceManager.mGameBackgroundMiddleTextureRegion, vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            //pGLState.enableDither();
+		            pGLState.enableDither();
 		     }
 	    };
-		mBackgroundBottom 	= new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, vbom) {
+		mBackgroundBottom = new Sprite(0, 0, ResourceManager.mGameBackgroundBottomTextureRegion, vbom) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
 		            super.preDraw(pGLState, pCamera);
-		            //pGLState.enableDither();
+		            pGLState.enableDither();
 		     }
 	    };
 	    
@@ -452,13 +450,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 
 	@Override
 	public void onBackKeyPressed() {
-		Scene scene = SceneManager.getInstance().getCurrentScene();
-		if (scene.hasChildScene()) {
-			Scene childScene = scene.getChildScene();
-			if (childScene instanceof PauseMenuScene) {
-				PauseMenuScene pms = (PauseMenuScene) childScene;
-				pms.onBackKeyPressed();
-			}
+		if (hasChildScene()) {
+			BaseScene childScene = (BaseScene) getChildScene();
+			childScene.onBackKeyPressed();
 		} else {
 			SceneManager.getInstance().loadPauseScene(engine);
 		}
@@ -474,6 +468,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	public void disposeScene() {
 		camera.setHUD(null);
 		camera.setCenter(400, 240);
+		
+		cleanClouds(true);
+		cleanCrates(true);
 		//remove all game scene objs
 	}
 
