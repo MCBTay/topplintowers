@@ -3,18 +3,21 @@ package topplintowers.crates;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
+import topplintowers.scenes.GameScene;
+
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 
-public class Crate implements IOnAreaTouchListener {
+public abstract class Crate implements IOnAreaTouchListener {
 	protected CrateType type;
 	protected Sprite sprite;
 	protected Body box;
@@ -22,7 +25,6 @@ public class Crate implements IOnAreaTouchListener {
 	protected float weight;
 	protected GenericPool<Sprite> spritePool;
 	
-	private boolean recycled = false;
 	private static float size = 65;
     
     protected static final FixtureDef FIXTURE_DEF = PhysicsFactory.createFixtureDef(1, 0.25f, 0.3f);
@@ -37,8 +39,6 @@ public class Crate implements IOnAreaTouchListener {
 
 	public CrateType getType() { return type; }
 	public static float getCrateWidth() { return size; }
-	public boolean isRecycled() { return recycled; }
-	public void setRecycled(boolean b) { recycled = b; }
 	
 	public GenericPool<Sprite> getSpritePool() { return spritePool; }
 	
@@ -51,6 +51,15 @@ public class Crate implements IOnAreaTouchListener {
 		box.setTransform(newX, newY, angle);
 	}	
 
+	public void dispose() {
+		PhysicsConnector physicsConnector = GameScene.mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(sprite);
+		GameScene.mPhysicsWorld.unregisterPhysicsConnector(physicsConnector);
+		
+		
+		sprite.detachSelf();
+		spritePool.recyclePoolItem(sprite);
+	}
+	
 	@Override
 	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 		float curX = pSceneTouchEvent.getX() - 5;
