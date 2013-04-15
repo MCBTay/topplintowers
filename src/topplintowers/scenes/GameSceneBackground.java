@@ -152,7 +152,7 @@ public class GameSceneBackground {
     	while (it.hasNext()) {
     		Sprite currentStar = it.next();
     		scene.getContainer().detachChild(currentStar);
-    		twinklingStars.remove(currentStar);
+    		it.remove();
     	}
 	}
 	
