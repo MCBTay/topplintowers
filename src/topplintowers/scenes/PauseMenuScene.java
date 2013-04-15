@@ -78,6 +78,9 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	@Override
 	public void onBackKeyPressed() { returnToGameScene();}
 	
+	@Override
+	public void onMenuKeyPressed() { returnToGameScene(); }
+	
 	private void returnToGameScene() { 
 		final GameScene gs = (GameScene)SceneManager.getInstance().getCurrentScene();		
 		SceneCommon.fadeOut(mRectangle, mButtons, mText);
@@ -97,10 +100,7 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	public SceneType getSceneType() { return SceneType.SCENE_PAUSED; }
 
 	@Override
-	public void disposeScene() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void disposeScene() { return; }
 	
 	@Override
 	public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
@@ -178,9 +178,5 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 		container.resizeContainer(container.getSprite().getHeight());
 		container.repositionCrates();
 	}
-	@Override
-	public void onMenuKeyPressed() {
-		// TODO Auto-generated method stub
-		
-	}
+
 }
