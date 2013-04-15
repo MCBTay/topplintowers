@@ -445,6 +445,10 @@ public class ResourceManager
     	mFontLevelSelectTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
     	mFontLevelSelect = FontFactory.createFromAsset(mActivity.getFontManager(), mFontLevelSelectTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 36, true, Color.WHITE);
     	mFontLevelSelect.load();
+    	
+    	mGoalFontTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
+    	mGoalFont = FontFactory.createFromAsset(mActivity.getFontManager(), mGoalFontTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 42, true, Color.WHITE); 
+    	mGoalFont.load();
     }
     
     private void loadGameAudio() {

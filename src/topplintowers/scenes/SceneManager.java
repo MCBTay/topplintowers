@@ -92,8 +92,6 @@ public class SceneManager
     	disposeSplashScene();
     }
     
-
-    
     public void loadGameScene(final Engine mEngine, final Level level) {
     	((LoadingScene)mLoadingScene).setCrateTexture();
     	setScene(mLoadingScene);    	
