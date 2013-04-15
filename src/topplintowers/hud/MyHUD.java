@@ -144,14 +144,17 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
 	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 		if (isVisible()) {
 			// TODO:  somehow get rid of this tiny bit of dupli-code
+			float pSceneTouchEventX = pSceneTouchEvent.getX();
+			float pSceneTouchEventY = pSceneTouchEvent.getY();
+			
 			for (CrateThumbnail ct : mLeftContainer.thumbs) {
-				if (ct.getSprite().contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
+				if (ct.getSprite().contains(pSceneTouchEventX, pSceneTouchEventY)) {
 					ct.onAreaTouched(pSceneTouchEvent, pTouchArea, pTouchAreaLocalX, pTouchAreaLocalY);
 					return true;
 				}
 			}
 			for (CrateThumbnail ct : mRightContainer.thumbs) {
-				if (ct.getSprite().contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
+				if (ct.getSprite().contains(pSceneTouchEventX, pSceneTouchEventY)) {
 					ct.onAreaTouched(pSceneTouchEvent, pTouchArea, pTouchAreaLocalX, pTouchAreaLocalY);
 					return true;
 				}
