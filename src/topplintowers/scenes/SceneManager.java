@@ -122,17 +122,17 @@ public class SceneManager
     }
     
     public void loadMenuScene(final Engine mEngine) {
-    	((LoadingScene)mLoadingScene).setCrateTexture();
+    	((LoadingScene)mLoadingScene).setCrateTexture(); 
+    	BaseScene previousScene = mCurrentScene;
     	setScene(mLoadingScene);
     	
-    	try {
+    	if (previousScene instanceof GameScene || previousScene instanceof PauseMenuScene) {
     		mGameScene.disposeScene();
     		ResourceManager.getInstance().unloadGameTextures();
-    	} catch (Exception e) {
+    	} else if (previousScene instanceof LevelSelectScene) {
     		mLevelSelectScene.disposeScene();
     		ResourceManager.getInstance().unloadLevelSelectGraphics();
-    	}
-    	
+    	}    	
     	
     	mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
     		public void onTimePassed(final TimerHandler pTimerHandler) {
