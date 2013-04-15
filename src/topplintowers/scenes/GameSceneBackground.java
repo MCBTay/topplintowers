@@ -80,7 +80,7 @@ public class GameSceneBackground {
 		scene.getContainer().attachChild(newCloud);
 		
 		float startPosX = -newCloud.getWidth();
-		float startPosY = ((float)Math.random() * -700) - 600;
+		float startPosY = ((float)Math.random() * -1100) - 700;
 		newCloud.setPosition(startPosX, startPosY);
 		
 		newCloud.setAlpha((float)Math.random());
