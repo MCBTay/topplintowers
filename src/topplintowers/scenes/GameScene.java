@@ -211,7 +211,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	
 	private void cleanCrates(boolean dispose) {
 		LinkedHashMap<CrateType, Integer> crateCounts = MyHUD.mAvailableCrateCounts;
-		ArrayList<Crate> removeList = new ArrayList<Crate>();
 		
 		Iterator<CrateType> it = crateCounts.keySet().iterator();
 		
@@ -224,7 +223,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 				Sprite currentSprite = currentCrate.getSprite();
 				
 				if (dispose || currentSprite.getY() > camera.getHeight()) {
-					//activeCrates.get(type).remove(currentCrate);
 					crateIt.remove();
 					int crateCount = crateCounts.get(type);
 					if (crateCount == 0) {
@@ -233,18 +231,9 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 					
 					crateCounts.put(type, crateCount + 1);
 					currentCrate.dispose();
-					removeList.add(currentCrate);
 				}
 			}
 		}
-		
-//		Iterator<Crate> removeIt = removeList.iterator();
-//		while (removeIt.hasNext()) {
-//			Crate currentCrate = removeIt.next();
-//			activeCrates.get(currentCrate.getType()).remove(currentCrate);
-//		}
-//		removeList.clear();
-		
 	}
 	
 	@Override
