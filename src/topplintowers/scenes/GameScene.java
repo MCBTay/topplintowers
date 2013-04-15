@@ -274,7 +274,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 
 	@Override
-	public void onBackKeyPressed() {
+	public void onBackKeyPressed() { handleKeyPress(); }
+	
+	@Override
+	public void onMenuKeyPressed() { handleKeyPress(); }
+	
+	private void handleKeyPress() {
 		if (hasChildScene()) {
 			BaseScene childScene = (BaseScene) getChildScene();
 			childScene.onBackKeyPressed();
@@ -282,9 +287,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			SceneManager.getInstance().loadPauseScene(engine);
 		}
 	}
-	
-	@Override
-	public void onMenuKeyPressed() { }
 
 	@Override
 	public SceneType getSceneType() { return SceneType.SCENE_GAME; }
