@@ -45,6 +45,9 @@ public class LoadingScene extends BaseScene {
 	
 	@Override
 	public void onBackKeyPressed() { return; }
+	
+	@Override
+	public void onMenuKeyPressed() { return; }
 
 	@Override
 	public SceneType getSceneType() { return SceneType.SCENE_LOADING; }
@@ -54,11 +57,4 @@ public class LoadingScene extends BaseScene {
 		mText.detachSelf();
 		mText.dispose();
 	}
-
-	@Override
-	public void onMenuKeyPressed() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
