@@ -422,7 +422,7 @@ public class ResourceManager
     	mStarTextureRegion2 = null;
     	mStarTextureRegion3 = null;
     	
-    	mCloudTextureAtlas.unload();
+    	//mCloudTextureAtlas.unload();
     	mCloudTextureRegions = null;
     	mCloudTextureRegion1 = null;
     	mCloudTextureRegion2 = null;
