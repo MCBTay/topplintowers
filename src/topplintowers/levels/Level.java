@@ -2,6 +2,13 @@ package topplintowers.levels;
 
 import java.util.LinkedHashMap;
 
+import org.andengine.entity.primitive.Line;
+import org.andengine.entity.text.Text;
+import org.andengine.util.color.Color;
+
+import com.topplintowers.R;
+
+import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
 import topplintowers.scenes.GameScene;
 
@@ -27,18 +34,21 @@ public class Level {
 	public Levels getLevelType() { return this.level; }
 	
 	public void setGoal(GameScene currentScene) {
-//		float goalScaled = Crate.getCrateWidth()  * goalHeight;	
-//		float lineLength = instance.mCamera.getWidth() * 0.6f;
-//		float linePoxX = instance.mCamera.getWidth()/2 - (lineLength/2);
-//		//float linePosY = instance.mCamera.getHeight() - currentScene.mPlatform.rectangle.getHeight() - goalScaled;
-//		//Line goalLine = new Line(linePoxX, linePosY, linePoxX+lineLength, linePosY, 3, instance.getVertexBufferObjectManager());
-//		goalLine.setColor(Color.WHITE);
-//		currentScene.attachChild(goalLine);
-//		Text goalText = new Text(0, 0, ResourceManager.mGoalFont, instance.getString(R.string.goal_caps), instance.getVertexBufferObjectManager());
-//		float textPosX = goalLine.getX2() - goalText.getWidth();
-//		float textPosY = goalLine.getY2() - goalText.getHeight();
-//		goalText.setPosition(textPosX, textPosY);
-//		currentScene.attachChild(goalText);
+		float goalScaled = 65 * goalHeight;	
+		
+		float lineLength = 480;
+		float linePoxX = 400 - (lineLength/2);
+		float linePosY = 480 - currentScene.mPlatform.rectangle.getHeightScaled() - goalScaled;
+		
+		Line goalLine = new Line(linePoxX, linePosY, linePoxX+lineLength, linePosY, 3, currentScene.getVBOM());
+		goalLine.setColor(Color.WHITE);
+		currentScene.getContainer().attachChild(goalLine);
+		
+		Text goalText = new Text(0, 0, ResourceManager.mGoalFont, "Goal", currentScene.getVBOM());
+		float textPosX = goalLine.getX2() - goalText.getWidth();
+		float textPosY = goalLine.getY2() - goalText.getHeight();
+		goalText.setPosition(textPosX, textPosY);
+		currentScene.getContainer().attachChild(goalText);
 	}
 	
 	

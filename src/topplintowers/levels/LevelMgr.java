@@ -12,12 +12,12 @@ public class LevelMgr {
 	
 	private Integer max = Integer.MAX_VALUE;
 	private int[] free_mode = {max, max, max, max, max, max, max};
-	private int[] one		= {1, 1, 1, 1, 1, 1, 1};
-	private int[] two		= {2, 2, 2, 2, 2, 2, 2};
-	private int[] three		= {3, 3, 3, 3, 3, 3, 3};
-	private int[] four		= {4, 4, 4, 4, 4, 4, 4};
-	private int[] five		= {5, 5, 5, 5, 5, 5, 5};
-	private int[] six		= {6, 6, 6, 6, 6, 6, 6};
+	private int[] one		= {3, 0, 0, 0, 0, 0, 0};
+	private int[] two		= {3, 3, 0, 0, 0, 0, 0};
+	private int[] three		= {3, 3, 3, 0, 0, 0, 0};
+	private int[] four		= {4, 4, 4, 4, 0, 0, 0};
+	private int[] five		= {5, 5, 5, 5, 5, 0, 0};
+	private int[] six		= {6, 6, 6, 6, 6, 6, 0};
 	private int[] seven		= {7, 7, 7, 7, 7, 7, 7};
 	private int[] eight		= {8, 8, 8, 8, 8, 8, 8};
 	private int[] nine		= {9, 9, 9, 9, 9, 9, 9};
