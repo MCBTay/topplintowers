@@ -213,25 +213,27 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 
 	@Override
 	public void onBackKeyPressed() {
-		mHud.setVisible(false);
-		clearChildScene();
 		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
         {                      
             @Override
             public void onTimePassed(final TimerHandler pTimerHandler)
-            {            	            	
-            	 SceneManager.getInstance().loadMenuScene(engine);
+            {            	            
+        	     mHud.setVisible(false);
+        	     clearChildScene();
+        	     SceneManager.getInstance().loadMenuScene(engine);
             }
         }));
 	}
+	
+	@Override
+	public void onMenuKeyPressed() { return; }	
 	
     @Override
 	public SceneType getSceneType() { return SceneType.SCENE_LEVEL_SELECT; }
 
 	@Override
-	public void disposeScene() {
-		// TODO Auto-generated method stub
-		
+	public void disposeScene() { 
+		resourceManager.unloadLevelSelectGraphics();
 	}
 
 	@Override
@@ -301,9 +303,5 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 			SceneManager.getInstance().loadGameScene(engine, newLevel);
 		}
 	}
-	@Override
-	public void onMenuKeyPressed() {
-		// TODO Auto-generated method stub
-		
-	}	
+
 }
