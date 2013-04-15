@@ -135,7 +135,6 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	@Override
 	public void disposeScene() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
