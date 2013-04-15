@@ -122,24 +122,6 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 	
 	@Override
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
-//		int crateCount = GameScene.availableCrateCounts.get(type);
-//		if (crateCount > 0) {
-//			Crate newCrate = new Crate(100, 0, type); 
-//			instance.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(newCrate.getSprite(), newCrate.getBox(), true, true));
-//		    
-//			//newCrate.setPosition(instance.mCamera.getWidth()/2, pSceneY);
-//			//newCrate.setPosition(pSceneX, pSceneY);
-//			if (newCrate != null) {
-//				int newCrateCount = crateCount - 1;
-//				if (newCrateCount == 0) {
-//					shrinkThumbnail();
-//					parent.resizeContainer(parent.getSprite().getHeight());
-//					parent.repositionCrates();
-//				}
-//				GameScene.availableCrateCounts.put(type, newCrateCount);
-//			}
-//		}
-		
 		return;
 	}
 	
