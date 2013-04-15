@@ -123,7 +123,6 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
             	MenuButtonsEnum button = MenuButtonsEnum.values()[pMenuItem.getID()];
             	switch (button) {
             	 	case RESUME:  
-            	 		//instance.onResumeGame();
             	 		((MainActivity)activity).onResumeGame();
 	    	        	break;
 	    	        case RESTART:
