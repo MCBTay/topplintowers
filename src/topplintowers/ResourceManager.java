@@ -402,7 +402,6 @@ public class ResourceManager
     	mPlatformTexture.unload();
     	mPlatformTextureRegion = null;
     	
-    	mCrateTextureAtlas.unload();
     	mWoodCrateTextureRegion 			= null;
     	mStoneCrateTextureRegion 			= null;
     	mMetalCrateTextureRegion 			= null;
