@@ -38,7 +38,7 @@ public class Level {
 		
 		float lineLength = 480;
 		float linePoxX = 400 - (lineLength/2);
-		float linePosY = 480 - currentScene.mPlatform.rectangle.getHeightScaled() - goalScaled;
+		float linePosY = currentScene.mPlatform.rectangle.getY() - goalScaled;
 		
 		Line goalLine = new Line(linePoxX, linePosY, linePoxX+lineLength, linePosY, 3, currentScene.getVBOM());
 		goalLine.setColor(Color.WHITE);
