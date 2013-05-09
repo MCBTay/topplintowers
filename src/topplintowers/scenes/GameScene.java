@@ -95,6 +95,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          }
 	  	}));
 		
+		ResourceManager.mBackgroundMusic.play();
+		
 		mPhysicsWorld.setContactListener(new ContactListener() {
 			@Override
 			public void beginContact(final Contact pContact) {

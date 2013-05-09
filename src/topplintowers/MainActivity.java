@@ -48,6 +48,7 @@ public class MainActivity extends BaseGameActivity {
 		
 		EngineOptions options = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(cameraWidth, cameraHeight), mCamera);
 		options.getAudioOptions().setNeedsSound(true);
+		options.getAudioOptions().setNeedsMusic(true);
 		return options;
 	}
 
