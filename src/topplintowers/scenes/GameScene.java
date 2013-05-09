@@ -28,8 +28,14 @@ import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
 import topplintowers.Platform;
+import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.hud.MyHUD;
@@ -67,6 +73,92 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public VertexBufferObjectManager getVBOM() { return vbom; }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
     public Entity getContainer() { return container; }
+    
+	@Override
+	public void createScene() {
+		container = new Entity();
+		createPhysics();
+		mBackground = new GameSceneBackground(this);
+		createPlatform();
+		
+    	setOnSceneTouchListener(this);
+		this.mScrollDetector = new SurfaceScrollDetector(this);
+		
+		registerUpdateHandler(new TimerHandler(1f / 10.0f, true, new ITimerCallback() {
+	          @Override
+	          public void onTimePassed(final TimerHandler pTimerHandler) {
+	          	cleaner();
+	          	mHud.updateCounts();
+	          	if (level.getLevelType() != Levels.FREEMODE) {
+	          		//checkForLevelCompletion();
+	          	}
+	          }
+	  	}));
+		
+		mPhysicsWorld.setContactListener(new ContactListener() {
+			@Override
+			public void beginContact(final Contact pContact) {
+				final Body bodyA = pContact.getFixtureA().getBody();
+				final Body bodyB = pContact.getFixtureB().getBody();
+				ResourceManager.getInstance().mCollisionSound.play();
+			}
+
+			@Override
+			public void endContact(Contact contact) { }
+			
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) { }
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) { }
+		});
+	
+		attachChild(container);
+	}
+	
+	private void createPlatform() {
+		mPlatform = new Platform(this);
+		container.attachChild(mPlatform.getSprite());
+	}
+	
+	private void createHUD() {
+		boolean freeMode = this.level.getLevelType() == Levels.FREEMODE;
+		mHud = new MyHUD(this, freeMode, this.level, mBackground.getHeight());
+		camera.setHUD(mHud);
+	}
+	
+	private void createPhysics() {
+		mPhysicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, SensorManager.GRAVITY_EARTH), false);
+		registerUpdateHandler(mPhysicsWorld);
+	}
+
+	@Override
+	public void onBackKeyPressed() { handleKeyPress(); }
+	
+	@Override
+	public void onMenuKeyPressed() { handleKeyPress(); }
+	
+	private void handleKeyPress() {
+		if (hasChildScene()) {
+			BaseScene childScene = (BaseScene) getChildScene();
+			childScene.onBackKeyPressed();
+		} else {
+			SceneManager.getInstance().loadPauseScene(engine);
+		}
+	}
+
+	@Override
+	public SceneType getSceneType() { return SceneType.SCENE_GAME; }
+
+	@Override
+	public void disposeScene() {
+		camera.setHUD(null);
+		camera.setCenter(400, 240);
+		
+		mBackground.cleanClouds(true);
+		mBackground.cleanStars();
+		cleanCrates(true);
+	}
     
     public GameScene(Level level) {
 		this.level = level;
@@ -236,70 +328,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		}
 	}
 	
-	@Override
-	public void createScene() {
-		container = new Entity();
-		createPhysics();
-		mBackground = new GameSceneBackground(this);
-		createPlatform();
-		
-    	setOnSceneTouchListener(this);
-		this.mScrollDetector = new SurfaceScrollDetector(this);
-		
-		registerUpdateHandler(new TimerHandler(1f / 10.0f, true, new ITimerCallback() {
-	          @Override
-	          public void onTimePassed(final TimerHandler pTimerHandler) {
-	          	cleaner();
-	          	mHud.updateCounts();
-	          }
-	  	}));
-	
-		attachChild(container);
-	}
-	
-	private void createPlatform() {
-		mPlatform = new Platform(this);
-		container.attachChild(mPlatform.getSprite());
-	}
-	
-	private void createHUD() {
-		boolean freeMode = this.level.getLevelType() == Levels.FREEMODE;
-		mHud = new MyHUD(this, freeMode, this.level, mBackground.getHeight());
-		camera.setHUD(mHud);
-	}
-	
-	private void createPhysics() {
-		mPhysicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, SensorManager.GRAVITY_EARTH), false);
-		registerUpdateHandler(mPhysicsWorld);
-	}
 
-	@Override
-	public void onBackKeyPressed() { handleKeyPress(); }
-	
-	@Override
-	public void onMenuKeyPressed() { handleKeyPress(); }
-	
-	private void handleKeyPress() {
-		if (hasChildScene()) {
-			BaseScene childScene = (BaseScene) getChildScene();
-			childScene.onBackKeyPressed();
-		} else {
-			SceneManager.getInstance().loadPauseScene(engine);
-		}
-	}
-
-	@Override
-	public SceneType getSceneType() { return SceneType.SCENE_GAME; }
-
-	@Override
-	public void disposeScene() {
-		camera.setHUD(null);
-		camera.setCenter(400, 240);
-		
-		mBackground.cleanClouds(true);
-		mBackground.cleanStars();
-		cleanCrates(true);
-	}
 
 
 }

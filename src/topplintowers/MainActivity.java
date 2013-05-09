@@ -46,8 +46,9 @@ public class MainActivity extends BaseGameActivity {
 		mCamera = new SmoothCamera(0, 0, 800, 480, 0, 1500, 0);
 		mLevelManager = new LevelMgr();
 		
-
-		return new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(cameraWidth, cameraHeight), mCamera);
+		EngineOptions options = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(cameraWidth, cameraHeight), mCamera);
+		options.getAudioOptions().setNeedsSound(true);
+		return options;
 	}
 
 	@Override
@@ -67,6 +68,20 @@ public class MainActivity extends BaseGameActivity {
 		}
 	    return false; 
 	}
+	
+	@Override
+	public boolean onKeyLongPress(final int pKeyCode, final KeyEvent pEvent) {
+		switch (pKeyCode) {
+			case KeyEvent.KEYCODE_BACK:
+			case KeyEvent.KEYCODE_MENU:
+				break;
+			default:
+				onKeyLongPress(pKeyCode, pEvent);
+				break;
+		}
+		return false;
+	}
+	
 
 	public static MainActivity getSharedInstance() {
 		return instance;

@@ -1,7 +1,10 @@
 package topplintowers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.SmoothCamera;
@@ -106,6 +109,9 @@ public class ResourceManager
     // GameScene Textures
     public BuildableBitmapTextureAtlas mGameBackgroundTextureAtlas;
     public static TextureRegion mGameBackgroundTopTextureRegion, mGameBackgroundMiddleTextureRegion, mGameBackgroundBottomTextureRegion;
+    
+    // Game Sounds
+    public static Sound mCollisionSound;
     
     //---------------------------------------------
     // CLASS LOGIC
@@ -453,6 +459,11 @@ public class ResourceManager
     
     private void loadGameAudio() {
         //TODO: add loading of audio (when we get some)
+    	try {
+			mCollisionSound = SoundFactory.createSoundFromAsset(mActivity.getSoundManager(), mActivity.getApplicationContext(), "snd/collision.mp3");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     public void loadSplashScreen() {
