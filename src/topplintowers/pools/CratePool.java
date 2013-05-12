@@ -1,24 +1,26 @@
 package topplintowers.pools;
 
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
-import topplintowers.ResourceManager;
 import topplintowers.scenes.GameScene;
 
-public class MetalCratePool extends GenericPool<Sprite> {
-
-	public MetalCratePool() {
+public class CratePool extends GenericPool<Sprite> {
+	private TextureRegion texture;
+	
+	public CratePool(TextureRegion texture) {
 		super();
+		
+		this.texture = texture;
 	}
 	
 	@Override
 	protected Sprite onAllocatePoolItem() {
-		return new Sprite(0, 0, ResourceManager.mMetalCrateTextureRegion, GameScene.getScene().getVBOM());
+		return new Sprite(0, 0, this.texture, GameScene.getScene().getVBOM());
 	}
 	
 	protected void recycle(Sprite cloud) {
 		this.recyclePoolItem(cloud);
 	}
 }
-
