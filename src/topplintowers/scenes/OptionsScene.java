@@ -98,7 +98,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	
 		SceneType type = SceneManager.getInstance().getCurrentSceneType();
 		
-		if (type == SceneType.MAIN_MENU) returnToMainMenu();
+		if (type == SceneType.MAIN_MENU) SceneManager.getInstance().returnToMainMenu(this);
 		else if (type == SceneType.GAME) SceneManager.getInstance().returnToPauseMenu(this);
 	}
 
@@ -110,23 +110,6 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 
 	@Override
 	public void disposeScene() {
-	}
-	
-	private void returnToMainMenu() {  // TODO:  Move to SceneManager
-		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
-		SpriteMenuItem mainMenuButton = mms.getButtons().get(0);
-		SceneCommon.repositionButtons(mainMenuButton.getWidth(), mainMenuButton.getHeight(),  mms.getButtons());
-		
-		fadeOut();
-
-		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
-        {                      
-            @Override
-            public void onTimePassed(final TimerHandler pTimerHandler) { 
-            	mms.setChildScene(mms.getMenuChildScene());
-            	//fade in menu child scene?
-        	}
-        }));
 	}
 	
 	public void fadeIn() { fadeIn(true); }

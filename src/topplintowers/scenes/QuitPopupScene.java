@@ -25,6 +25,7 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 	private ArrayList<SpriteMenuItem> mButtons;
 	private Rectangle mRectangle;
 	private Text mText;
+	private QuitPopupScene instance;
 	
 	private MenuScene mMenuChildScene;
 		
@@ -39,6 +40,8 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 
 	@Override
 	public void createScene() {
+		instance = this;
+		
 		mRectangle = SceneCommon.createBackground(this);
 		//setBackgroundEnabled(false);
 		mText = SceneCommon.createLargeText(this, activity.getString(R.string.Quit));
@@ -47,7 +50,7 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 	}
 
 	@Override
-	public void onBackKeyPressed() { returnToMainMenu(); }
+	public void onBackKeyPressed() { SceneManager.getInstance().returnToMainMenu(instance); }
 	
 	@Override
 	public void onMenuKeyPressed() { return; }
@@ -102,7 +105,7 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 		    			android.os.Process.killProcess(android.os.Process.myPid());
 		    			break;
 		        	case CANCEL:
-		        		returnToMainMenu();
+		        		SceneManager.getInstance().returnToMainMenu(instance);
 		        		break;
 					
 	    	        default:
@@ -114,30 +117,13 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 	    return true;
 	}
 	
-	private void returnToMainMenu() {
-		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
-		SceneCommon.repositionButtons(mQuitButton.getWidth(), mQuitButton.getHeight(),  mms.getButtons());
-		
-		fadeOut();
-		
-		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
-        {                      
-            @Override
-            public void onTimePassed(final TimerHandler pTimerHandler)
-            {   
- 	       		mms.setChildScene(mms.getMenuChildScene());
-        		SceneCommon.repositionButtons(mQuitButton.getWidth(), mQuitButton.getHeight(), mButtons);
-            }
-        }));
-	}
-	
 	public void fadeIn() {
 		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
 		SceneCommon.applyFadeModifier(mButtons, 0, 1);
 		SceneCommon.applyFadeModifier(mText, 0, 1);
 	}
 	
-	private void fadeOut() {
+	public void fadeOut() {
 		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
 		SceneCommon.applyFadeModifier(mButtons, 1, 0);
 		SceneCommon.applyFadeModifier(mText, 1, 0);

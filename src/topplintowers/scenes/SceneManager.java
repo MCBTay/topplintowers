@@ -192,4 +192,45 @@ public class SceneManager
         	}
         }));
 	}
+	
+	public void returnToMainMenu(OptionsScene os) {
+		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
+		resetMainMenuButtons(mms);	
+		os.fadeOut();
+		setSceneChangeAfterFade(mms);
+	}
+	
+	public void returnToMainMenu(QuitPopupScene qp) {
+		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
+		resetMainMenuButtons(mms);
+		qp.fadeOut();
+		setSceneChangeAfterFade(mms, qp);
+	}
+	
+	private void resetMainMenuButtons(MainMenuScene mms) {
+		SpriteMenuItem mainMenuButton = mms.getButtons().get(0);
+		SceneCommon.repositionButtons(mainMenuButton.getWidth(), mainMenuButton.getHeight(),  mms.getButtons());
+	}
+	
+	private void setSceneChangeAfterFade(MainMenuScene mms) {
+		setSceneChangeAfterFade(mms, null);
+	}
+	
+	private void setSceneChangeAfterFade(final MainMenuScene mms, final QuitPopupScene quitPopup) {
+		mEngine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
+        {                      
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) { 
+            	mms.setChildScene(mms.getMenuChildScene());
+            	//fade in menu child scene?
+            	
+            	if (quitPopup != null) {
+            		SpriteMenuItem quitButton = quitPopup.getButtons().get(0);
+            		SceneCommon.repositionButtons(quitButton.getWidth(), quitButton.getHeight(), quitPopup.getButtons());	
+            	}
+            	
+        	}
+        }));
+	}
+	
 }

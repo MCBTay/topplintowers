@@ -46,7 +46,7 @@ public class SoundManager {
     public void playBlockCollision() {
     	SharedPreferences options = mActivity.getOptions();
 		float volume = options.getFloat("fxVolume", 50);
-		mCollisionSound.setVolume(volume/100);
+		setMusicVolume(volume);
 		mCollisionSound.play();
     }
     
@@ -65,7 +65,6 @@ public class SoundManager {
     	// because you can set this value before the sounds have been loaded, we'll store off the value
     	// and set it when we load the sounds
     	mFXVolume = value;
-    	//mCollisionSound.setVolume(value);
     }
     
     public void saveSoundOptions(float musicVolume, float fxVolume) {
