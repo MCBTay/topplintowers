@@ -173,6 +173,11 @@ public class ResourceManager
     	mBackgroundTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 800, 480, TextureOptions.BILINEAR);
     	mBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBackgroundTexture, mActivity, "background.png", 0, 0);
     	mBackgroundTexture.load();
+    	
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/levelselect/");
+    	mLevelSelectButtonTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 484, 75, TextureOptions.BILINEAR);
+    	mLevelSelectButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mLevelSelectButtonTexture, mActivity, "levelSelectButton.png", 0, 0);
+    	mLevelSelectButtonTexture.load();
     }
     
     public void loadLevelSelectGraphics() { 

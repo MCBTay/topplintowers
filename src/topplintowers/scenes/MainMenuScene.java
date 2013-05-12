@@ -122,12 +122,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			if (childScene instanceof QuitPopupScene) {
 				QuitPopupScene qps = (QuitPopupScene) childScene;
 				qps.onBackKeyPressed();
-			} else if (childScene instanceof LevelSelectScene) {
-				LevelSelectScene lss = (LevelSelectScene) childScene;
-				lss.onBackKeyPressed();
-			} else { //main menu scene
-				SceneManager.getInstance().loadQuitPopup(engine);
+			} else if (childScene instanceof OptionsScene) {
+				OptionsScene os = (OptionsScene) childScene;
+				os.onBackKeyPressed();
 			}
+		} else {
+			SceneManager.getInstance().loadQuitPopup(engine);
 		}
 	}
 	
@@ -168,7 +168,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	    	        case QUIT:
 	    	        	SceneManager.getInstance().loadQuitPopup(engine);    	
 	    	        	break;
-					
+	    	        case OPTIONS:
+	    	        	SceneManager.getInstance().loadOptionsScene(engine);
+	    	        	break;
 	    	        default:
 						break;
             	}

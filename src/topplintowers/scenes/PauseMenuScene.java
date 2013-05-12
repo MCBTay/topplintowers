@@ -25,7 +25,7 @@ import topplintowers.scenes.SceneManager.SceneType;
 import com.topplintowers.R;
 
 public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListener {
-	private SpriteMenuItem mResumeButton, mRestartButton, mMainMenuButton, mOptionsButton;
+	private SpriteMenuItem mResumeButton, mRestartButton, mMainMenuButton;
 	private ArrayList<SpriteMenuItem> mButtons;
 	private Rectangle mRectangle;
 	private Text mText;
@@ -65,9 +65,6 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 		
 		mRestartButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.RESTART,  activity.getString(R.string.restart));
 		mButtons.add(mRestartButton);
-		
-		mOptionsButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.OPTIONS, activity.getString(R.string.option));
-		mButtons.add(mOptionsButton);
 		
 		mMainMenuButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.MAIN_MENU,  activity.getString(R.string.main_menu));
 		mButtons.add(mMainMenuButton);
@@ -136,7 +133,6 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	    	        case MAIN_MENU:
 	    	        	SceneManager.getInstance().loadMenuScene(engine);
 	    	        	break;
-					
 	    	        default:
 						break;
             	}

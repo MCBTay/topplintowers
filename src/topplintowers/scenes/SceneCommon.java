@@ -95,7 +95,7 @@ public class SceneCommon {
 		object.registerEntityModifier(am);
 	}
 	
-	private static void fadeOutBackground(Rectangle rectangle) {
+	public static void fadeOutBackground(Rectangle rectangle) {
 		applyFadeOutModifier(rectangle, 0.75f, 0);
 		fadeOutChildren(rectangle);
 	}

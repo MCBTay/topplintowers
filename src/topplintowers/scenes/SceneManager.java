@@ -12,7 +12,7 @@ import topplintowers.levels.Level;
 
 public class SceneManager
 {
-    private BaseScene mSplashScene, mMenuScene, mGameScene, mPausedScene, mQuitPopupScene, mLevelSelectScene, mLoadingScene;
+    private BaseScene mSplashScene, mMenuScene, mGameScene, mPausedScene, mQuitPopupScene, mLevelSelectScene, mLoadingScene, mOptionsScene;
     
     private static final SceneManager INSTANCE = new SceneManager();
     private SceneType mCurrentSceneType = SceneType.SCENE_SPLASH;
@@ -26,7 +26,8 @@ public class SceneManager
     	SCENE_PAUSED,
     	SCENE_QUIT_POPUP,
     	SCENE_LOADING,
-    	SCENE_GAME
+    	SCENE_GAME,
+    	SCENE_OPTIONS
     }
     
     public static SceneManager getInstance(){ return INSTANCE; }    
@@ -65,6 +66,9 @@ public class SceneManager
             case SCENE_LOADING:
             	setScene(mLoadingScene);
             	break;
+            case SCENE_OPTIONS:
+            	setScene(mOptionsScene);
+            	break;
             default:
                 break;
         }
@@ -88,6 +92,7 @@ public class SceneManager
     	mMenuScene = new MainMenuScene();
     	mLoadingScene = new LoadingScene();
     	mQuitPopupScene = new QuitPopupScene();
+    	mOptionsScene = new OptionsScene();
     	setScene(mMenuScene);
     	disposeSplashScene();
     }
@@ -159,6 +164,13 @@ public class SceneManager
     	mCurrentScene.setChildScene(mQuitPopupScene);
     	QuitPopupScene qps = (QuitPopupScene) mQuitPopupScene;
     	SceneCommon.fadeIn(qps.getRectangle(), qps.getButtons(), qps.getText());
+    }
+    
+    public void loadOptionsScene(final Engine mEngine) {
+    	mCurrentScene.setChildScene(mOptionsScene);
+    	OptionsScene os = (OptionsScene) mOptionsScene;
+    	SceneCommon.fadeInBackground(os.getRectangle());
+    	
     }
     
     public void loadPauseScene(final Engine mEngine) {
