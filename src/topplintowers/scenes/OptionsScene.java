@@ -29,7 +29,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	public Rectangle getRectangle() { return mRectangle; }
 	
 	@Override
-	public void createScene() {		
+	public void createScene() {
 		mRectangle = SceneCommon.createBackground(this);
 		createBackgroundButton();
 		createTitleText();
@@ -85,6 +85,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	}
 	
 	private void saveOptions() {
+		mOptions = activity.getOptions();
 		SharedPreferences.Editor editor = mOptions.edit();
 		
 		float musicVolume = mMusicSlider.getValue();
@@ -98,7 +99,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	
 	@Override
 	public void onBackKeyPressed() { 
-		//saveOptions();
+		saveOptions();
 		returnToMainMenu(); 
 	}
 
