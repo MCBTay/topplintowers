@@ -98,6 +98,10 @@ public class ResourceManager
     public BuildableBitmapTextureAtlas mGameBackgroundTextureAtlas;
     public static TextureRegion mGameBackgroundTopTextureRegion, mGameBackgroundMiddleTextureRegion, mGameBackgroundBottomTextureRegion;
     
+    // Options Textures
+    private BitmapTextureAtlas mSliderTexture, mSliderThumbTexture;
+    public static TextureRegion mSliderTextureRegion, mSliderThumbTextureRegion;
+    
     // Game Sounds
     public static Sound mCollisionSound;
     public static Music mBackgroundMusic;
@@ -124,7 +128,7 @@ public class ResourceManager
     {
     	loadMainMenuGraphics();
     	loadLoadingSceneTextures();
-    	
+    	loadOptionsSceneTextures();
     	
     	
     	try {  //forced to handle the IOException here but not for images?
@@ -209,6 +213,17 @@ public class ResourceManager
     	
     	mLockTexture.unload();
     	mLockTextureRegion = null; 
+    }
+    
+    private void loadOptionsSceneTextures() {
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+    	mSliderTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 32, TextureOptions.BILINEAR);
+    	mSliderTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mSliderTexture, mActivity, "slider.png", 0, 0);
+    	mSliderTexture.load();
+    	
+    	mSliderThumbTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 32, 32, TextureOptions.BILINEAR);
+    	mSliderThumbTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mSliderThumbTexture, mActivity, "sliderThumb.png", 0, 0);
+    	mSliderThumbTexture.load();
     }
     
     private void loadFonts() {

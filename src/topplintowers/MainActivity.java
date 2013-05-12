@@ -16,6 +16,7 @@ import topplintowers.scenes.GameScene;
 import topplintowers.scenes.PauseMenuScene;
 import topplintowers.scenes.SceneCommon;
 import topplintowers.scenes.SceneManager;
+import android.content.SharedPreferences;
 import android.view.KeyEvent;
 
 import com.badlogic.gdx.physics.box2d.Body;
@@ -35,18 +36,17 @@ public class MainActivity extends BaseGameActivity {
 	public static LevelMgr mLevelManager;
 	
 	private ResourceManager mResourceManager;
+	
+	
+	private SharedPreferences mOptions;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public EngineOptions onCreateEngineOptions() {
-		instance = this;
-		float cameraWidth = instance.getWindowManager().getDefaultDisplay().getWidth();   // deprecated
-		float cameraHeight = instance.getWindowManager().getDefaultDisplay().getHeight(); // deprecated
-		
+		instance = this;		
 		mCamera = new SmoothCamera(0, 0, 800, 480, 0, 1500, 0);
 		mLevelManager = new LevelMgr();
 		
-		EngineOptions options = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(cameraWidth, cameraHeight), mCamera);
+		EngineOptions options = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(800, 480), mCamera);
 		options.getAudioOptions().setNeedsSound(true);
 		options.getAudioOptions().setNeedsMusic(true);
 		return options;
@@ -84,9 +84,9 @@ public class MainActivity extends BaseGameActivity {
 	}
 	
 
-	public static MainActivity getSharedInstance() {
-		return instance;
-	}
+	public static MainActivity getSharedInstance() { return instance; }
+	
+	public SharedPreferences getOptions() { return mOptions; }
 
 	public void setCurrentScene(Scene scene) {
 		mCurrentScene = scene;
@@ -166,6 +166,8 @@ public class MainActivity extends BaseGameActivity {
 		ResourceManager.prepareManager(mEngine, this, mCamera, getVertexBufferObjectManager());
 		mResourceManager = ResourceManager.getInstance();
 		pOnCreateResourcesCallback.onCreateResourcesFinished();
+		
+		mOptions = getSharedPreferences("OptionsFile", MODE_PRIVATE);
 	}
 	@Override
 	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws Exception {

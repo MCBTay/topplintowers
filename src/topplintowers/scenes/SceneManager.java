@@ -167,8 +167,15 @@ public class SceneManager
     }
     
     public void loadOptionsScene(final Engine mEngine) {
-    	mCurrentScene.setChildScene(mOptionsScene);
+    	//set slider values    	
     	OptionsScene os = (OptionsScene) mOptionsScene;
+    	float musicVolume = os.activity.getOptions().getFloat("musicVolume", 50);
+    	float fxVolume = os.activity.getOptions().getFloat("fxVolume", 50);
+    	
+    	os.getMusicSlider().setValue(musicVolume);
+    	os.getFXSlider().setValue(fxVolume);
+    	
+    	mCurrentScene.setChildScene(os); 	
     	SceneCommon.fadeInBackground(os.getRectangle());
     	
     }
