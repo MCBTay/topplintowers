@@ -58,101 +58,35 @@ public class SceneCommon {
 		}
 	}
 	
-	public static void fadeInBackground(Rectangle rectangle) {		
-		applyFadeInModifier(rectangle, 0, 0.75f);
-		fadeInChildren(rectangle);
-	}
-	
-	private static void fadeInButtons(ArrayList<SpriteMenuItem> buttons) {
-		int size = buttons.size();
-		for (int i = 0; i < size; i++) {
-			SpriteMenuItem current = buttons.get(i);
-			applyFadeInModifier(current, 0, 1);
-			fadeInChildren(current);
-		}
-	}
-	
-	private static void fadeInText(Text text) {
-		applyFadeInModifier(text, 0, 1);
-	}
-	
-	public static void fadeInChildren(IEntity object) {
+	public static void fadeChildren(IEntity object, float start, float finish) {
 		int childCount = object.getChildCount();
 		for (int i = 0; i < childCount; i++) {
 			IEntity child = object.getChildByIndex(i);
-			applyFadeInModifier(child, 0, 1);
+			applyFadeModifier(child, start, finish);
 			int childChildCount = child.getChildCount();
 			for (int j = 0; j < childChildCount; j++) {
 				IEntity childsChild = child.getChildByIndex(j);
-				applyFadeInModifier(childsChild, 0, 1);
+				applyFadeModifier(childsChild, start, finish);
 			}
 		}
 	}
 	
-	private static void applyFadeInModifier(IEntity object, float start, float finish) {
+	public static void applyFadeModifier(ArrayList<SpriteMenuItem> buttons, float start, float finish) {
+		int size = buttons.size();
+		for (int i = 0; i < size; i++) {
+			SpriteMenuItem current = buttons.get(i);
+			applyFadeModifier(current, start, finish);
+			fadeChildren(current, start, finish);
+		}
+	}
+	
+	public static void applyFadeModifier(IEntity object, float start, float finish) {
 		AlphaModifier am = new AlphaModifier(0.2f, start, finish);
 		am.setAutoUnregisterWhenFinished(true);
 		object.registerEntityModifier(am);
 	}
 	
-	public static void fadeOutBackground(Rectangle rectangle) {
-		applyFadeOutModifier(rectangle, 0.75f, 0);
-		fadeOutChildren(rectangle);
-	}
 	
-	private static void fadeOutButtons(ArrayList<SpriteMenuItem> buttons) {
-		int size = buttons.size();
-		for (int i = 0; i < size; i++) {
-			SpriteMenuItem current = buttons.get(i);
-			applyFadeOutModifier(current, 1, 0);
-			fadeOutChildren(current);
-		}
-	}
-	
-	private static void fadeOutText(Text text) {
-		applyFadeOutModifier(text, 1, 0);
-	}
-	
-	public static void fadeOutChildren(IEntity object) {
-		int childCount = object.getChildCount();
-		for (int i = 0; i < childCount; i++) {
-			IEntity child = object.getChildByIndex(i);
-			applyFadeOutModifier(child, 1, 0);
-			int childChildCount = child.getChildCount();
-			for (int j = 0; j < childChildCount; j++) {
-				IEntity childsChild = child.getChildByIndex(j);
-				applyFadeOutModifier(childsChild, 1, 0);
-			}
-		}
-	}
-	
-	public static void fadeIn(Rectangle rect, ArrayList<SpriteMenuItem> buttons) {
-		SceneCommon.fadeInBackground(rect);
-		SceneCommon.fadeInButtons(buttons);
-	}
-	
-	public static void fadeIn(Rectangle rect, ArrayList<SpriteMenuItem> buttons, Text text) {
-		SceneCommon.fadeInBackground(rect);
-		SceneCommon.fadeInButtons(buttons);
-		SceneCommon.fadeInText(text);
-	}
-	
-	public static void fadeOut(Rectangle rect, ArrayList<SpriteMenuItem> buttons) {
-		SceneCommon.fadeOutBackground(rect);
-		SceneCommon.fadeOutButtons(buttons);
-	}
-	
-	public static void fadeOut(Rectangle rect, ArrayList<SpriteMenuItem> buttons, Text text) {
-		SceneCommon.fadeOutBackground(rect);
-		SceneCommon.fadeOutButtons(buttons);
-		SceneCommon.fadeOutText(text);
-	}
-	
-	private static void applyFadeOutModifier(IEntity object, float start, float finish) {
-		AlphaModifier am = new AlphaModifier(0.2f, start, finish);
-		am.setAutoUnregisterWhenFinished(true);
-		object.registerEntityModifier(am);
-	}
 	
 	public static Rectangle createBackground(Scene currentScene) {
 		currentScene.setBackgroundEnabled(false);

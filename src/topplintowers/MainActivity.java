@@ -100,7 +100,7 @@ public class MainActivity extends BaseGameActivity {
 		if (scene != null) {
 			if (scene instanceof GameScene && scene.hasChildScene()) {
 				PauseMenuScene pms = (PauseMenuScene) scene.getChildScene();
-				SceneCommon.fadeOut(pms.getRectangle(), pms.getButtons(), pms.getText());
+				pms.fadeOut();
 			}
 			mEngine.registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback()
 	        {                      
@@ -123,7 +123,7 @@ public class MainActivity extends BaseGameActivity {
 		
 		if (mCurrentScene instanceof GameScene) {
 			final PauseMenuScene pms = new PauseMenuScene();
-			SceneCommon.fadeIn(pms.getRectangle(), pms.getButtons(), pms.getText());
+			pms.fadeIn();
 			instance.getEngine().registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback() {
 				@Override
 				public void onTimePassed(final TimerHandler pTimerHandler) {
@@ -142,7 +142,7 @@ public class MainActivity extends BaseGameActivity {
 				am.setAutoUnregisterWhenFinished(true);
 				GameScene.mHud.registerEntityModifier(am);
 				GameScene.mHud.setVisible(true);
-				SceneCommon.fadeInChildren(GameScene.mHud);
+				SceneCommon.fadeChildren(GameScene.mHud, 0, 1);
 			}
 		}));
 	}
@@ -151,7 +151,7 @@ public class MainActivity extends BaseGameActivity {
 		AlphaModifier am = new AlphaModifier(0.2f, 1, 0);
 		am.setAutoUnregisterWhenFinished(true);
 		GameScene.mHud.registerEntityModifier(am);
-		SceneCommon.fadeOutChildren(GameScene.mHud);
+		SceneCommon.fadeChildren(GameScene.mHud, 1, 0);
 		instance.getEngine().registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(final TimerHandler pTimerHandler) {

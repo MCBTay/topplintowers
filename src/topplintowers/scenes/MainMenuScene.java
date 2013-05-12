@@ -125,10 +125,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			} else if (childScene instanceof OptionsScene) {
 				OptionsScene os = (OptionsScene) childScene;
 				os.onBackKeyPressed();
+			} else {
+				SceneManager.getInstance().loadQuitPopup(engine);
 			}
-		} else {
-			SceneManager.getInstance().loadQuitPopup(engine);
-		}
+		} 
 	}
 	
 	@Override

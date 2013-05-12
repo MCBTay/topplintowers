@@ -118,12 +118,42 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 		SpriteMenuItem mainMenuButton = mms.getButtons().get(0);
 		SceneCommon.repositionButtons(mainMenuButton.getWidth(), mainMenuButton.getHeight(),  mms.getButtons());
 		
-		SceneCommon.fadeOutBackground(mRectangle);
+		fadeOut();
+
 		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
         {                      
             @Override
-            public void onTimePassed(final TimerHandler pTimerHandler) { mms.setChildScene(mms.getMenuChildScene()); }
+            public void onTimePassed(final TimerHandler pTimerHandler) { 
+            	mms.setChildScene(mms.getMenuChildScene());
+            	//fade in menu child scene?
+        	}
         }));
+	}
+	
+	public void fadeIn() {
+		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
+		SceneCommon.applyFadeModifier(mButtonBackground, 0, 1);
+		SceneCommon.applyFadeModifier(mTitleText, 0, 1);
+		SceneCommon.applyFadeModifier(mMusicVolumeText, 0, 1);
+		SceneCommon.applyFadeModifier(mFXVolumeText, 0, 1);
+		
+		SceneCommon.applyFadeModifier(mMusicSlider, 0, 1);
+		SceneCommon.fadeChildren(mMusicSlider, 0, 1);
+		SceneCommon.applyFadeModifier(mFXSlider, 0, 1);
+		SceneCommon.fadeChildren(mFXSlider, 0, 1);
+	}
+	
+	private void fadeOut() {
+		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
+		SceneCommon.applyFadeModifier(mButtonBackground, 1, 0);
+		SceneCommon.applyFadeModifier(mTitleText, 1, 0);
+		SceneCommon.applyFadeModifier(mMusicVolumeText, 1, 0);
+		SceneCommon.applyFadeModifier(mFXVolumeText, 1, 0);
+		
+		SceneCommon.applyFadeModifier(mMusicSlider, 1, 0);
+		SceneCommon.fadeChildren(mMusicSlider, 1, 0);
+		SceneCommon.applyFadeModifier(mFXSlider, 1, 0);
+		SceneCommon.fadeChildren(mFXSlider, 1, 0);
 	}
 
 	@Override

@@ -118,7 +118,8 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
 		SceneCommon.repositionButtons(mQuitButton.getWidth(), mQuitButton.getHeight(),  mms.getButtons());
 		
-		SceneCommon.fadeOut(mRectangle, mButtons, mText);
+		fadeOut();
+		
 		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
         {                      
             @Override
@@ -128,5 +129,17 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
         		SceneCommon.repositionButtons(mQuitButton.getWidth(), mQuitButton.getHeight(), mButtons);
             }
         }));
+	}
+	
+	public void fadeIn() {
+		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
+		SceneCommon.applyFadeModifier(mButtons, 0, 1);
+		SceneCommon.applyFadeModifier(mText, 0, 1);
+	}
+	
+	private void fadeOut() {
+		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
+		SceneCommon.applyFadeModifier(mButtons, 1, 0);
+		SceneCommon.applyFadeModifier(mText, 1, 0);
 	}
 }

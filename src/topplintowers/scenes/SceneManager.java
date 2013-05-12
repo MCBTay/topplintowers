@@ -163,21 +163,19 @@ public class SceneManager
     public void loadQuitPopup(final Engine mEngine) {
     	mCurrentScene.setChildScene(mQuitPopupScene);
     	QuitPopupScene qps = (QuitPopupScene) mQuitPopupScene;
-    	SceneCommon.fadeIn(qps.getRectangle(), qps.getButtons(), qps.getText());
+    	qps.fadeIn();
     }
     
-    public void loadOptionsScene(final Engine mEngine) {
-    	//set slider values    	
+    public void loadOptionsScene(final Engine mEngine) { 	
     	OptionsScene os = (OptionsScene) mOptionsScene;
+    	
     	float musicVolume = os.activity.getOptions().getFloat("musicVolume", 50);
     	float fxVolume = os.activity.getOptions().getFloat("fxVolume", 50);
-    	
     	os.getMusicSlider().setValue(musicVolume);
     	os.getFXSlider().setValue(fxVolume);
     	
-    	mCurrentScene.setChildScene(os); 	
-    	SceneCommon.fadeInBackground(os.getRectangle());
-    	
+    	mCurrentScene.setChildScene(os);
+    	os.fadeIn();    	
     }
     
     public void loadPauseScene(final Engine mEngine) {
@@ -191,7 +189,6 @@ public class SceneManager
     	
     	currentScene.setChildScene(mPausedScene, false, true, true);
     	
-    	SceneCommon.fadeIn(pms.getRectangle(), pms.getButtons(), pms.getText());
-    	
+    	pms.fadeIn();
     }
 }

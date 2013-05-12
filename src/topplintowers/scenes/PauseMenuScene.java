@@ -83,7 +83,9 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	
 	private void returnToGameScene() { 
 		final GameScene gs = (GameScene)SceneManager.getInstance().getCurrentScene();		
-		SceneCommon.fadeOut(mRectangle, mButtons, mText);
+		
+		fadeOut();
+		
 		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
         {                      
             @Override
@@ -176,6 +178,18 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 		
 		container.resizeContainer(container.getSprite().getHeight());
 		container.repositionCrates();
+	}
+	
+	public void fadeIn() {
+		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
+		SceneCommon.applyFadeModifier(mButtons, 0, 1);
+		SceneCommon.applyFadeModifier(mText, 0, 1);
+	}
+	
+	public void fadeOut() {
+		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
+		SceneCommon.applyFadeModifier(mButtons, 1, 0);
+		SceneCommon.applyFadeModifier(mText, 1, 0);
 	}
 
 }
