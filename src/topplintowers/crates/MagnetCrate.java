@@ -6,6 +6,7 @@ import topplintowers.pools.PoolManager;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class MagnetCrate extends Crate {
+	// FROM DERRICK: Weight: 5, Friction: 3, Elasticity: 1, sticks to metal, magnets, electromagnets
 	// TODO: customize this crate's density, elasticity, and friction
 	private static final FixtureDef FIXTURE_DEF_MAGNET = PhysicsFactory.createFixtureDef(1, 0.25f, 0.3f);  
 
