@@ -1,14 +1,11 @@
 package topplintowers.pools;
 
+import topplintowers.ResourceManager;
+
 public class PoolManager {
 	public CloudPool mCloudPool; 	
-	public WoodCratePool mWoodPool;
-	public StoneCratePool mStonePool;
-	public MetalCratePool mMetalPool;
-	public MagnetCratePool mMagnetPool;
-	public ElectromagnetCratePool mElectromagnetPool;
-	public StickyCratePool mStickyPool; // lol
-	public TransformerCratePool mTransformerPool;
+	public CratePool mWoodPool, mStonePool, mMetalPool, mMagnetPool,
+					 mElectromagnetPool, mStickyPool, mTransformerPool;
 	
 	private static final PoolManager INSTANCE = new PoolManager();
 	
@@ -16,12 +13,13 @@ public class PoolManager {
 	
 	public PoolManager() { 
 		mCloudPool = new CloudPool();
-		mWoodPool = new WoodCratePool();
-		mStonePool = new StoneCratePool();
-		mMetalPool = new MetalCratePool();
-		mMagnetPool = new MagnetCratePool();
-		mElectromagnetPool = new ElectromagnetCratePool();
-		mStickyPool = new StickyCratePool();
-		mTransformerPool = new TransformerCratePool();
+		
+		mWoodPool 			= new CratePool(ResourceManager.mWoodCrateTextureRegion);
+		mStonePool 			= new CratePool(ResourceManager.mStoneCrateTextureRegion);
+		mMetalPool 			= new CratePool(ResourceManager.mMetalCrateTextureRegion);
+		mMagnetPool 		= new CratePool(ResourceManager.mMagnetCrateTextureRegion);
+		mElectromagnetPool 	= new CratePool(ResourceManager.mElectromagnetCrateTextureRegion);
+		mStickyPool 		= new CratePool(ResourceManager.mStickyCrateTextureRegion);
+		mTransformerPool 	= new CratePool(ResourceManager.mTransformerCrateTextureRegion);
 	}
 }
