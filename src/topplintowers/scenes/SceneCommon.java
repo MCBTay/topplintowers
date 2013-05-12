@@ -15,10 +15,10 @@ import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.text.Text;
 
 import topplintowers.MainActivity;
-import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.hud.MyHUD;
+import topplintowers.resources.ResourceManager;
 
 public class SceneCommon {
 

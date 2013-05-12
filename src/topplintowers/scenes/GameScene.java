@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.andengine.audio.sound.Sound;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -26,6 +27,7 @@ import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
+import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -35,12 +37,13 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import topplintowers.Platform;
-import topplintowers.ResourceManager;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
 import topplintowers.levels.Levels;
+import topplintowers.resources.ResourceManager;
+import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener, IScrollDetectorListener  {
@@ -100,9 +103,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mPhysicsWorld.setContactListener(new ContactListener() {
 			@Override
 			public void beginContact(final Contact pContact) {
-				final Body bodyA = pContact.getFixtureA().getBody();
-				final Body bodyB = pContact.getFixtureB().getBody();
-				ResourceManager.getInstance().mCollisionSound.play();
+				//final Body bodyA = pContact.getFixtureA().getBody();
+				//final Body bodyB = pContact.getFixtureB().getBody();
+								
+				SoundManager.getInstance().playBlockCollision();
 			}
 
 			@Override

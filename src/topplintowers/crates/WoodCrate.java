@@ -4,7 +4,7 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-import topplintowers.pools.PoolManager;
+import topplintowers.resources.PoolManager;
 
 public class WoodCrate extends Crate {
 	// FROM DERRICK: Weight: 2, Friction: 5, Elasticity: 1, breaks under weight 15

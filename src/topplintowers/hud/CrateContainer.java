@@ -7,8 +7,8 @@ import org.andengine.entity.modifier.MoveModifier;
 import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.sprite.Sprite;
 import topplintowers.MainActivity;
-import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
+import topplintowers.resources.ResourceManager;
 
 public class CrateContainer {
 	private static MainActivity instance = MainActivity.getSharedInstance();

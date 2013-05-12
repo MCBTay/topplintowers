@@ -28,11 +28,11 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.color.Color;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
-import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
 import topplintowers.levels.Level;
 import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class LevelSelectScene extends BaseScene implements IClickDetectorListener, IScrollDetectorListener, IOnSceneTouchListener {

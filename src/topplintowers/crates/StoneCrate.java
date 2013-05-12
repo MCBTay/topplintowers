@@ -3,7 +3,7 @@ package topplintowers.crates;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-import topplintowers.pools.PoolManager;
+import topplintowers.resources.PoolManager;
 
 public class StoneCrate extends Crate {
 	// FROM DERRICK: Weight: 8, Friction: 5, Elasticity: 0 (stone heavy stone smash?)

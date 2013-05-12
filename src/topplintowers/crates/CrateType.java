@@ -3,7 +3,7 @@ package topplintowers.crates;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
 
-import topplintowers.ResourceManager;
+import topplintowers.resources.ResourceManager;
 
 public enum CrateType {
 	WOOD(0), STONE(1), METAL(2), MAGNET(3), ELECTROMAGNET(4), STICKY(5), TRANSFORMER(6);

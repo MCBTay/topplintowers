@@ -8,8 +8,8 @@ import org.andengine.util.color.Color;
 
 import com.topplintowers.R;
 
-import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.GameScene;
 
 public class Level {

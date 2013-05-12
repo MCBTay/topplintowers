@@ -9,9 +9,9 @@ import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
 
-import topplintowers.ResourceManager;
 import topplintowers.crates.CrateType;
 import topplintowers.levels.Level;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.GameScene;
 
 public class MyHUD extends HUD implements IOnAreaTouchListener {

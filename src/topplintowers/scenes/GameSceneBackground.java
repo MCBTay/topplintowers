@@ -15,8 +15,8 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.util.color.Color;
 
-import topplintowers.ResourceManager;
-import topplintowers.pools.PoolManager;
+import topplintowers.resources.PoolManager;
+import topplintowers.resources.ResourceManager;
 
 public class GameSceneBackground {
     private ArrayList<Sprite> twinklingStars;

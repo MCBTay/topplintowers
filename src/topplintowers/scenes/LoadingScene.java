@@ -5,7 +5,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.texture.region.TextureRegion;
 
-import topplintowers.ResourceManager;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class LoadingScene extends BaseScene {

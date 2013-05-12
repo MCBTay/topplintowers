@@ -7,8 +7,8 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
-import topplintowers.ResourceManager;
 import topplintowers.levels.Level;
+import topplintowers.resources.ResourceManager;
 
 public class SceneManager
 {
@@ -176,4 +176,20 @@ public class SceneManager
     	
     	pms.fadeIn();
     }
+    
+	public void returnToPauseMenu(OptionsScene os) {
+		final GameScene gs = (GameScene) getCurrentScene();
+		PauseMenuScene ps = (PauseMenuScene) mPausedScene;
+		SpriteMenuItem pauseButton = ps.getButtons().get(0);
+		SceneCommon.repositionButtons(pauseButton.getWidth(), pauseButton.getHeight(),  ps.getButtons());
+
+		os.engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
+        {                      
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) { 
+            	gs.setChildScene(mPausedScene, false, true, true);
+            	//fade in menu child scene?
+        	}
+        }));
+	}
 }

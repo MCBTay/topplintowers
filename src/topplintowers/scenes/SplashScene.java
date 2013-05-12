@@ -4,7 +4,7 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
-import topplintowers.ResourceManager;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class SplashScene extends BaseScene {

@@ -16,8 +16,8 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import topplintowers.MainActivity;
-import topplintowers.ResourceManager;
 import topplintowers.crates.*;
+import topplintowers.resources.ResourceManager;
 
 public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorListener, IOnAreaTouchListener {
 	private static MainActivity instance = MainActivity.getSharedInstance();

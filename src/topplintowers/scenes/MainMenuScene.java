@@ -18,9 +18,10 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
-import topplintowers.ResourceManager;
 import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
+import topplintowers.resources.ResourceManager;
+import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 import android.content.SharedPreferences;
@@ -46,10 +47,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		createTitle();
 		createMenuChildScene();
 		
-		SharedPreferences options = activity.getOptions();
-		float volume = options.getFloat("musicVolume", 50);
-		ResourceManager.mBackgroundMusic.setVolume(volume/100);
-		ResourceManager.mBackgroundMusic.play();
+		SoundManager.getInstance().playBackgroundMusic();
+		
 	}
 	
 	private void createBackground() {        

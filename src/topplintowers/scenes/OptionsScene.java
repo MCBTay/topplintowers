@@ -11,9 +11,10 @@ import android.content.SharedPreferences;
 
 import com.topplintowers.R;
 
-import topplintowers.ResourceManager;
 import topplintowers.Slider;
 import topplintowers.Slider.OnSliderValueChangeListener;
+import topplintowers.resources.ResourceManager;
+import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public class OptionsScene extends BaseScene implements OnSliderValueChangeListener {
@@ -81,27 +82,24 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 		registerTouchArea(slider.getmThumb());
 		setTouchAreaBindingOnActionDownEnabled(true);
 		slider.setOnSliderValueChangeListener(this);
-		slider.setOnSliderValueChangeListener(this);
 		return slider;
 	}
 	
 	private void saveOptions() {
-		mOptions = activity.getOptions();
-		SharedPreferences.Editor editor = mOptions.edit();
-		
 		float musicVolume = mMusicSlider.getValue();
 		float fxVolume = mFXSlider.getValue();
-		
-		editor.putFloat("musicVolume", musicVolume);
-		editor.putFloat("fxVolume", fxVolume);
-		
-		editor.commit();
+		SoundManager.getInstance().saveSoundOptions(musicVolume, fxVolume);
+
 	}
 	
 	@Override
 	public void onBackKeyPressed() { 
 		saveOptions();
-		returnToMainMenu(); 
+	
+		SceneType type = SceneManager.getInstance().getCurrentSceneType();
+		
+		if (type == SceneType.MAIN_MENU) returnToMainMenu();
+		else if (type == SceneType.GAME) SceneManager.getInstance().returnToPauseMenu(this);
 	}
 
 	@Override
@@ -114,7 +112,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	public void disposeScene() {
 	}
 	
-	private void returnToMainMenu() {
+	private void returnToMainMenu() {  // TODO:  Move to SceneManager
 		final MainMenuScene mms = (MainMenuScene)SceneManager.getInstance().getCurrentScene();  
 		SpriteMenuItem mainMenuButton = mms.getButtons().get(0);
 		SceneCommon.repositionButtons(mainMenuButton.getWidth(), mainMenuButton.getHeight(),  mms.getButtons());
@@ -148,7 +146,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 		SceneCommon.fadeChildren(mFXSlider, 0, 1);
 	}
 	
-	private void fadeOut() {
+	public void fadeOut() {
 		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
 		SceneCommon.applyFadeModifier(mButtonBackground, 1, 0);
 		SceneCommon.applyFadeModifier(mTitleText, 1, 0);
@@ -162,8 +160,16 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	}
 
 	@Override
-	public void onSliderValueChanged(float value) {
-		//detect which slider i'm on?
-		ResourceManager.mBackgroundMusic.setVolume(value/100);
+	public void onSliderValueChanged(Slider slider, float value) {
+		float newValue = value / 100;
+		
+		if (slider.equals(mMusicSlider)) {
+			SoundManager.getInstance().setMusicVolume(newValue);
+			
+		} else if (slider.equals(mFXSlider)) {
+			SoundManager.getInstance().setFXVolume(newValue);
+			//ResourceManager.mCollisionSound.setVolume(newValue);
+		}
+		
 	}
 }

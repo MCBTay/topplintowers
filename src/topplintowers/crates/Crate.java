@@ -10,7 +10,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
-import topplintowers.pools.PoolManager;
+import topplintowers.resources.PoolManager;
 import topplintowers.scenes.GameScene;
 
 import com.badlogic.gdx.physics.box2d.Body;

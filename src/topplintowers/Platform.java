@@ -6,6 +6,7 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.GameScene;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;

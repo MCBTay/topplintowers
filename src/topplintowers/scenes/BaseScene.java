@@ -6,7 +6,7 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import topplintowers.MainActivity;
-import topplintowers.ResourceManager;
+import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
 public abstract class BaseScene extends Scene
