@@ -81,6 +81,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 		registerTouchArea(slider.getmThumb());
 		setTouchAreaBindingOnActionDownEnabled(true);
 		slider.setOnSliderValueChangeListener(this);
+		slider.setOnSliderValueChangeListener(this);
 		return slider;
 	}
 	
@@ -107,7 +108,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	public void onMenuKeyPressed() { return; }
 
 	@Override
-	public SceneType getSceneType() { return SceneType.SCENE_OPTIONS; }
+	public SceneType getSceneType() { return SceneType.OPTIONS; }
 
 	@Override
 	public void disposeScene() {
@@ -130,8 +131,12 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
         }));
 	}
 	
-	public void fadeIn() {
-		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
+	public void fadeIn() { fadeIn(true); }
+	
+	public void fadeIn(boolean background) {
+		if (background) {
+			SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
+		}
 		SceneCommon.applyFadeModifier(mButtonBackground, 0, 1);
 		SceneCommon.applyFadeModifier(mTitleText, 0, 1);
 		SceneCommon.applyFadeModifier(mMusicVolumeText, 0, 1);
@@ -158,6 +163,7 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 
 	@Override
 	public void onSliderValueChanged(float value) {
-		
+		//detect which slider i'm on?
+		ResourceManager.mBackgroundMusic.setVolume(value/100);
 	}
 }

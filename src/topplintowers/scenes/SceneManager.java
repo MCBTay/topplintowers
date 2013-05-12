@@ -15,19 +15,19 @@ public class SceneManager
     private BaseScene mSplashScene, mMenuScene, mGameScene, mPausedScene, mQuitPopupScene, mLevelSelectScene, mLoadingScene, mOptionsScene;
     
     private static final SceneManager INSTANCE = new SceneManager();
-    private SceneType mCurrentSceneType = SceneType.SCENE_SPLASH;
+    private SceneType mCurrentSceneType = SceneType.SPLASH;
     private BaseScene mCurrentScene;
     private Engine mEngine = ResourceManager.getInstance().mEngine;
     
     public enum SceneType {
-    	SCENE_SPLASH,
-    	SCENE_MAIN_MENU,
-    	SCENE_LEVEL_SELECT,
-    	SCENE_PAUSED,
-    	SCENE_QUIT_POPUP,
-    	SCENE_LOADING,
-    	SCENE_GAME,
-    	SCENE_OPTIONS
+    	SPLASH,
+    	MAIN_MENU,
+    	LEVEL_SELECT,
+    	PAUSED,
+    	QUIT_POPUP,
+    	LOADING,
+    	GAME,
+    	OPTIONS
     }
     
     public static SceneManager getInstance(){ return INSTANCE; }    
@@ -45,32 +45,15 @@ public class SceneManager
     {
         switch (sceneType)
         {
-            case SCENE_MAIN_MENU:
-                setScene(mMenuScene);
-                break;
-            case SCENE_GAME:
-                setScene(mGameScene);
-                break;
-            case SCENE_SPLASH:
-                setScene(mSplashScene);
-                break;
-            case SCENE_LEVEL_SELECT:
-                setScene(mLevelSelectScene);
-                break;
-            case SCENE_PAUSED:
-            	setScene(mPausedScene);
-            	break;
-            case SCENE_QUIT_POPUP:
-            	setScene(mQuitPopupScene);
-            	break;
-            case SCENE_LOADING:
-            	setScene(mLoadingScene);
-            	break;
-            case SCENE_OPTIONS:
-            	setScene(mOptionsScene);
-            	break;
-            default:
-                break;
+            case MAIN_MENU:  	setScene(mMenuScene); break;
+            case GAME:       	setScene(mGameScene); break;
+            case SPLASH:        setScene(mSplashScene); break;
+            case LEVEL_SELECT:	setScene(mLevelSelectScene); break;
+            case PAUSED:        setScene(mPausedScene); break;
+            case QUIT_POPUP: 	setScene(mQuitPopupScene); break;
+            case LOADING:       setScene(mLoadingScene); break;
+            case OPTIONS:       setScene(mOptionsScene); break;
+            default:                break;
         }
     }
     
@@ -166,7 +149,9 @@ public class SceneManager
     	qps.fadeIn();
     }
     
-    public void loadOptionsScene(final Engine mEngine) { 	
+    public void loadOptionsScene(final Engine mEngine) { loadOptionsScene(mEngine, true); }
+    
+    public void loadOptionsScene(final Engine mEngine, boolean background) { 	
     	OptionsScene os = (OptionsScene) mOptionsScene;
     	
     	float musicVolume = os.activity.getOptions().getFloat("musicVolume", 50);
@@ -175,7 +160,7 @@ public class SceneManager
     	os.getFXSlider().setValue(fxVolume);
     	
     	mCurrentScene.setChildScene(os);
-    	os.fadeIn();    	
+    	os.fadeIn(background);    	
     }
     
     public void loadPauseScene(final Engine mEngine) {

@@ -53,7 +53,7 @@ public class QuitPopupScene extends BaseScene implements IOnSceneTouchListener, 
 	public void onMenuKeyPressed() { return; }
 
 	@Override
-	public SceneType getSceneType() { return SceneType.SCENE_QUIT_POPUP; }
+	public SceneType getSceneType() { return SceneType.QUIT_POPUP; }
 
 	@Override
 	public void disposeScene() { return; }

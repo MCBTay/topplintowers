@@ -229,7 +229,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	public void onMenuKeyPressed() { return; }	
 	
     @Override
-	public SceneType getSceneType() { return SceneType.SCENE_LEVEL_SELECT; }
+	public SceneType getSceneType() { return SceneType.LEVEL_SELECT; }
 
 	@Override
 	public void disposeScene() { 

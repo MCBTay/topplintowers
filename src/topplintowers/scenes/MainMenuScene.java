@@ -23,6 +23,8 @@ import topplintowers.levels.LevelMgr;
 import topplintowers.levels.Levels;
 import topplintowers.scenes.SceneManager.SceneType;
 
+import android.content.SharedPreferences;
+
 import com.topplintowers.R;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener {
@@ -43,6 +45,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		createBackground();
 		createTitle();
 		createMenuChildScene();
+		
+		SharedPreferences options = activity.getOptions();
+		float volume = options.getFloat("musicVolume", 50);
+		ResourceManager.mBackgroundMusic.setVolume(volume/100);
+		ResourceManager.mBackgroundMusic.play();
 	}
 	
 	private void createBackground() {        
@@ -132,7 +139,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	@Override
-	public SceneType getSceneType() { return SceneType.SCENE_MAIN_MENU; }
+	public SceneType getSceneType() { return SceneType.MAIN_MENU; }
 	
 	@Override
 	public void disposeScene() {
