@@ -97,7 +97,7 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 		float posX = 0;
 		float crateEdge = 0, spaceToFill = 0, textWidth = 0;
 		
-		countText = new Text(0, 0, ResourceManager.mFontLevelSelect, crateCount, instance.getVertexBufferObjectManager());
+		countText = new Text(0, 0, ResourceManager.mFont32, crateCount, instance.getVertexBufferObjectManager());
 		if (side == "left") {
 			crateEdge = parent.getX() + parent.getWidthScaled();
 			spaceToFill = this.parent.getSprite().getWidthScaled() - crateEdge;

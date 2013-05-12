@@ -142,7 +142,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	}
 	
 	private void createLevelText(Levels level, Sprite button) {
-		TextMenuItem text = new TextMenuItem(level.ordinal(), ResourceManager.mFontLevelSelect, "Level "+((Integer)level.ordinal()).toString(), vbom);	
+		TextMenuItem text = new TextMenuItem(level.ordinal(), ResourceManager.mFont32, "Level "+((Integer)level.ordinal()).toString(), vbom);	
 		button.attachChild(text);
 		text.setPosition(text.getX() + 5, text.getY());
 	}
@@ -152,7 +152,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	    
 	    float goalHeight = currentLevel.getGoal();
 	    CharSequence goalHeightString = "Goal: " + goalHeight + " ft";
-		Text text = new Text(0, 0, ResourceManager.mFontLevelSelect, goalHeightString, vbom);
+		Text text = new Text(0, 0, ResourceManager.mFont32, goalHeightString, vbom);
 			
 		text.setPosition(button.getWidth()- text.getWidth() - 5, 0);
 		button.attachChild(text);
@@ -184,7 +184,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 				
 				
 				CharSequence countString = ((Integer)count).toString();
-				Text countText = new Text(0, 0, ResourceManager.mFontLevelSelect, countString, vbom);
+				Text countText = new Text(0, 0, ResourceManager.mFont32, countString, vbom);
 				float countX = crate.getX() + crate.getWidthScaled() + 5;
 				float countY = crate.getY() + crate.getHeightScaled()/2 - countText.getHeightScaled()/2;	
 				countText.setPosition(countX, countY);

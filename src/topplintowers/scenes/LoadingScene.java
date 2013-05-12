@@ -24,7 +24,7 @@ public class LoadingScene extends BaseScene {
 		rect.setColor(0,0,0,0.75f);
 		attachChild(rect);
 		
-		mText = new Text(0, 0, resourceManager.mFontButton, "Loading...", vbom);
+		mText = new Text(0, 0, resourceManager.mFont48, "Loading...", vbom);
 		float textX = 800 - mText.getWidth() - 10;
 		float textY = 480 - mText.getHeight() - 10;
 		mText.setPosition(textX, textY);

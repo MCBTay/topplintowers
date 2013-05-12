@@ -28,7 +28,7 @@ public class SceneCommon {
 		final SpriteMenuItem menuButton = new SpriteMenuItem(button.getValue(), ResourceManager.mMenuButtonTextureRegion, instance.getVertexBufferObjectManager());
 		scene.addMenuItem(menuButton);
 				
-		TextMenuItem menuButtonText = new TextMenuItem(button.getValue(), ResourceManager.mFontButton, buttonText, instance.getVertexBufferObjectManager());
+		TextMenuItem menuButtonText = new TextMenuItem(button.getValue(), ResourceManager.mFont48, buttonText, instance.getVertexBufferObjectManager());
 		menuButtonText.setPosition(5, 0);
 		menuButton.attachChild(menuButtonText);
 		
@@ -163,7 +163,7 @@ public class SceneCommon {
 	}
 	
 	public static Text createLargeText(Scene scene, String label) {
-		Text mText = new Text(0, 0, ResourceManager.mFontSplash, label, instance.getVertexBufferObjectManager());
+		Text mText = new Text(0, 0, ResourceManager.mFont140, label, instance.getVertexBufferObjectManager());
 		float fontX = 25;
 		float fontY = instance.mCamera.getHeight()/2 - mText.getHeight()/2;
 		mText.setPosition(fontX, fontY);

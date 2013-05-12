@@ -77,10 +77,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	private void createTitle() {		
-		Text topplinText = new Text(25, 0, ResourceManager.mFontTitle, activity.getString(R.string.topplin), vbom);
+		Text topplinText = new Text(25, 0, ResourceManager.mFont115, activity.getString(R.string.topplin), vbom);
 		attachChild(topplinText);
 		
-		Text towersText = new Text(0, 0, ResourceManager.mFontTitle, activity.getString(R.string.towers), vbom);
+		Text towersText = new Text(0, 0, ResourceManager.mFont115, activity.getString(R.string.towers), vbom);
 		float newX = topplinText.getX() + topplinText.getWidth()/3;
 		float newY = topplinText.getY() + topplinText.getHeight()/2 + 15;
 		towersText.setPosition(newX, newY);

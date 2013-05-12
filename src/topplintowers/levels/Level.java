@@ -44,7 +44,7 @@ public class Level {
 		goalLine.setColor(Color.WHITE);
 		currentScene.getContainer().attachChild(goalLine);
 		
-		Text goalText = new Text(0, 0, ResourceManager.mGoalFont, "Goal", currentScene.getVBOM());
+		Text goalText = new Text(0, 0, ResourceManager.mFont48, "Goal", currentScene.getVBOM());
 		float textPosX = goalLine.getX2() - goalText.getWidth();
 		float textPosY = goalLine.getY2() - goalText.getHeight();
 		goalText.setPosition(textPosX, textPosY);

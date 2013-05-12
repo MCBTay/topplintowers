@@ -43,7 +43,6 @@ public class ResourceManager
     // HUD Textures
     public BuildableBitmapTextureAtlas mHUDTextureAtlas;
 	public static TextureRegion mCrateContainerMiddleTextureRegion, mCrateContainerEndTextureRegion, mScrollBarTextureRegion, mScrollBarEndTextureRegion;
-	public static Font mCrateCountFont;
     
     // Scene Textures
     public static BitmapTextureAtlas mBackgroundTexture;   //TODO delete
@@ -79,9 +78,6 @@ public class ResourceManager
 	private static BitmapTextureAtlas mLevelSelectButtonTexture, mLockTexture;
 	public static TextureRegion mLevelSelectButtonTextureRegion, mLockTextureRegion;
 	
-	public static BitmapTextureAtlas mFontButtonTexture, mFontLevelSelectTexture;
-	public static Font mFontButton, mFontLevelSelect;
-	
 	public BuildableBitmapTextureAtlas mLevelSelectCrateThumbnailsTextureAtlas;
 	public static TextureRegion mLevelSelectWoodThumb, mLevelSelectStoneThumb, mLevelSelectMetalThumb, mLevelSelectMagnetThumb,
 						 mLevelSelectElectromagnetThumb, mLevelSelectStickyThumb, mLevelSelectTransformerThumb;
@@ -89,24 +85,14 @@ public class ResourceManager
     // Splash textures
 	private static BitmapTextureAtlas mSplashTexture;
 	public static TextureRegion mSplashTextureRegion;
-   
-    public static BitmapTextureAtlas mFontSplashTexture;
-    public static Font mFontSplash;
     
     // Parallax textures
     public static BitmapTextureAtlas mParallaxTexture1, mParallaxTexture2, mParallaxTexture3;
     public static TextureRegion mParallaxTextureRegion1, mParallaxTextureRegion2, mParallaxTextureRegion3;
     
     // Global Font
-    public static BitmapTextureAtlas mFontTitleTexture;
-    public static Font mFontTitle;
-    
-    public static BitmapTextureAtlas mFontSmallTexture;
-    public static BitmapTextureAtlas mGoalFontTexture;
-    public static BitmapTextureAtlas mLoadingFontTexture;
-    public static Font mFontSmall;
-    public static Font mGoalFont;
-    public static Font mLoadingFont;
+    public static BitmapTextureAtlas mFont32Texture, mFont48Texture, mFont64Texture, mFont115Texture, mFont140Texture;
+    public static Font mFont32, mFont48, mFont64, mFont115, mFont140;
     
     // GameScene Textures
     public BuildableBitmapTextureAtlas mGameBackgroundTextureAtlas;
@@ -123,13 +109,12 @@ public class ResourceManager
     public void loadMenuResources()
     {
         loadMenuGraphics();
-        loadMenuFonts();
+        loadFonts();
         loadMenuAudio();  
     }
     
     public void loadGameResources()
     {
-    	loadGameFonts();
     	loadGameTextures();  
         loadGameAudio();
         loadPauseTextures();
@@ -226,26 +211,26 @@ public class ResourceManager
     	mLockTextureRegion = null; 
     }
     
-    private void loadMenuFonts() {
-    	mFontButtonTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-		mFontButton = FontFactory.createFromAsset(mActivity.getFontManager(), mFontButtonTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 48, true, Color.WHITE);
-		mFontButton.load();
+    private void loadFonts() {
+		mFont32Texture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+		mFont32 = FontFactory.createFromAsset(mActivity.getFontManager(), mFont32Texture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 32, true, Color.WHITE);
+		mFont32.load();
 		
-		mFontTitleTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-		mFontTitle = FontFactory.createFromAsset(mActivity.getFontManager(), mFontTitleTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 115, true, Color.WHITE);
-		mFontTitle.load();
+    	mFont48Texture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+		mFont48 = FontFactory.createFromAsset(mActivity.getFontManager(), mFont48Texture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 48, true, Color.WHITE);
+		mFont48.load();
 		
-		mLoadingFontTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-		mLoadingFont = FontFactory.createFromAsset(mActivity.getFontManager(),  mLoadingFontTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf",  64,  true, Color.WHITE);
-		mLoadingFont.load();
+		mFont64Texture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+		mFont64 = FontFactory.createFromAsset(mActivity.getFontManager(),  mFont64Texture, mActivity.getAssets(), "LeagueGothic-Regular.otf",  64,  true, Color.WHITE);
+		mFont64.load();
 		
-		mFontSplashTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
-		mFontSplash = FontFactory.createFromAsset(mActivity.getFontManager(), mFontSplashTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 140, true, Color.WHITE);
-		mFontSplash.load();
+		mFont115Texture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+		mFont115 = FontFactory.createFromAsset(mActivity.getFontManager(), mFont115Texture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 115, true, Color.WHITE);
+		mFont115.load();
 		
-		mFontLevelSelectTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-		mFontLevelSelect = FontFactory.createFromAsset(mActivity.getFontManager(), mFontLevelSelectTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 32, true, Color.WHITE);
-		mFontLevelSelect.load();
+		mFont140Texture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
+		mFont140 = FontFactory.createFromAsset(mActivity.getFontManager(), mFont140Texture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 140, true, Color.WHITE);
+		mFont140.load();
     }
     
     public void unloadMenuTextures() {
@@ -477,16 +462,6 @@ public class ResourceManager
     
     public void unloadPauseTextures() {
     	// atm there really aren't pause textures that aren't already loaded
-    }
-    
-    private void loadGameFonts() {
-    	mFontLevelSelectTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
-    	mFontLevelSelect = FontFactory.createFromAsset(mActivity.getFontManager(), mFontLevelSelectTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 36, true, Color.WHITE);
-    	mFontLevelSelect.load();
-    	
-    	mGoalFontTexture = new BitmapTextureAtlas(mActivity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
-    	mGoalFont = FontFactory.createFromAsset(mActivity.getFontManager(), mGoalFontTexture, mActivity.getAssets(), "LeagueGothic-Regular.otf", 42, true, Color.WHITE); 
-    	mGoalFont.load();
     }
     
     private void loadGameAudio() {
