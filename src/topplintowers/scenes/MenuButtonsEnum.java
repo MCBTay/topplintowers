@@ -8,7 +8,8 @@ public enum MenuButtonsEnum {
 	RESTART(4),
 	MAIN_MENU(5), 
 	LEVEL_SELECT(6), 
-	FREE_MODE(7);
+	FREE_MODE(7),
+	OPTIONS(8);
 	
 	private int value;
 

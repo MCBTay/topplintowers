@@ -27,7 +27,7 @@ import com.topplintowers.R;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener {
 	private GameScene callingScene;
-    private SpriteMenuItem mLevelSelectButton, mFreeModeButton, mQuitButton, mResumeButton;
+    private SpriteMenuItem mLevelSelectButton, mFreeModeButton, mQuitButton, mResumeButton, mOptionsButton;
     
     private ArrayList<SpriteMenuItem> mButtons;
     
@@ -103,6 +103,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		mButtons.add(mLevelSelectButton);
 		mFreeModeButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.FREE_MODE, activity.getString(R.string.freemode));
 		mButtons.add(mFreeModeButton);
+		mOptionsButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.OPTIONS, activity.getString(R.string.option));
+		mButtons.add(mOptionsButton);
 		mQuitButton = SceneCommon.createMenuButton(mMenuChildScene, MenuButtonsEnum.QUIT, activity.getString(R.string.quit));
 		mButtons.add(mQuitButton);
 		
