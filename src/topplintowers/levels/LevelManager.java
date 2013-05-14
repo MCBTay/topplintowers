@@ -1,7 +1,6 @@
 package topplintowers.levels;
 
 import java.util.LinkedHashMap;
-
 import topplintowers.crates.CrateType;
 
 public class LevelManager {

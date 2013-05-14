@@ -6,8 +6,8 @@ import org.andengine.entity.text.Text;
 
 import com.topplintowers.R;
 
-import topplintowers.Slider;
-import topplintowers.Slider.OnSliderValueChangeListener;
+import topplintowers.lib.Slider;
+import topplintowers.lib.Slider.OnSliderValueChangeListener;
 import topplintowers.resources.ResourceManager;
 import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
