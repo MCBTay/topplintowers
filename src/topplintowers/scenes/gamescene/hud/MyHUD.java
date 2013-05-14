@@ -1,4 +1,4 @@
-package topplintowers.hud;
+package topplintowers.scenes.gamescene.hud;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -12,7 +12,7 @@ import org.andengine.input.touch.TouchEvent;
 import topplintowers.crates.CrateType;
 import topplintowers.levels.Level;
 import topplintowers.resources.ResourceManager;
-import topplintowers.scenes.GameScene;
+import topplintowers.scenes.gamescene.GameScene;
 
 public class MyHUD extends HUD implements IOnAreaTouchListener {
     public static HUD mHud;

@@ -1,4 +1,4 @@
-package topplintowers.scenes;
+package topplintowers.scenes.gamescene;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -36,11 +36,13 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import topplintowers.Platform;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
-import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
 import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.SoundManager;
+import topplintowers.scenes.BaseScene;
+import topplintowers.scenes.SceneManager;
 import topplintowers.scenes.SceneManager.SceneType;
+import topplintowers.scenes.gamescene.hud.MyHUD;
 
 public class GameScene extends BaseScene implements IOnSceneTouchListener, IScrollDetectorListener  {
 	

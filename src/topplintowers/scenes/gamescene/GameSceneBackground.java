@@ -1,4 +1,4 @@
-package topplintowers.scenes;
+package topplintowers.scenes.gamescene;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public class GameSceneBackground {
     }
     
     private Sprite createBackgroundPortion(TextureRegion tr, float posY) {
-		Sprite backgroundSprite = new Sprite(0, 0, tr, scene.vbom) {
+		Sprite backgroundSprite = new Sprite(0, 0, tr, scene.getVBOM()) {
 	    	@Override
 		     protected void preDraw(GLState pGLState, Camera pCamera)
 		     {
@@ -86,7 +86,7 @@ public class GameSceneBackground {
 		newCloud.setAlpha((float)Math.random());
 
 		float randomSpeed = ((float)Math.random() * 20) + 40;
-		MoveXModifier moveToRight = new MoveXModifier(randomSpeed, newCloud.getX(), scene.camera.getWidth());
+		MoveXModifier moveToRight = new MoveXModifier(randomSpeed, newCloud.getX(), scene.getCamera().getWidth());
 		moveToRight.setAutoUnregisterWhenFinished(true);
 		newCloud.registerEntityModifier(moveToRight);
 		
@@ -117,7 +117,7 @@ public class GameSceneBackground {
 		for (int i = 0; i < 300; i++) {
 			int randomStar = (int)((float)Math.random() * 3);
 			TextureRegion starTexture = ResourceManager.mStarTextureRegions.get(randomStar);
-			Sprite newStar = new Sprite(0, 0, starTexture, scene.vbom);
+			Sprite newStar = new Sprite(0, 0, starTexture, scene.getVBOM());
 			newStar.setCullingEnabled(true);
 			scene.getContainer().attachChild(newStar);
 			
@@ -126,7 +126,7 @@ public class GameSceneBackground {
 			float randomScale = ((float)Math.random() * 0.3f) + 0.2f;
 			newStar.setScale(randomScale);
 			
-			float starPosX = ((float)Math.random() * scene.camera.getWidth());
+			float starPosX = ((float)Math.random() * scene.getCamera().getWidth());
 			float starPosY = ((float)Math.random() * -2500) - 2000;
 			newStar.setPosition(starPosX, starPosY);
 			

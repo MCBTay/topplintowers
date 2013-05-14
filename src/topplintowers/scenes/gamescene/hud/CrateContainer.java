@@ -1,4 +1,4 @@
-package topplintowers.hud;
+package topplintowers.scenes.gamescene.hud;
 
 import java.util.ArrayList;
 import java.util.Timer;

@@ -1,4 +1,4 @@
-package topplintowers.hud;
+package topplintowers.scenes.gamescene.hud;
 
 import org.andengine.entity.modifier.MoveModifier;
 import org.andengine.entity.modifier.ScaleModifier;
