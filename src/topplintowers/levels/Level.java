@@ -9,19 +9,20 @@ import org.andengine.util.color.Color;
 import com.topplintowers.R;
 
 import topplintowers.crates.CrateType;
+import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.GameScene;
 
 public class Level {
 	private float goalHeight;
 	private LinkedHashMap<CrateType, Integer> crateCounts;
-	private Levels level;
+	private LevelType level;
 	private boolean isLocked = true;
 
-	public Level(Levels level, float goalHeight, LinkedHashMap<CrateType, Integer> crateCounts) {
+	public Level(LevelType level, float goalHeight, LinkedHashMap<CrateType, Integer> crateCounts) {
 		this.level = level;
 		
-		if (this.level == Levels.ONE) {
+		if (this.level == LevelType.ONE) {
 			this.isLocked = false;
 		}
 		
@@ -31,7 +32,7 @@ public class Level {
 	
 	public boolean getLocked() 	{ return this.isLocked; }
 	public float getGoal() 		{ return this.goalHeight; }
-	public Levels getLevelType() { return this.level; }
+	public LevelType getLevelType() { return this.level; }
 	
 	public void setGoal(GameScene currentScene) {
 		float goalScaled = 65 * goalHeight;	

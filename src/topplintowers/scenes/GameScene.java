@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.microedition.khronos.opengles.GL10;
 
-import org.andengine.audio.sound.Sound;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -27,10 +26,8 @@ import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
-import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -41,8 +38,7 @@ import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.hud.MyHUD;
 import topplintowers.levels.Level;
-import topplintowers.levels.Levels;
-import topplintowers.resources.ResourceManager;
+import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
@@ -92,7 +88,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          public void onTimePassed(final TimerHandler pTimerHandler) {
 	          	cleaner();
 	          	mHud.updateCounts();
-	          	if (level.getLevelType() != Levels.FREEMODE) {
+	          	if (level.getLevelType() != LevelType.FREEMODE) {
 	          		//checkForLevelCompletion();
 	          	}
 	          }
@@ -128,7 +124,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	private void createHUD() {
-		boolean freeMode = this.level.getLevelType() == Levels.FREEMODE;
+		boolean freeMode = this.level.getLevelType() == LevelType.FREEMODE;
 		mHud = new MyHUD(this, freeMode, this.level, mBackground.getHeight());
 		camera.setHUD(mHud);
 	}
@@ -169,7 +165,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public GameScene(Level level) {
 		this.level = level;
 		
-		if (level.getLevelType() != Levels.FREEMODE) {
+		if (level.getLevelType() != LevelType.FREEMODE) {
 			level.setGoal(this);
 		}
 		

@@ -1,13 +1,8 @@
 package topplintowers.scenes;
 
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
-
-import android.content.SharedPreferences;
 
 import com.topplintowers.R;
 
@@ -22,7 +17,6 @@ public class OptionsScene extends BaseScene implements OnSliderValueChangeListen
 	private Text mTitleText, mMusicVolumeText, mFXVolumeText;
 	private Slider mMusicSlider, mFXSlider;
 	private Sprite mButtonBackground;
-	private SharedPreferences mOptions;
 	
 	
 	public Slider getMusicSlider() { return mMusicSlider; }

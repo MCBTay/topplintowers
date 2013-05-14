@@ -1,7 +1,5 @@
 package topplintowers.scenes;
 
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -9,10 +7,6 @@ import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 
 import topplintowers.MainActivity;
-import topplintowers.hud.CrateContainer;
-import topplintowers.hud.CrateThumbnail;
-import topplintowers.levels.Level;
-import topplintowers.levels.Levels;
 
 public class MenuItemListener implements IOnMenuItemClickListener {
 	private static MainActivity instance = MainActivity.getSharedInstance();

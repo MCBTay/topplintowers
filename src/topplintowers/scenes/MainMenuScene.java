@@ -18,13 +18,11 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.util.GLState;
-import topplintowers.levels.LevelMgr;
-import topplintowers.levels.Levels;
+import topplintowers.levels.LevelManager;
+import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.ResourceManager;
 import topplintowers.resources.SoundManager;
 import topplintowers.scenes.SceneManager.SceneType;
-
-import android.content.SharedPreferences;
 
 import com.topplintowers.R;
 
@@ -169,7 +167,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	    	        	SceneManager.getInstance().loadLevelSelect(engine);
 	    	        	break;
 	    	        case FREE_MODE:
-	            		SceneManager.getInstance().loadGameScene(engine, LevelMgr.LevelList.get(Levels.FREEMODE));
+	            		SceneManager.getInstance().loadGameScene(engine, LevelManager.LevelList.get(LevelType.FREEMODE));
 	    	        	break;
 	    	        case QUIT:
 	    	        	SceneManager.getInstance().loadQuitPopup(engine);    	

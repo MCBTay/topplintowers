@@ -10,7 +10,7 @@ import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.ui.activity.BaseGameActivity;
-import topplintowers.levels.LevelMgr;
+import topplintowers.levels.LevelManager;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.BaseScene;
 import topplintowers.scenes.GameScene;
@@ -34,7 +34,7 @@ public class MainActivity extends BaseGameActivity {
 	public Body mGroundBody;
 	public MouseJoint mMouseJointActive;
 
-	public static LevelMgr mLevelManager;
+	public static LevelManager mLevelManager;
 	
 	private ResourceManager mResourceManager;
 	
@@ -45,7 +45,7 @@ public class MainActivity extends BaseGameActivity {
 	public EngineOptions onCreateEngineOptions() {
 		instance = this;		
 		mCamera = new SmoothCamera(0, 0, 800, 480, 0, 1500, 0);
-		mLevelManager = new LevelMgr();
+		mLevelManager = new LevelManager();
 		
 		EngineOptions options = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(800, 480), mCamera);
 		options.getAudioOptions().setNeedsSound(true);
@@ -185,12 +185,12 @@ public class MainActivity extends BaseGameActivity {
                 SceneManager.getInstance().createMenuScene();
             }
 	    }));
-		mLevelManager = new LevelMgr();		
+		mLevelManager = new LevelManager();		
 	    pOnPopulateSceneCallback.onPopulateSceneFinished();   
 	}
 	
 	
-	public LevelMgr getLevelMgr() { return mLevelManager; }
+	public LevelManager getLevelMgr() { return mLevelManager; }
 	
 	@Override
 	protected void onDestroy() {

@@ -4,11 +4,17 @@ import java.util.LinkedHashMap;
 
 import topplintowers.crates.CrateType;
 
-public class LevelMgr {
+public class LevelManager {
 	private Level currentLevel;
 	
-	public static LinkedHashMap<Levels, LinkedHashMap<CrateType, Integer>> CountList = new LinkedHashMap<Levels, LinkedHashMap<CrateType, Integer>>();
-	public static LinkedHashMap<Levels, Level> LevelList = new LinkedHashMap<Levels, Level>();
+	public enum LevelType {
+		FREEMODE, ONE, TWO, THREE, FOUR, 
+		FIVE, SIX, SEVEN, EIGHT, NINE,
+		TEN, ELEVEN, TWELVE; 
+    }
+	
+	public static LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>> CountList = new LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>>();
+	public static LinkedHashMap<LevelType, Level> LevelList = new LinkedHashMap<LevelType, Level>();
 	
 	private Integer max = Integer.MAX_VALUE;
 	private int[] free_mode = {max, max, max, max, max, max, max};
@@ -25,35 +31,35 @@ public class LevelMgr {
 	private int[] eleven	= {11, 11, 11, 11, 11, 11, 11};
 	private int[] twelve	= {11, 22, 33, 44, 55, 66, 77};
 	
-	public LevelMgr() {
+	public LevelManager() {
 		SetupCountList();
 		
 		float goalHeight = 1;
 		
-		Levels[] levels = Levels.values();
+		LevelType[] levels = LevelType.values();
 		
-		for (Levels level : levels) {
+		for (LevelType level : levels) {
         	LevelList.put(level, new Level(level, goalHeight++, CountList.get(level)));
 		}
 	}
 	
 	public Level getCurrentLevel()      { return currentLevel; }
-	public Level getLevel(Levels level) { return LevelList.get(level); }
+	public Level getLevel(LevelType level) { return LevelList.get(level); }
 	
 	private void SetupCountList() {
-		CountList.put(Levels.FREEMODE, 	getCrateCount(free_mode));
-		CountList.put(Levels.ONE, 		getCrateCount(one));
-		CountList.put(Levels.TWO, 		getCrateCount(two));
-		CountList.put(Levels.THREE, 	getCrateCount(three));
-		CountList.put(Levels.FOUR, 		getCrateCount(four));
-		CountList.put(Levels.FIVE, 		getCrateCount(five));
-		CountList.put(Levels.SIX, 		getCrateCount(six));
-		CountList.put(Levels.SEVEN, 	getCrateCount(seven));
-		CountList.put(Levels.EIGHT, 	getCrateCount(eight));
-		CountList.put(Levels.NINE, 		getCrateCount(nine));
-		CountList.put(Levels.TEN, 		getCrateCount(ten));
-		CountList.put(Levels.ELEVEN,	getCrateCount(eleven));
-		CountList.put(Levels.TWELVE, 	getCrateCount(twelve));
+		CountList.put(LevelType.FREEMODE, 	getCrateCount(free_mode));
+		CountList.put(LevelType.ONE, 		getCrateCount(one));
+		CountList.put(LevelType.TWO, 		getCrateCount(two));
+		CountList.put(LevelType.THREE, 	getCrateCount(three));
+		CountList.put(LevelType.FOUR, 		getCrateCount(four));
+		CountList.put(LevelType.FIVE, 		getCrateCount(five));
+		CountList.put(LevelType.SIX, 		getCrateCount(six));
+		CountList.put(LevelType.SEVEN, 	getCrateCount(seven));
+		CountList.put(LevelType.EIGHT, 	getCrateCount(eight));
+		CountList.put(LevelType.NINE, 		getCrateCount(nine));
+		CountList.put(LevelType.TEN, 		getCrateCount(ten));
+		CountList.put(LevelType.ELEVEN,	getCrateCount(eleven));
+		CountList.put(LevelType.TWELVE, 	getCrateCount(twelve));
 	}
 	
 	private LinkedHashMap<CrateType, Integer> getCrateCount(int[] count) {

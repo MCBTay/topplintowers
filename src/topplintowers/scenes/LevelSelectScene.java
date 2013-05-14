@@ -30,8 +30,8 @@ import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import topplintowers.crates.CrateType;
 import topplintowers.levels.Level;
-import topplintowers.levels.LevelMgr;
-import topplintowers.levels.Levels;
+import topplintowers.levels.LevelManager;
+import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
 
@@ -62,8 +62,8 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 
 	public void createLevelButtons() {
 		container = new Entity();
-		for (Levels level : Levels.values()) {
-			if (level != Levels.FREEMODE) {
+		for (LevelType level : LevelType.values()) {
+			if (level != LevelType.FREEMODE) {
 				Sprite button = createButton(level);
 				container.attachChild(button);
 			}
@@ -73,13 +73,13 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		attachChild(container);
 	}
 	
-	public Sprite createButton(Levels level) {
+	public Sprite createButton(LevelType level) {
 		Sprite button = createButtonBackground(level);
 		createLevelText(level, button);
 		createGoalText(level, button);
 		createCrateThumbnailsAndCounts(level, button);
 		
-		if (LevelMgr.LevelList.get(level).getLocked()) {
+		if (LevelManager.LevelList.get(level).getLocked()) {
 			button.setColor(dimmed);
 			Sprite lock = new Sprite(0, 0, ResourceManager.mLockTextureRegion, vbom);
 			
@@ -97,7 +97,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		return button;
 	}
 	
-	private Sprite createButtonBackground(final Levels level) {
+	private Sprite createButtonBackground(final LevelType level) {
 		Sprite menuButton = new Sprite(0, 0, ResourceManager.mLevelSelectButtonTextureRegion, vbom) { 
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -112,7 +112,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		float posX = 158;
 		float posY = 202;
 		
-		if (level != Levels.ONE) {
+		if (level != LevelType.ONE) {
 			posY += 95 * (level.ordinal() - 1);
 		}
 		
@@ -141,13 +141,13 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		mHud.attachChild(line);
 	}
 	
-	private void createLevelText(Levels level, Sprite button) {
+	private void createLevelText(LevelType level, Sprite button) {
 		TextMenuItem text = new TextMenuItem(level.ordinal(), ResourceManager.mFont32, "Level "+((Integer)level.ordinal()).toString(), vbom);	
 		button.attachChild(text);
 		text.setPosition(text.getX() + 5, text.getY());
 	}
 	
-	private void createGoalText(Levels level, Sprite button) {
+	private void createGoalText(LevelType level, Sprite button) {
 	    Level currentLevel = activity.mLevelManager.getLevel(level);
 	    
 	    float goalHeight = currentLevel.getGoal();
@@ -158,7 +158,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		button.attachChild(text);
 	}
 	
-	private void createCrateThumbnailsAndCounts(Levels level, Sprite button) {
+	private void createCrateThumbnailsAndCounts(LevelType level, Sprite button) {
 		Level currentLevel = activity.mLevelManager.getLevel(level);
 		
 		LinkedHashMap<CrateType, Integer> crateCounts = currentLevel.getCounts();
@@ -298,7 +298,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 	@Override
 	public void onClick(ClickDetector pClickDetector, int pPointerID, float pSceneX, float pSceneY) {
 		if (iItemClicked != -1) {
-			Level newLevel = activity.mLevelManager.getLevel(Levels.values()[iItemClicked]);
+			Level newLevel = activity.mLevelManager.getLevel(LevelType.values()[iItemClicked]);
 			mHud.setVisible(false);
 			SceneManager.getInstance().loadGameScene(engine, newLevel);
 		}
