@@ -17,8 +17,9 @@ import org.andengine.entity.text.Text;
 import topplintowers.MainActivity;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
-import topplintowers.hud.MyHUD;
 import topplintowers.resources.ResourceManager;
+import topplintowers.scenes.gamescene.GameScene;
+import topplintowers.scenes.gamescene.hud.MyHUD;
 
 public class SceneCommon {
 

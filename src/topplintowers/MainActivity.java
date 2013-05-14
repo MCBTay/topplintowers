@@ -13,10 +13,10 @@ import org.andengine.ui.activity.BaseGameActivity;
 import topplintowers.levels.LevelManager;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.BaseScene;
-import topplintowers.scenes.GameScene;
 import topplintowers.scenes.PauseMenuScene;
 import topplintowers.scenes.SceneCommon;
 import topplintowers.scenes.SceneManager;
+import topplintowers.scenes.gamescene.GameScene;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 

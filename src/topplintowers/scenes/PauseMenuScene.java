@@ -17,10 +17,11 @@ import org.andengine.entity.text.Text;
 import topplintowers.MainActivity;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
-import topplintowers.hud.CrateContainer;
-import topplintowers.hud.CrateThumbnail;
-import topplintowers.hud.MyHUD;
 import topplintowers.scenes.SceneManager.SceneType;
+import topplintowers.scenes.gamescene.GameScene;
+import topplintowers.scenes.gamescene.hud.CrateContainer;
+import topplintowers.scenes.gamescene.hud.CrateThumbnail;
+import topplintowers.scenes.gamescene.hud.MyHUD;
 
 import com.topplintowers.R;
 

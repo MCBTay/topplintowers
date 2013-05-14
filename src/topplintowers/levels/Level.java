@@ -11,7 +11,7 @@ import com.topplintowers.R;
 import topplintowers.crates.CrateType;
 import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.resources.ResourceManager;
-import topplintowers.scenes.GameScene;
+import topplintowers.scenes.gamescene.GameScene;
 
 public class Level {
 	private float goalHeight;

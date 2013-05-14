@@ -4,7 +4,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
-import topplintowers.scenes.GameScene;
+import topplintowers.scenes.gamescene.GameScene;
 
 public class CloudPool extends GenericPool<Sprite> {
 

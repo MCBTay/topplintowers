@@ -11,7 +11,7 @@ import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
 import topplintowers.resources.PoolManager;
-import topplintowers.scenes.GameScene;
+import topplintowers.scenes.gamescene.GameScene;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
