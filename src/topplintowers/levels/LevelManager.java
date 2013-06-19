@@ -33,7 +33,7 @@ public class LevelManager {
 	public LevelManager() {
 		SetupCountList();
 		
-		float goalHeight = 1;
+		float goalHeight = 1.5f;
 		
 		LevelType[] levels = LevelType.values();
 		

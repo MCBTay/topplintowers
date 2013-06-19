@@ -25,9 +25,10 @@ public abstract class Crate implements IOnAreaTouchListener {
 	protected TextureRegion texture;
 	protected float weight;
 	protected GenericPool<Sprite> spritePool;
+	protected boolean isBeingMoved = false;
 	
 	private static float size = 65;
-    
+	
     public Crate(CrateType crateType, GenericPool<Sprite> pool, FixtureDef fd) { 
     	/* could probably move some of the duplicate code out of subclasses into this */ 
     	type = crateType;
@@ -46,16 +47,14 @@ public abstract class Crate implements IOnAreaTouchListener {
     }
     
 	public Body getBox() { return box; }
-	public void setBox(Body box) { this.box = box; }
-	
 	public Sprite getSprite() { return sprite; }
-	public void setSprite(Sprite sprite) { this.sprite = sprite; }
-
 	public CrateType getType() { return type; }
 	public static float getCrateWidth() { return size; }
-	
 	public GenericPool<Sprite> getSpritePool() { return spritePool; }
-	
+	public boolean getIsBeingMoved() { return isBeingMoved; }
+
+	public void setSprite(Sprite sprite) { this.sprite = sprite; }
+	public void setBox(Body box) { this.box = box; }
 	public void setPosition(float x, float y) {
 		final float widthD2 = sprite.getWidth() / 2;
 		final float heightD2 = sprite.getHeight() / 2;
@@ -84,6 +83,7 @@ public abstract class Crate implements IOnAreaTouchListener {
 			dX = curX;
 			dY = curY;
 			box.setTransform(curX/32,  curY/32, 0);
+			isBeingMoved = true;
 		
 		} else if (pSceneTouchEvent.isActionMove()) {
 			dX = curX - lastX;
@@ -91,10 +91,12 @@ public abstract class Crate implements IOnAreaTouchListener {
 			box.setTransform(curX/32, curY/32, 0);
 			lastX = curX;
 			lastX = curY;
+			isBeingMoved = true;
 			
 		} else if (pSceneTouchEvent.isActionUp()) { 
 			box.setType(BodyType.DynamicBody);
 			box.setLinearVelocity(dX, dY);
+			isBeingMoved = false;
 		}
 		return false;
 	}

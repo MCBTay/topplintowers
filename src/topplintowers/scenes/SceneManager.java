@@ -13,7 +13,7 @@ import topplintowers.scenes.gamescene.GameScene;
 
 public class SceneManager
 {
-    private BaseScene mSplashScene, mMenuScene, mGameScene, mPausedScene, mQuitPopupScene, mLevelSelectScene, mLoadingScene, mOptionsScene;
+    private BaseScene mSplashScene, mMenuScene, mGameScene, mPausedScene, mQuitPopupScene, mLevelSelectScene, mLoadingScene, mOptionsScene, mWinScene;
     
     private static final SceneManager INSTANCE = new SceneManager();
     private SceneType mCurrentSceneType = SceneType.SPLASH;
@@ -28,7 +28,8 @@ public class SceneManager
     	QUIT_POPUP,
     	LOADING,
     	GAME,
-    	OPTIONS
+    	OPTIONS,
+    	WIN
     }
     
     public static SceneManager getInstance(){ return INSTANCE; }    
@@ -54,6 +55,7 @@ public class SceneManager
             case QUIT_POPUP: 	setScene(mQuitPopupScene); break;
             case LOADING:       setScene(mLoadingScene); break;
             case OPTIONS:       setScene(mOptionsScene); break;
+            case WIN: 			setScene(mWinScene); break;
             default:                break;
         }
     }
@@ -91,7 +93,7 @@ public class SceneManager
     			ResourceManager.getInstance().loadGameResources();
     			mGameScene = new GameScene(level);
     			mPausedScene = new PauseMenuScene();
-    			
+    			mWinScene = new WinScene();
     			setScene(mGameScene);
     		}
     	}));
@@ -176,6 +178,20 @@ public class SceneManager
     	currentScene.setChildScene(mPausedScene, false, true, true);
     	
     	pms.fadeIn();
+    }
+    
+    public void loadWinScene(final Engine mEngine) {
+    	GameScene currentScene = (GameScene)mCurrentScene;
+    	currentScene.mHud.setVisible(false);
+    	
+    	WinScene ws = (WinScene) mWinScene;
+    	
+    	ws.setBackgroundPosition(0, ws.getCamera().getCenterY() - 240);
+    	//ws.setTextPosition(10, ws.getCamera().getCenterY() - ws.getText().getHeight()/2);
+    	
+    	currentScene.setChildScene(mWinScene, false, true, true);
+    	
+    	ws.fadeIn();
     }
     
 	public void returnToPauseMenu(OptionsScene os) {

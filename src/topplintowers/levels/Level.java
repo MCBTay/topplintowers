@@ -18,6 +18,7 @@ public class Level {
 	private LinkedHashMap<CrateType, Integer> crateCounts;
 	private LevelType level;
 	private boolean isLocked = true;
+	private Line goalLine;
 
 	public Level(LevelType level, float goalHeight, LinkedHashMap<CrateType, Integer> crateCounts) {
 		this.level = level;
@@ -32,6 +33,7 @@ public class Level {
 	
 	public boolean getLocked() 	{ return this.isLocked; }
 	public float getGoal() 		{ return this.goalHeight; }
+	public float getGoalLineHeight() { return this.goalLine.getY1(); }
 	public LevelType getLevelType() { return this.level; }
 	
 	public void setGoal(GameScene currentScene) {
@@ -41,7 +43,7 @@ public class Level {
 		float linePoxX = 400 - (lineLength/2);
 		float linePosY = currentScene.mPlatform.rectangle.getY() - goalScaled;
 		
-		Line goalLine = new Line(linePoxX, linePosY, linePoxX+lineLength, linePosY, 3, currentScene.getVBOM());
+		goalLine = new Line(linePoxX, linePosY, linePoxX+lineLength, linePosY, 3, currentScene.getVBOM());
 		goalLine.setColor(Color.WHITE);
 		currentScene.getContainer().attachChild(goalLine);
 		
