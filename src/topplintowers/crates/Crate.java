@@ -29,14 +29,18 @@ public abstract class Crate implements IOnAreaTouchListener {
 	
 	private static float size = 65;
 	
+	public Crate(CrateType crateType, GenericPool<Sprite> pool) {
+		type = crateType;
+		spritePool = pool;
+	}
+	
     public Crate(CrateType crateType, GenericPool<Sprite> pool, FixtureDef fd) { 
-    	/* could probably move some of the duplicate code out of subclasses into this */ 
     	type = crateType;
 		spritePool = pool;
 		sprite = spritePool.obtainPoolItem();
 		
 		box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, fd);
-		box.setBullet(true);
+		//box.setBullet(true);
 		
 		sprite.setUserData(box);
 		sprite.setVisible(true);
@@ -52,6 +56,7 @@ public abstract class Crate implements IOnAreaTouchListener {
 	public static float getCrateWidth() { return size; }
 	public GenericPool<Sprite> getSpritePool() { return spritePool; }
 	public boolean getIsBeingMoved() { return isBeingMoved; }
+	public float getSize() { return size; }
 
 	public void setSprite(Sprite sprite) { this.sprite = sprite; }
 	public void setBox(Body box) { this.box = box; }

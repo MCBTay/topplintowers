@@ -41,6 +41,10 @@ public class ResourceManager
     public BuildableBitmapTextureAtlas mCrateTextureAtlas;
     public static TextureRegion mWoodCrateTextureRegion, mStoneCrateTextureRegion, mMetalCrateTextureRegion, mMagnetCrateTextureRegion,
     						    mElectromagnetCrateTextureRegion, mStickyCrateTextureRegion, mTransformerCrateTextureRegion;
+    
+    public BuildableBitmapTextureAtlas mWoodCrateTextureAtlas;
+    public static TextureRegion mWoodCrateTopTextureRegion, mWoodCrateBottomTextureRegion, mWoodCrateLeftTextureRegion, 
+    							mWoodCrateRightTextureRegion, mWoodCrateDiagonalTextureRegion;
 
     // HUD Textures
     public BuildableBitmapTextureAtlas mHUDTextureAtlas;
@@ -294,6 +298,8 @@ public class ResourceManager
     	
     	mCrateTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 256, 512, TextureOptions.NEAREST);
     	
+    	
+    	
     	mWoodCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "wood.png");
     	mStoneCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "stone.png");
     	mMetalCrateTextureRegion 			= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mCrateTextureAtlas, mActivity, "metal.png");
@@ -305,6 +311,27 @@ public class ResourceManager
     	try {
     		mCrateTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
     		mCrateTextureAtlas.load();
+    	} catch (final TextureAtlasBuilderException e) {
+    		Debug.e(e);
+    	}
+    	
+    	loadWoodCrateTextures();
+    }
+    
+    private void loadWoodCrateTextures() {
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/crates/woodpieces/");
+    	
+    	mWoodCrateTextureAtlas = new BuildableBitmapTextureAtlas(mActivity.getTextureManager(), 128, 128);
+    	
+    	mWoodCrateTopTextureRegion 		= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTextureAtlas, mActivity, "top.png");
+    	mWoodCrateBottomTextureRegion  	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTextureAtlas, mActivity, "bottom.png");
+    	mWoodCrateLeftTextureRegion  	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTextureAtlas, mActivity, "left.png");
+    	mWoodCrateRightTextureRegion  	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTextureAtlas, mActivity, "right.png");
+    	mWoodCrateDiagonalTextureRegion	= BitmapTextureAtlasTextureRegionFactory.createFromAsset(mWoodCrateTextureAtlas, mActivity, "diagonal.png");
+    	
+    	try {
+    		mWoodCrateTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
+    		mWoodCrateTextureAtlas.load();
     	} catch (final TextureAtlasBuilderException e) {
     		Debug.e(e);
     	}

@@ -27,6 +27,8 @@ public abstract class BaseScene extends Scene
         createScene();
     }
     
+    public Engine getEngine() { return engine; }
+    
     public abstract void createScene();
     public abstract void onBackKeyPressed();
     public abstract void onMenuKeyPressed();

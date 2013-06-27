@@ -20,13 +20,9 @@ public class Level {
 	private boolean isLocked = true;
 	private Line goalLine;
 
-	public Level(LevelType level, float goalHeight, LinkedHashMap<CrateType, Integer> crateCounts) {
+	public Level(LevelType level, float goalHeight, LinkedHashMap<CrateType, Integer> crateCounts, boolean locked) {
 		this.level = level;
-		
-		if (this.level == LevelType.ONE) {
-			this.isLocked = false;
-		}
-		
+		this.isLocked = locked;
 		this.crateCounts = crateCounts;
 		this.goalHeight = goalHeight;	
 	}
@@ -35,6 +31,8 @@ public class Level {
 	public float getGoal() 		{ return this.goalHeight; }
 	public float getGoalLineHeight() { return this.goalLine.getY1(); }
 	public LevelType getLevelType() { return this.level; }
+	
+	public void setLocked(boolean lock) { this.isLocked = lock; }
 	
 	public void setGoal(GameScene currentScene) {
 		float goalScaled = 65 * goalHeight;	

@@ -1,8 +1,13 @@
 package topplintowers.scenes;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
@@ -12,8 +17,15 @@ import org.andengine.entity.text.Text;
 
 import com.topplintowers.R;
 
+import topplintowers.MainActivity;
+import topplintowers.crates.Crate;
+import topplintowers.crates.CrateType;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
+import topplintowers.scenes.gamescene.GameScene;
+import topplintowers.scenes.gamescene.hud.CrateContainer;
+import topplintowers.scenes.gamescene.hud.CrateThumbnail;
+import topplintowers.scenes.gamescene.hud.MyHUD;
 
 public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	private Rectangle mRectangle;
@@ -91,10 +103,80 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	}
 	
 	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-			float pMenuItemLocalX, float pMenuItemLocalY) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+		final MoveXModifier moveRight = new MoveXModifier(0.25f, pMenuItem.getX() - 25, camera.getWidth());
+		moveRight.setAutoUnregisterWhenFinished(true);
+		
+		MoveXModifier moveLeft = new MoveXModifier(0.25f, pMenuItem.getX(), pMenuItem.getX() - 25) {
+			@Override
+			protected void onModifierFinished(IEntity pItem) {
+				pItem.registerEntityModifier(moveRight);
+			}
+		};
+	    moveLeft.setAutoUnregisterWhenFinished(true);
+	    pMenuItem.registerEntityModifier(moveLeft);
+	    
+	    engine.registerUpdateHandler(new TimerHandler(0.55f, new ITimerCallback() {                      
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler)
+            {            	
+            	MenuButtonsEnum button = MenuButtonsEnum.values()[pMenuItem.getID()];
+            	switch (button) {
+	    	        case RESTART:
+	    	        	deleteExistingCrates();
+	    	        	reinitializeContainers();
+	    	        	((MainActivity)activity).onResumeGame();
+	    	    		break;
+	    	        case LEVEL_SELECT:
+	    	        	SceneManager.getInstance().loadLevelSelect(engine);
+	    	        	//SceneManager.getInstance().loadOptionsScene(engine, false);
+	    	        	break;
+	    	        case MAIN_MENU:
+	    	        	SceneManager.getInstance().loadMenuScene(engine);
+	    	        	break;
+	    	        default:
+						break;
+            	}
+            	
+            }
+        }));
+	    return true;
+	}
+	
+	private void deleteExistingCrates() {
+		GameScene gameScene = ((GameScene)getParent());
+		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
+		while (crateTypes.hasMoreElements()) {
+			CrateType type = (CrateType) crateTypes.nextElement();
+			ArrayList<Crate> currentList = GameScene.activeCrates.get(type);
+			for (Crate currentCrate : currentList) {
+				gameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
+				currentCrate.getSprite().detachSelf();
+				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
+			}
+			currentList.clear();
+		}
+		gameScene.mPhysicsWorld.clearPhysicsConnectors();
+	}	
+	
+	private void reinitializeContainers() {
+		GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
+		CrateContainer left = gameScene.mHud.getLeft();
+		CrateContainer right = gameScene.mHud.getRight();
+		
+		expandHiddenCrates(left);
+		expandHiddenCrates(right);
+	}
+	
+	private void expandHiddenCrates(CrateContainer container) {
+		for (int i = 0; i < container.thumbs.size(); i++) {
+			CrateThumbnail current = container.thumbs.get(i);
+			if (current.isHidden())
+				current.expandThumbnail();
+		}
+		
+		container.resizeContainer(container.getSprite().getHeight());
+		container.repositionCrates();
 	}
 	
 	public void fadeIn() {

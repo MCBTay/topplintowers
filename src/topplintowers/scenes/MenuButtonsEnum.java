@@ -9,7 +9,8 @@ public enum MenuButtonsEnum {
 	MAIN_MENU(5), 
 	LEVEL_SELECT(6), 
 	FREE_MODE(7),
-	OPTIONS(8);
+	OPTIONS(8),
+	WIN(9);
 	
 	private int value;
 

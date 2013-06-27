@@ -16,6 +16,7 @@ import topplintowers.scenes.BaseScene;
 import topplintowers.scenes.PauseMenuScene;
 import topplintowers.scenes.SceneCommon;
 import topplintowers.scenes.SceneManager;
+import topplintowers.scenes.WinScene;
 import topplintowers.scenes.gamescene.GameScene;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
@@ -100,8 +101,14 @@ public class MainActivity extends BaseGameActivity {
 		final BaseScene scene = SceneManager.getInstance().getCurrentScene();
 		if (scene != null) {
 			if (scene instanceof GameScene && scene.hasChildScene()) {
-				PauseMenuScene pms = (PauseMenuScene) scene.getChildScene();
-				pms.fadeOut();
+				if (scene.getChildScene() instanceof PauseMenuScene) {
+					PauseMenuScene pms = (PauseMenuScene) scene.getChildScene();
+					pms.fadeOut();
+				} else if (scene.getChildScene() instanceof WinScene) {
+					WinScene ws = (WinScene) scene.getChildScene();
+					ws.fadeOut();
+				}
+				
 			}
 			mEngine.registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback()
 	        {                      

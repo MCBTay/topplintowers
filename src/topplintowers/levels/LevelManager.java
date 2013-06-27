@@ -1,15 +1,16 @@
 package topplintowers.levels;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
 import topplintowers.crates.CrateType;
 
 public class LevelManager {
 	private Level currentLevel;
 	
 	public enum LevelType {
-		FREEMODE, ONE, TWO, THREE, FOUR, 
-		FIVE, SIX, SEVEN, EIGHT, NINE,
-		TEN, ELEVEN, TWELVE; 
+		FREEMODE, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE; 
     }
 	
 	public static LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>> CountList = new LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>>();
@@ -17,15 +18,15 @@ public class LevelManager {
 	
 	private Integer max = Integer.MAX_VALUE;
 	private int[] free_mode = {max, max, max, max, max, max, max};
-	private int[] one		= {3, 0, 0, 0, 0, 0, 0};
-	private int[] two		= {3, 3, 0, 0, 0, 0, 0};
-	private int[] three		= {3, 3, 3, 0, 0, 0, 0};
-	private int[] four		= {4, 4, 4, 4, 0, 0, 0};
-	private int[] five		= {5, 5, 5, 5, 5, 0, 0};
-	private int[] six		= {6, 6, 6, 6, 6, 6, 0};
-	private int[] seven		= {7, 7, 7, 7, 7, 7, 7};
-	private int[] eight		= {8, 8, 8, 8, 8, 8, 8};
-	private int[] nine		= {9, 9, 9, 9, 9, 9, 9};
+	private int[] one		= { 3,  0,  0,  0,  0,  0,  0};
+	private int[] two		= { 3,  3,  0,  0,  0,  0,  0};
+	private int[] three		= { 3,  3,  3,  0,  0,  0,  0};
+	private int[] four		= { 4,  4,  4,  4,  0,  0,  0};
+	private int[] five		= { 5,  5,  5,  5,  5,  0,  0};
+	private int[] six		= { 6,  6,  6,  6,  6,  6,  0};
+	private int[] seven		= { 7,  7,  7,  7,  7,  7,  7};
+	private int[] eight		= { 8,  8,  8,  8,  8,  8,  8};
+	private int[] nine		= { 9,  9,  9,  9,  9,  9,  9};
 	private int[] ten		= {10, 10, 10, 10, 10, 10, 10};
 	private int[] eleven	= {11, 11, 11, 11, 11, 11, 11};
 	private int[] twelve	= {11, 22, 33, 44, 55, 66, 77};
@@ -38,7 +39,7 @@ public class LevelManager {
 		LevelType[] levels = LevelType.values();
 		
 		for (LevelType level : levels) {
-        	LevelList.put(level, new Level(level, goalHeight++, CountList.get(level)));
+        	LevelList.put(level, new Level(level, goalHeight++, CountList.get(level), false));
 		}
 	}
 	
