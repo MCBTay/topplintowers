@@ -40,7 +40,9 @@ public abstract class Crate implements IOnAreaTouchListener {
 		sprite = spritePool.obtainPoolItem();
 		
 		box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, fd);
-		//box.setBullet(true);
+		// set bullet to true for CCD.  by default CCD is not enabled for dynamic/dynamic collisions.
+		// since all of my crates are dynamic, they need to have setBullet set to true for CCD
+		box.setBullet(true);
 		
 		sprite.setUserData(box);
 		sprite.setVisible(true);
