@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">"Topplin' Towers"</string>
+    <string name="quit">Quit</string>
+    <string name="resume">Resume</string>
+    <string name="paused">PAUSED</string>
+    <string name="goal_caps">Goal</string>
+    <string name="main_menu">Menu</string>
+    <string name="cancel">Cancel</string>
+    <string name="restart">Restart</string>
+    <string name="levelselect">Levels</string>
+    <string name="freemode">Free Mode</string>
+    <string name="Quit">QUIT?</string>
+    <string name="topplin">"TOPPLIN'"</string>
+    <string name="towers">TOWERS</string>
+    <string name="option">Options</string>
+    <string name="music_volume">Music Volume</string>
+    <string name="fx_volume">FX Volume</string>
+    <string name="you_win">You win!</string>
+</resources>
