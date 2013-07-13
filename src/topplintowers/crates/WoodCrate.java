@@ -60,7 +60,6 @@ public class WoodCrate extends Crate {
 	
 
 	public WoodCrate() {
-		//super(CrateType.WOOD, PoolManager.getInstance().mWoodPool, FIXTURE_DEF_WOOD);
 		super(CrateType.WOOD, PoolManager.getInstance().mWoodPool);
 		
 		toBeBroken = false;
@@ -78,6 +77,7 @@ public class WoodCrate extends Crate {
 		bd.type = BodyType.DynamicBody;
 		bd.position.set(20, 0);
 		box = GameScene.mPhysicsWorld.createBody(bd);
+		box.setUserData("wood");
 		
 		createTopAndBottomFixtures(box);
 		createLeftAndRightFixtures(box);
@@ -85,8 +85,6 @@ public class WoodCrate extends Crate {
 		createDiagonalFixture(box);
 		
 		GameScene.getScene().mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, box));
-		sprite.setPosition(20, 0);
-		sprite.setAlpha(0.8f);
 	}
 	
 	private void createTopAndBottomFixtures(Body crateBody) {
@@ -195,7 +193,6 @@ public class WoodCrate extends Crate {
 	}
 	
 	public void breakApart() {
-		Log.e("ToppplinTowers", "Breaking!");
 		toBeBroken = false;
 		broken = true;
 		
@@ -217,7 +214,7 @@ public class WoodCrate extends Crate {
         box.destroyFixture(diagonalFixture);	diagonalFixture = null;
         
         dispose();
-        box = null;
+        
         GameScene.activeCrates.get(type).remove(this);        
 
         
