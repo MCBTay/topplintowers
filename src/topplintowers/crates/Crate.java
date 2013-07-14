@@ -10,15 +10,22 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.adt.pool.GenericPool;
 
+import topplintowers.MainActivity;
 import topplintowers.resources.PoolManager;
 import topplintowers.scenes.gamescene.GameScene;
 
+import android.util.Log;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
 
-public abstract class Crate implements IOnAreaTouchListener {
+public abstract class Crate {
 	protected CrateType type;
 	protected Sprite sprite;
 	protected Body box;
@@ -43,6 +50,12 @@ public abstract class Crate implements IOnAreaTouchListener {
 		// set bullet to true for CCD.  by default CCD is not enabled for dynamic/dynamic collisions.
 		// since all of my crates are dynamic, they need to have setBullet set to true for CCD
 		box.setBullet(true);
+		// allows body to sleep when at rest for less overhead
+		box.setSleepingAllowed(true);
+		box.setAwake(true);
+		
+		box.setAngularDamping(10);
+		//box.setAngularVelocity(5);
 		
 		sprite.setUserData(box);
 		sprite.setVisible(true);
@@ -63,6 +76,7 @@ public abstract class Crate implements IOnAreaTouchListener {
 	public void setSprite(Sprite sprite) { this.sprite = sprite; }
 	public void setBox(Body box) { this.box = box; }
 	public void setPosition(float x, float y) {
+		Log.e("topplintowers", "Setting position to " + x + ", " + y);
 		final float widthD2 = sprite.getWidth() / 2;
 		final float heightD2 = sprite.getHeight() / 2;
 		final float angle = box.getAngle();
@@ -77,35 +91,6 @@ public abstract class Crate implements IOnAreaTouchListener {
 		
 		sprite.detachSelf();
 		spritePool.recyclePoolItem(sprite);
-	}
-	
-	@Override
-	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-		float curX = pSceneTouchEvent.getX() - 5;
-        float curY = pSceneTouchEvent.getY() - 5;
-        float dX = 0, dY = 0, lastX = 0, lastY = 0;
-        
-		if (pSceneTouchEvent.isActionDown()) {
-			box.setType(BodyType.KinematicBody);
-			dX = curX;
-			dY = curY;
-			box.setTransform(curX/32,  curY/32, 0);
-			isBeingMoved = true;
-		
-		} else if (pSceneTouchEvent.isActionMove()) {
-			dX = curX - lastX;
-			dY = curY - lastY;
-			box.setTransform(curX/32, curY/32, 0);
-			lastX = curX;
-			lastX = curY;
-			isBeingMoved = true;
-			
-		} else if (pSceneTouchEvent.isActionUp()) { 
-			box.setType(BodyType.DynamicBody);
-			box.setLinearVelocity(dX, dY);
-			isBeingMoved = false;
-		}
-		return false;
 	}
 }	
 
