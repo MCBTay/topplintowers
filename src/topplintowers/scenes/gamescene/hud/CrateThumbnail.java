@@ -8,16 +8,25 @@ import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.ClickDetector.IClickDetectorListener;
 import org.andengine.opengl.texture.region.TextureRegion;
 
+import android.util.Log;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
 import topplintowers.MainActivity;
 import topplintowers.crates.*;
 import topplintowers.resources.ResourceManager;
+import topplintowers.scenes.gamescene.GameScene;
 
 public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorListener, IOnAreaTouchListener {
 	private static MainActivity instance = MainActivity.getSharedInstance();
@@ -32,6 +41,8 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 	final ScaleModifier zoomOut;
 	final ScaleModifier zoomIn;
 	MoveModifier move;
+	
+	private Body groundBody; // used for Mouse Joint
 	
 	private ClickDetector mClickDetector;
 	
@@ -139,23 +150,24 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 		hidden = false;
 		countText.setVisible(true);
 	}
+
 	
-	Crate newCrate;
 	@Override
-	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+	public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 		float curX = pSceneTouchEvent.getX() - 5;
-        float curY = pSceneTouchEvent.getY() - 5;
-        float offset = instance.mCamera.getCenterY() - 240;
-        curY += offset;
-        float dX = 0, dY = 0, lastX = 0, lastY = 0;
-        
+      float curY = pSceneTouchEvent.getY() - 5;
+      float offset = instance.mCamera.getCenterY() - 240;
+      curY += offset;
+      float dX = 0, dY = 0, lastX = 0, lastY = 0;
+      
 		if (pSceneTouchEvent.isActionDown()) {
 			
 			int crateCount = MyHUD.mAvailableCrateCounts.get(type);
 			if (crateCount > 0) {
 				
-				newCrate = createCrate(type);
-				newCrate.setPosition(curX, curY);
+				Crate newCrate = createCrate(type);
+				newCrate.setPosition(curX - newCrate.getSize()/2, curY - newCrate.getSize()/2);
+				
 				if (newCrate != null) {
 					int newCrateCount = crateCount - 1;
 					if (newCrateCount == 0) {
@@ -164,43 +176,71 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 						parent.repositionCrates();
 					}
 					MyHUD.mAvailableCrateCounts.put(type, newCrateCount);
+					
+					GameScene gs = GameScene.getScene();
+					
+					float jointX = pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+					float jointY = pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+					Vector2 vector = new Vector2(jointX, jointY);
+					
+					BodyDef groundBodyDef = new BodyDef();
+	                groundBodyDef.position.set(vector);
+	                GameScene.getScene().setGroundBody(GameScene.mPhysicsWorld.createBody(groundBodyDef));
+					
+					Log.e("", "Creating mouse joint at " + vector.toString() + "...");
+					gs.setMJActive(gs.createMouseJoint(newCrate.getBox(), jointX, jointY));
+						
+					return true;
 				}
+				//GameScene.getScene().onSceneTouchEvent(GameScene.getScene(), pSceneTouchEvent);
 			}
 			
-			newCrate.getBox().setType(BodyType.KinematicBody);
-			dX = curX;
-			dY = curY;
-			newCrate.getBox().setTransform(curX/32,  curY/32, 0);
+			//newCrate.getBox().setType(BodyType.KinematicBody);
+//			dX = curX;
+//			dY = curY;
+//			newCrate.getBox().setTransform(curX/32,  curY/32, 0);
 		
-		} else if (pSceneTouchEvent.isActionMove()) {
-			dX = curX - lastX;
-			dY = curY - lastY;
-			newCrate.getBox().setTransform(curX/32, curY/32, 0);
-			lastX = curX;
-			lastX = curY;
-			
-		} else if (pSceneTouchEvent.isActionUp()) { 
-			newCrate.getBox().setType(BodyType.DynamicBody);
-			newCrate.getBox().setLinearVelocity(dX, dY);
+//		} else if (pSceneTouchEvent.isActionMove()) {
+//			dX = curX - lastX;
+//			dY = curY - lastY;
+//			newCrate.getBox().setTransform(curX/32, curY/32, 0);
+//			lastX = curX;
+//			lastX = curY;
+//			
+//		} else if (pSceneTouchEvent.isActionUp()) { 
+//			newCrate.getBox().setType(BodyType.DynamicBody);
+//			newCrate.getBox().setLinearVelocity(dX, dY);
 		}
+			
 		return false;
 	}
 	
 	private Crate createCrate(CrateType type) {
-		Crate crate;
+		Crate crate = null;
 		
-		switch (type) {
-			case WOOD:			crate = new WoodCrate();			break;
-			case STONE:			crate = new StoneCrate();			break;
-			case METAL:			crate = new MetalCrate();			break;
-			case MAGNET:		crate = new MagnetCrate();			break;
-			case ELECTROMAGNET:	crate = new ElectromagnetCrate(); 	break;
-			case STICKY:		crate = new StickyCrate();			break;
-			case TRANSFORMER: 	crate = new TransformerCrate(); 	break;
+		int crateCount = MyHUD.mAvailableCrateCounts.get(type);
+		if (crateCount > 0) {
+			switch (type) {
+				case WOOD:			crate = new WoodCrate();			break;
+				case STONE:			crate = new StoneCrate();			break;
+				case METAL:			crate = new MetalCrate();			break;
+				case MAGNET:		crate = new MagnetCrate();			break;
+				case ELECTROMAGNET:	crate = new ElectromagnetCrate(); 	break;
+				case STICKY:		crate = new StickyCrate();			break;
+				case TRANSFORMER: 	crate = new TransformerCrate(); 	break;
+				
+				default: crate = new WoodCrate(); break;
+			}
 			
-			default: crate = new WoodCrate(); break;
+			int newCrateCount = crateCount - 1;
+			if (newCrateCount == 0) {
+				shrinkThumbnail();
+				parent.resizeContainer(parent.getSprite().getHeight());
+				parent.repositionCrates();
+			}
+			MyHUD.mAvailableCrateCounts.put(type, newCrateCount);
 		}
-		
+			
 		return crate;
 	}
 }

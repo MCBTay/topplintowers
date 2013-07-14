@@ -49,12 +49,12 @@ public abstract class Crate {
 		box = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, fd);
 		// set bullet to true for CCD.  by default CCD is not enabled for dynamic/dynamic collisions.
 		// since all of my crates are dynamic, they need to have setBullet set to true for CCD
-		box.setBullet(true);
+		//box.setBullet(true);
 		// allows body to sleep when at rest for less overhead
 		box.setSleepingAllowed(true);
 		box.setAwake(true);
 		
-		box.setAngularDamping(10);
+		//box.setAngularDamping(10);
 		//box.setAngularVelocity(5);
 		
 		sprite.setUserData(box);
@@ -75,13 +75,16 @@ public abstract class Crate {
 
 	public void setSprite(Sprite sprite) { this.sprite = sprite; }
 	public void setBox(Body box) { this.box = box; }
+	
 	public void setPosition(float x, float y) {
-		Log.e("topplintowers", "Setting position to " + x + ", " + y);
+		
 		final float widthD2 = sprite.getWidth() / 2;
 		final float heightD2 = sprite.getHeight() / 2;
 		final float angle = box.getAngle();
 		float newX = (x + widthD2) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 		float newY = (y + heightD2) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+		
+		Log.e("topplintowers", "Setting position to " + newX + ", " + newY);
 		box.setTransform(newX, newY, angle);
 	}	
 

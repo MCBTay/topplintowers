@@ -243,7 +243,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 				boolean crateIsMoving = crateIsMovingX && crateIsMovingY;
 
 				boolean crateIsBeingMoved = currentCrate.getIsBeingMoved();
-				if (crateIsHigher && !crateIsMovingX && !crateIsMovingY && !crateIsBeingMoved) {  
+				if (crateIsHigher && currentCrate.getBox().isAwake() && !crateIsBeingMoved) {  
 					highest = currentCrate.getSprite().getY(); 
 				}
 			}
@@ -314,7 +314,15 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	}
 	
 	Body groundBody;
+	public void setGroundBody(Body groundBody) {
+		this.groundBody = groundBody;
+	}
+	
 	MouseJoint mjActive;
+	public void setMJActive(MouseJoint mjActive) {
+		this.mjActive = mjActive;
+	}
+	
 	public MouseJoint createMouseJoint(Body box, float x, float y){
 		Vector2 v = new Vector2(x, y);
 		
@@ -323,7 +331,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		mjd.bodyB 				= box;
 		mjd.dampingRatio 		= 0f;
 		mjd.frequencyHz 		= 100;
-		mjd.maxForce 			= (float) 15000 * box.getMass();
+		mjd.maxForce 			= (float) 5000 * box.getMass();
 		mjd.collideConnected	= true;
 		mjd.target.set(v);
 		return (MouseJoint) mPhysicsWorld.createJoint(mjd);
@@ -340,7 +348,12 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			for (int j = 0; j < size; j++) {
 				Crate currentCrate = currentList.get(j);
 				
-				if (currentCrate.getSprite().contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
+				float x = pSceneTouchEvent.getX();
+				float y = pSceneTouchEvent.getY();
+				
+
+				
+				if (currentCrate.getSprite().contains(x, y)) {
 					crate = currentCrate;
 					break;
 				}
@@ -357,8 +370,8 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		final Crate crate = getCrateTouched(pSceneTouchEvent);
 		
 		if (pSceneTouchEvent.isActionDown()) {
-			//Log.e("", "Clicked" + pSceneTouchEvent.getX() + ", " + pSceneTouchEvent.getY() + "...");
-			//Log.e("", "Clicked" + pSceneTouchEvent.getX()/32 + ", " + pSceneTouchEvent.getY()/32 + "...");
+			Log.e("", "Clicked" + pSceneTouchEvent.getX() + ", " + pSceneTouchEvent.getY() + "...");
+			Log.e("", "Clicked" + pSceneTouchEvent.getX()/32 + ", " + pSceneTouchEvent.getY()/32 + "...");
 			if (crate != null) {
 				float jointX = pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 				float jointY = pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
@@ -370,8 +383,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 				
 				Log.e("", "Creating mouse joint at " + vector.toString() + "...");
 				mjActive = createMouseJoint(crate.getBox(), jointX, jointY);
-				
-				
+					
 				crateBeingDragged = crate;
 				return true;
 			}
@@ -385,7 +397,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 				mjActive.setTarget(vector);
 				
 				
-				Log.e("topplintowers", "Crate's angular velocity: " + crateBeingDragged.getBox().getAngularVelocity());
+				//Log.e("topplintowers", "Crate's angular velocity: " + crateBeingDragged.getBox().getAngularVelocity());
 				
 				return true;
 			}
