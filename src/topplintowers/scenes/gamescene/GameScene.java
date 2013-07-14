@@ -20,12 +20,15 @@ import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
+import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
@@ -48,7 +51,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
+import topplintowers.MainActivity;
 import topplintowers.Platform;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
@@ -93,6 +99,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public VertexBufferObjectManager getVBOM() { return vbom; }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
     public Entity getContainer() { return container; }
+    public MainActivity getActivity() { return activity; }
     
 	@Override
 	public void createScene() {
@@ -131,7 +138,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          public void onTimePassed(final TimerHandler pTimerHandler) {
 	        	  for (int i = 0; i < activeCrates.get(CrateType.WOOD).size(); i++) {
 	        		  final WoodCrate woodCrate = (WoodCrate) activeCrates.get(CrateType.WOOD).get(i);
-	        		  if (woodCrate.toBeBroken()) {
+	        		  if (woodCrate.toBeBroken() && !woodCrate.isBroken()) {
 	        			  engine.runOnUpdateThread(new Runnable() {
 								@Override
 								public void run() {
@@ -158,14 +165,16 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		});
 		
 		
-		
 		mPhysicsWorld.setContactListener(new ContactListener() {
 			float maxImpulse;
 			
 			@Override
 			public void beginContact(final Contact pContact) {
-				if (pContact.isTouching()) {
-					SoundManager.getInstance().playBlockCollision();
+				Fixture fixture1 = pContact.getFixtureA();
+				Fixture fixture2 = pContact.getFixtureB();
+				
+				if (fixture1.getUserData() == "wood" || fixture2.getUserData() == "wood") {
+					
 				}
 			}
 
@@ -186,7 +195,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 					maxImpulse = Math.max(impulse.getNormalImpulses()[i], maxImpulse);
 				}
 			    
-				if (maxImpulse > 80) {
+				if (maxImpulse > 120) {
 					for (Crate crate : activeCrates.get(CrateType.WOOD)) {
 						WoodCrate wc = (WoodCrate) crate;
 						wc.setToBeBroken(true);
@@ -232,8 +241,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 				boolean crateIsMovingX = velocityX != 0.0;
 				boolean crateIsMovingY = velocityY != 0.0;
 				boolean crateIsMoving = crateIsMovingX && crateIsMovingY;
-				//String velocityString = "["+velocityX+":"+velocityY+"]";
-				//Log.i("TopplinTowers", velocityString);
+
 				boolean crateIsBeingMoved = currentCrate.getIsBeingMoved();
 				if (crateIsHigher && !crateIsMovingX && !crateIsMovingY && !crateIsBeingMoved) {  
 					highest = currentCrate.getSprite().getY(); 
@@ -297,8 +305,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		initializeActiveCrateList();	
 		createHUD();
 	}
-	
-	
+
 	
 	private void initializeActiveCrateList() {
 		for (CrateType type : CrateType.values()) {
@@ -306,8 +313,25 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 		}
 	}
 	
-	@Override
-	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {	
+	Body groundBody;
+	MouseJoint mjActive;
+	public MouseJoint createMouseJoint(Body box, float x, float y){
+		Vector2 v = new Vector2(x, y);
+		
+		MouseJointDef mjd = new MouseJointDef();
+		mjd.bodyA 				= groundBody; 
+		mjd.bodyB 				= box;
+		mjd.dampingRatio 		= 0f;
+		mjd.frequencyHz 		= 100;
+		mjd.maxForce 			= (float) 15000 * box.getMass();
+		mjd.collideConnected	= true;
+		mjd.target.set(v);
+		return (MouseJoint) mPhysicsWorld.createJoint(mjd);
+	}
+	
+	private Crate getCrateTouched(final TouchEvent pSceneTouchEvent) { 
+		Crate crate = null;
+		
 		Enumeration<CrateType> crateTypes = activeCrates.keys();
 		while (crateTypes.hasMoreElements()) {
 			CrateType type = (CrateType) crateTypes.nextElement();
@@ -315,15 +339,72 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			int size = currentList.size();
 			for (int j = 0; j < size; j++) {
 				Crate currentCrate = currentList.get(j);
+				
 				if (currentCrate.getSprite().contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
-					currentCrate.onAreaTouched(pSceneTouchEvent, currentCrate.getSprite(), pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
-					return false;
+					crate = currentCrate;
+					break;
 				}
 			}
 		}
+		
+		return crate;
+	}
+	
+	Crate crateBeingDragged = null;
+	@Override
+	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {	
+		
+		final Crate crate = getCrateTouched(pSceneTouchEvent);
+		
+		if (pSceneTouchEvent.isActionDown()) {
+			//Log.e("", "Clicked" + pSceneTouchEvent.getX() + ", " + pSceneTouchEvent.getY() + "...");
+			//Log.e("", "Clicked" + pSceneTouchEvent.getX()/32 + ", " + pSceneTouchEvent.getY()/32 + "...");
+			if (crate != null) {
+				float jointX = pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+				float jointY = pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+				Vector2 vector = new Vector2(jointX, jointY);
+				
+				BodyDef groundBodyDef = new BodyDef();
+                groundBodyDef.position.set(vector);
+                groundBody      = mPhysicsWorld.createBody(groundBodyDef);
+				
+				Log.e("", "Creating mouse joint at " + vector.toString() + "...");
+				mjActive = createMouseJoint(crate.getBox(), jointX, jointY);
+				
+				
+				crateBeingDragged = crate;
+				return true;
+			}
+		}
+		
+		if (pSceneTouchEvent.isActionMove()) {
+			if (mjActive != null) {
+				float jointX = pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+				float jointY = pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+				Vector2 vector = new Vector2(jointX, jointY);
+				mjActive.setTarget(vector);
+				
+				
+				Log.e("topplintowers", "Crate's angular velocity: " + crateBeingDragged.getBox().getAngularVelocity());
+				
+				return true;
+			}
+		}
+		
+		if (pSceneTouchEvent.isActionUp() || pSceneTouchEvent.isActionCancel()) {
+			if (mjActive != null) {
+				mPhysicsWorld.destroyJoint(mjActive);
+				mPhysicsWorld.destroyBody(groundBody);
+				mjActive = null;
+				crateBeingDragged = null;
+				
+				return true;
+			}
+		}
+		
 				
 		this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
-		return true;
+		return false;
 	}
 
 	@Override
