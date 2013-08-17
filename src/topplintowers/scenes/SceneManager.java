@@ -7,6 +7,7 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
+import topplintowers.MainActivity;
 import topplintowers.levels.Level;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.gamescene.GameScene;
@@ -170,6 +171,8 @@ public class SceneManager
     }
     
     public void loadPauseScene(final Engine mEngine) {
+    	//somehow disable scrolling?
+    	 	
     	PauseMenuScene pms = (PauseMenuScene) mPausedScene;
     	
 		SpriteMenuItem pauseButton = pms.getButtons().get(0);
@@ -179,9 +182,10 @@ public class SceneManager
     	pms.setBackgroundPosition(0, pms.getCamera().getCenterY() - 240);
     	pms.setTextPosition(10, pms.getCamera().getCenterY() - pms.getText().getHeight()/2);
     	
-    	mCurrentScene.setChildScene(pms); //, false, true, true);
+    	mCurrentScene.setChildScene(pms, false, true, true);
     	
     	GameScene currentScene = (GameScene)mCurrentScene;
+    	currentScene.getContainer().setIgnoreUpdate(true);
     	currentScene.mHud.setVisible(false);
     	
     	pms.fadeIn();
