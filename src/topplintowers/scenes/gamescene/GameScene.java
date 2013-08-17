@@ -1,15 +1,10 @@
 package topplintowers.scenes.gamescene;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import org.andengine.engine.camera.Camera;
@@ -20,12 +15,9 @@ import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
-import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
-import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
@@ -37,20 +29,16 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.EaseCubicOut;
 
 import android.hardware.SensorManager;
-import android.os.Vibrator;
 import android.util.Log;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
@@ -61,7 +49,6 @@ import topplintowers.crates.CrateType;
 import topplintowers.crates.WoodCrate;
 import topplintowers.levels.Level;
 import topplintowers.levels.LevelManager.LevelType;
-import topplintowers.resources.SoundManager;
 import topplintowers.scenes.BaseScene;
 import topplintowers.scenes.SceneManager;
 import topplintowers.scenes.SceneManager.SceneType;
@@ -129,6 +116,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	          	if (completeCount >= 6) {
 	          		SceneManager.getInstance().loadWinScene(engine);
 	          		
+	          		activity.getLevelMgr().unlockNextLevel();
 	          	}
 	          }
 	  	}));

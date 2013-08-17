@@ -79,7 +79,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		createGoalText(level, button);
 		createCrateThumbnailsAndCounts(level, button);
 		
-		if (LevelManager.LevelList.get(level).getLocked()) {
+		if (LevelManager.LevelLocks.get(level)) {
 			button.setColor(dimmed);
 			Sprite lock = new Sprite(0, 0, ResourceManager.mLockTextureRegion, vbom);
 			
@@ -300,6 +300,7 @@ public class LevelSelectScene extends BaseScene implements IClickDetectorListene
 		if (iItemClicked != -1) {
 			Level newLevel = activity.mLevelManager.getLevel(LevelType.values()[iItemClicked]);
 			mHud.setVisible(false);
+			activity.mLevelManager.setCurrentLevel(newLevel);
 			SceneManager.getInstance().loadGameScene(engine, newLevel);
 		}
 	}

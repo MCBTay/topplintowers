@@ -4,17 +4,31 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import topplintowers.MainActivity;
 import topplintowers.crates.CrateType;
+import topplintowers.resources.ResourceManager;
+import topplintowers.scenes.SceneManager;
 
 public class LevelManager {
 	private Level currentLevel;
+	private MainActivity mActivity = ResourceManager.getInstance().mActivity;
 	
 	public enum LevelType {
 		FREEMODE, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE; 
+		
+		public LevelType getNext() {
+			int ordinal = this.ordinal();
+
+			return ordinal < LevelType.values().length - 1 ? LevelType.values()[ordinal + 1] : null;
+		}
     }
 	
 	public static LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>> CountList = new LinkedHashMap<LevelType, LinkedHashMap<CrateType, Integer>>();
 	public static LinkedHashMap<LevelType, Level> LevelList = new LinkedHashMap<LevelType, Level>();
+	public static LinkedHashMap<LevelType, Boolean> LevelLocks = new LinkedHashMap<LevelType, Boolean>();
 	
 	private Integer max = Integer.MAX_VALUE;
 	private int[] free_mode = {max, max, max, max, max, max, max};
@@ -38,11 +52,56 @@ public class LevelManager {
 		
 		LevelType[] levels = LevelType.values();
 		
+		loadLevelState();
+		
 		for (LevelType level : levels) {
-        	LevelList.put(level, new Level(level, goalHeight++, CountList.get(level), false));
+        	LevelList.put(level, new Level(level, goalHeight++, CountList.get(level), LevelLocks.get(level)));
 		}
 	}
 	
+    public void loadLevelState() {
+		SharedPreferences options = MainActivity.getOptions();
+		
+		for (LevelType level : LevelType.values()) {
+			Boolean isLocked = true;
+			
+			if (level == LevelType.FREEMODE) {
+				isLocked = false;
+			} else {
+				boolean isLockedByDefault = true;
+				if (level == LevelType.ONE) {
+					isLockedByDefault = false;
+				}
+				
+				isLocked = options.getBoolean(level.toString(), isLockedByDefault);
+			}
+			
+			LevelLocks.put(level, isLocked);
+		}
+    }
+    
+    public void writeLevelState() {	
+		SharedPreferences options = mActivity.getOptions();
+		SharedPreferences.Editor editor = options.edit();
+
+		for (LevelType level : LevelType.values()) {
+			editor.putBoolean(level.toString(), LevelLocks.get(level));
+		}
+		
+		editor.commit();
+    }
+    
+    public void unlockNextLevel() {
+    	LevelType nextLevel = getCurrentLevel().getLevelType().getNext();
+    	if (nextLevel != null) {
+    		LevelLocks.put(nextLevel, false);
+    	}
+    	
+    	writeLevelState();
+    }
+
+	
+    public void setCurrentLevel(Level level) { currentLevel = level; }
 	public Level getCurrentLevel()      { return currentLevel; }
 	public Level getLevel(LevelType level) { return LevelList.get(level); }
 	

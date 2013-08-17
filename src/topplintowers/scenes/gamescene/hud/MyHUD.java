@@ -37,6 +37,7 @@ public class MyHUD extends HUD implements IOnAreaTouchListener {
 		createContainers(isInFreeMode);
 		createScrollBar(backgroundHeight);
 		
+		
 		setOnAreaTouchListener(this);
 	}
 	
