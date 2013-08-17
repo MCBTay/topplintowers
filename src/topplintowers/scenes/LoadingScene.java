@@ -36,10 +36,8 @@ public class LoadingScene extends BaseScene {
 		Integer random = (int)(Math.random() * 6);
 		mTexture = resourceManager.getInstance().mLoadingCrateTextureRegions.get(random);
 		
-		mSprite = new Sprite(0, 0, mTexture, vbom);
-		float posX = 575;
-		float posY = 396;
-		mSprite.setPosition(posX, posY);
+		mSprite = new Sprite(575, 396, mTexture, vbom);
+
 		attachChild(mSprite);
 	}
 	
@@ -54,7 +52,7 @@ public class LoadingScene extends BaseScene {
 
 	@Override
 	public void disposeScene() {
-		mText.detachSelf();
-		mText.dispose();
+		mSprite.detachSelf();
+		mSprite.dispose();
 	}
 }

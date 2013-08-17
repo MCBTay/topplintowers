@@ -95,6 +95,7 @@ public class SceneManager
     			mPausedScene = new PauseMenuScene();
     			mWinScene = new WinScene();
     			setScene(mGameScene);
+    			mLoadingScene.disposeScene();
     		}
     	}));
     }
@@ -125,6 +126,7 @@ public class SceneManager
     			MenuScene childScene = ((MainMenuScene)mMenuScene).getMenuChildScene();
     			mMenuScene.setChildScene(childScene);		
     			setScene(mMenuScene);
+    			mLoadingScene.disposeScene();
     		}
     	}));
     }
@@ -142,6 +144,7 @@ public class SceneManager
     			
     			mLevelSelectScene = new LevelSelectScene();
     			setScene(mLevelSelectScene);
+    			mLoadingScene.disposeScene();
     		}
     	}));
     }
