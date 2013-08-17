@@ -170,15 +170,19 @@ public class SceneManager
     }
     
     public void loadPauseScene(final Engine mEngine) {
-    	GameScene currentScene = (GameScene)mCurrentScene;
-    	currentScene.mHud.setVisible(false);
-    	
     	PauseMenuScene pms = (PauseMenuScene) mPausedScene;
+    	
+		SpriteMenuItem pauseButton = pms.getButtons().get(0);
+		SceneCommon.repositionButtons(pauseButton.getWidth(), pauseButton.getHeight(),  pms.getButtons());
+    	SceneCommon.repositionButtons(pauseButton.getWidth(), pauseButton.getHeight(),  pms.getButtons());
     	
     	pms.setBackgroundPosition(0, pms.getCamera().getCenterY() - 240);
     	pms.setTextPosition(10, pms.getCamera().getCenterY() - pms.getText().getHeight()/2);
     	
-    	currentScene.setChildScene(mPausedScene, false, true, true);
+    	mCurrentScene.setChildScene(pms); //, false, true, true);
+    	
+    	GameScene currentScene = (GameScene)mCurrentScene;
+    	currentScene.mHud.setVisible(false);
     	
     	pms.fadeIn();
     }
