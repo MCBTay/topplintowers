@@ -171,6 +171,7 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 			gameScene.mPhysicsWorld.destroyBody(piece.getBody());
 			piece.getSprite().detachSelf();
 		}
+		gameScene.activeWoodCratePieces.clear();
 		
 		gameScene.mPhysicsWorld.clearPhysicsConnectors();
 	}	
