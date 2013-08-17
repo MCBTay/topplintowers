@@ -30,8 +30,4 @@ public class MenuItemListener implements IOnMenuItemClickListener {
 	    pMenuItem.registerEntityModifier(moveLeft);
 	    return true;
 	}
-	
-
-	
-
 }

@@ -37,7 +37,7 @@ public class WoodCrate extends Crate {
 	private static final FixtureDef FIXTURE_DEF_WOOD = PhysicsFactory.createFixtureDef(1, 0.05f, 0.3f);  
 	
 	private PolygonShape topPlank, bottomPlank, leftPlank, rightPlank, diagonalPlank;
-	Vector2[] diagonalVertices;
+	public Vector2[] diagonalVertices;
 	private Fixture topFixture, bottomFixture, leftFixture, rightFixture, diagonalFixture;
 	ArrayList<Fixture> fixtures = new ArrayList<Fixture>();
 	Vector2 velocity;
@@ -200,13 +200,6 @@ public class WoodCrate extends Crate {
         Vector2 position = box.getPosition();
         float angle = box.getAngle();
         
-        VertexBufferObjectManager vbom = GameScene.getScene().getVBOM();
-        Sprite topSprite 	  = new Sprite(0, 0, ResourceManager.mWoodCrateTopTextureRegion, vbom);
-        Sprite bottomSprite	  = new Sprite(0, 0, ResourceManager.mWoodCrateBottomTextureRegion, vbom);
-        Sprite leftSprite 	  = new Sprite(0, 0, ResourceManager.mWoodCrateLeftTextureRegion, vbom);
-        Sprite rightSprite 	  = new Sprite(0, 0, ResourceManager.mWoodCrateRightTextureRegion, vbom);
-        Sprite diagonalSprite = new Sprite(0, 0, ResourceManager.mWoodCrateDiagonalTextureRegion, vbom);
-        
         box.destroyFixture(topFixture);			topFixture = null;
         box.destroyFixture(bottomFixture);		bottomFixture = null;
         box.destroyFixture(leftFixture);		leftFixture = null;
@@ -217,20 +210,24 @@ public class WoodCrate extends Crate {
         
         GameScene.activeCrates.get(type).remove(this);        
 
-        
         Vector2 topPosition = new Vector2 (position.x, position.y - totalSize/2);
-        createBoxBody(topSprite, topPosition, angle);
+        WoodCratePiece topPiece = new WoodCratePiece(ResourceManager.mWoodCrateTopTextureRegion, topPosition, angle);
+        GameScene.activeWoodCratePieces.add(topPiece);
         
         Vector2 bottomPosition = new Vector2 (position.x, position.y + totalSize/2);
-        createBoxBody(bottomSprite, bottomPosition, angle);
+        WoodCratePiece bottomPiece = new WoodCratePiece(ResourceManager.mWoodCrateBottomTextureRegion, bottomPosition, angle);
+        GameScene.activeWoodCratePieces.add(bottomPiece);
         
         Vector2 leftPosition = new Vector2 (position.x - totalSize/2 + leftAndRightWidth/2, position.y);
-        createBoxBody(leftSprite, leftPosition, angle);
+        WoodCratePiece leftPiece = new WoodCratePiece(ResourceManager.mWoodCrateLeftTextureRegion, leftPosition, angle);
+        GameScene.activeWoodCratePieces.add(leftPiece);
         
         Vector2 rightPosition = new Vector2 (position.x + totalSize/2 - leftAndRightWidth/2, position.y);
-        createBoxBody(rightSprite, rightPosition, angle);
+        WoodCratePiece rightPiece = new WoodCratePiece(ResourceManager.mWoodCrateRightTextureRegion, rightPosition, angle);
+        GameScene.activeWoodCratePieces.add(rightPiece);
         
-        createDiagonalBody(diagonalSprite, position, angle);
+        WoodCratePiece diagonalPiece = new WoodCratePiece(ResourceManager.mWoodCrateDiagonalTextureRegion, position, angle, true, diagonalVertices);
+        GameScene.activeWoodCratePieces.add(diagonalPiece);
         
         //Vector2 center1 = box.getWorldCenter();
         //Vector2 center2 = body1.getWorldCenter();
@@ -243,20 +240,5 @@ public class WoodCrate extends Crate {
         
         //body2.setAngularVelocity(angularVelocity);
         //body2.setLinearVelocity(velocity2);
-	}
-	
-	private void createBoxBody(Sprite sprite, Vector2 position, float angle) {
-		Body body = PhysicsFactory.createBoxBody(GameScene.mPhysicsWorld, sprite, BodyType.DynamicBody, FIXTURE_DEF_WOOD);
-        GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, true));
-        body.setTransform(position, angle);
-        GameScene.getScene().attachChild(sprite);
-	}
-	
-	private void createDiagonalBody(Sprite sprite, Vector2 position, float angle) {
-		Body body = PhysicsFactory.createPolygonBody(GameScene.mPhysicsWorld, sprite, diagonalVertices, BodyType.DynamicBody, FIXTURE_DEF_WOOD);
-        GameScene.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body, true, true));
-        body.setTransform(position, angle);
-        GameScene.getScene().attachChild(sprite);
-	}
-	
+	}	
 }

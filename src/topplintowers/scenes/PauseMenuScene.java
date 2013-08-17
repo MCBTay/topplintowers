@@ -17,6 +17,7 @@ import org.andengine.entity.text.Text;
 import topplintowers.MainActivity;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
+import topplintowers.crates.WoodCratePiece;
 import topplintowers.scenes.SceneManager.SceneType;
 import topplintowers.scenes.gamescene.GameScene;
 import topplintowers.scenes.gamescene.hud.CrateContainer;
@@ -153,6 +154,7 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	
 	private void deleteExistingCrates() {
 		GameScene gameScene = ((GameScene)getParent());
+		
 		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
 		while (crateTypes.hasMoreElements()) {
 			CrateType type = (CrateType) crateTypes.nextElement();
@@ -164,6 +166,12 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 			}
 			currentList.clear();
 		}
+		
+		for (WoodCratePiece piece : gameScene.activeWoodCratePieces) {
+			gameScene.mPhysicsWorld.destroyBody(piece.getBody());
+			piece.getSprite().detachSelf();
+		}
+		
 		gameScene.mPhysicsWorld.clearPhysicsConnectors();
 	}	
 	

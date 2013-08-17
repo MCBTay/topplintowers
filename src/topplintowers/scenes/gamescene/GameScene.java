@@ -47,6 +47,7 @@ import topplintowers.Platform;
 import topplintowers.crates.Crate;
 import topplintowers.crates.CrateType;
 import topplintowers.crates.WoodCrate;
+import topplintowers.crates.WoodCratePiece;
 import topplintowers.levels.Level;
 import topplintowers.levels.LevelManager.LevelType;
 import topplintowers.scenes.BaseScene;
@@ -62,6 +63,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 	private Entity container;
 		
 	public static Hashtable<CrateType, ArrayList<Crate>> activeCrates = new Hashtable<CrateType, ArrayList<Crate>>();
+	public static ArrayList<WoodCratePiece> activeWoodCratePieces = new ArrayList<WoodCratePiece>();
     
     public static MyHUD mHud;
     private GameSceneBackground mBackground;
