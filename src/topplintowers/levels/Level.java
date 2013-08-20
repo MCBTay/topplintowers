@@ -51,7 +51,6 @@ public class Level {
 		goalText.setPosition(textPosX, textPosY);
 		currentScene.getContainer().attachChild(goalText);
 	}
-	
-	
+		
 	public LinkedHashMap<CrateType, Integer> getCounts() { return crateCounts; }
 }

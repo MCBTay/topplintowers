@@ -1,5 +1,8 @@
 package topplintowers.scenes;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -7,10 +10,18 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
+import android.util.Log;
+
 import topplintowers.MainActivity;
+import topplintowers.crates.Crate;
+import topplintowers.crates.CrateType;
+import topplintowers.crates.WoodCratePiece;
 import topplintowers.levels.Level;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.gamescene.GameScene;
+import topplintowers.scenes.gamescene.hud.CrateContainer;
+import topplintowers.scenes.gamescene.hud.CrateThumbnail;
+import topplintowers.scenes.gamescene.hud.MyHUD;
 
 public class SceneManager
 {
@@ -205,6 +216,95 @@ public class SceneManager
     	ws.fadeIn();
     }
     
+    public void returnToGameScene(WinScene ws) { 
+		final GameScene gs = (GameScene) getCurrentScene();		
+		
+		ws.fadeOut();
+		
+		mEngine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
+        {                      
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) { 
+            	gs.clearChildScene();
+            	gs.mHud.setVisible(true);
+            	gs.setIgnoreUpdate(false);
+        	}
+        }));
+	}
+    
+	public void returnToGameScene(PauseMenuScene pms) { 
+		final GameScene gs = (GameScene) getCurrentScene();		
+		
+		pms.fadeOut();
+		
+		mEngine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
+        {                      
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) { 
+            	gs.clearChildScene();
+            	gs.mHud.setVisible(true);
+            	gs.setIgnoreUpdate(false);
+        	}
+        }));
+	}
+    
+	public void restartGameScene(WinScene ws) {
+		deleteExistingCrates();
+		reinitializeContainers();
+		returnToGameScene(ws);
+	}
+	
+	public void restartGameScene(PauseMenuScene pms) {
+		deleteExistingCrates();
+		reinitializeContainers();
+		returnToGameScene(pms);
+	}
+	
+	private void deleteExistingCrates() {
+		//should only be called from child views of GameScene
+		GameScene gameScene = GameScene.getScene(); 
+		
+		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
+		while (crateTypes.hasMoreElements()) {
+			CrateType type = (CrateType) crateTypes.nextElement();
+			ArrayList<Crate> currentList = GameScene.activeCrates.get(type);
+			for (Crate currentCrate : currentList) {
+				gameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
+				currentCrate.getSprite().detachSelf();
+				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
+			}
+			currentList.clear();
+		}
+		
+		for (WoodCratePiece piece : gameScene.activeWoodCratePieces) {
+			gameScene.mPhysicsWorld.destroyBody(piece.getBody());
+			piece.getSprite().detachSelf();
+		}
+		gameScene.activeWoodCratePieces.clear();
+		
+		gameScene.mPhysicsWorld.clearPhysicsConnectors();
+	}	
+	
+	private void reinitializeContainers() {
+		GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
+		CrateContainer left = gameScene.mHud.getLeft();
+		CrateContainer right = gameScene.mHud.getRight();
+		
+		expandHiddenCrates(left);
+		expandHiddenCrates(right);
+	}
+	
+	private void expandHiddenCrates(CrateContainer container) {
+		for (int i = 0; i < container.thumbs.size(); i++) {
+			CrateThumbnail current = container.thumbs.get(i);
+			if (current.isHidden())
+				current.expandThumbnail();
+		}
+		
+		container.resizeContainer(container.getSprite().getHeight());
+		container.repositionCrates();
+	}
+	
 	public void returnToPauseMenu(OptionsScene os) {
 		final GameScene gs = (GameScene) getCurrentScene();
 		PauseMenuScene ps = (PauseMenuScene) mPausedScene;

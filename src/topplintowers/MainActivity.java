@@ -10,6 +10,9 @@ import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.ui.activity.BaseGameActivity;
+
+import topplintowers.crates.CrateType;
+import topplintowers.crates.WoodCrate;
 import topplintowers.levels.LevelManager;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.BaseScene;
@@ -19,6 +22,7 @@ import topplintowers.scenes.SceneManager;
 import topplintowers.scenes.WinScene;
 import topplintowers.scenes.gamescene.GameScene;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.badlogic.gdx.physics.box2d.Body;
@@ -95,50 +99,16 @@ public class MainActivity extends BaseGameActivity {
 	}
 
 	public void onResumeGame() {
+		Log.e("topplintowers", "resuming game");
 		super.onResumeGame();
-		
-		final BaseScene scene = SceneManager.getInstance().getCurrentScene();
-		if (scene != null) {
-			if (scene instanceof GameScene && scene.hasChildScene()) {
-				if (scene.getChildScene() instanceof PauseMenuScene) {
-					PauseMenuScene pms = (PauseMenuScene) scene.getChildScene();
-					pms.fadeOut();
-				} else if (scene.getChildScene() instanceof WinScene) {
-					WinScene ws = (WinScene) scene.getChildScene();
-					ws.fadeOut();
-				}
-				
-			}
-			mEngine.registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback()
-	        {                      
-	            @Override
-	            public void onTimePassed(final TimerHandler pTimerHandler)
-	            {     	
-	            	if (scene.hasChildScene()) 	scene.clearChildScene();
-	            }
-	        }));
-			
-			
-			
-			if (GameScene.mHud != null)
-				showHUD();
-		}
 	}
 
-	public void onPauseGame() {
-//		super.onPause();  // causes crash when pressing homebutton?
-		
-		if (mCurrentScene instanceof GameScene) {
-			final PauseMenuScene pms = new PauseMenuScene();
-			pms.fadeIn();
-			instance.getEngine().registerUpdateHandler(new TimerHandler(0.25f, new ITimerCallback() {
-				@Override
-				public void onTimePassed(final TimerHandler pTimerHandler) {
-					mCurrentScene.setChildScene(pms, false, true, true);
-					hideHUD();
-				}
-			}));
+	public void onPauseGame() {		
+		if (SceneManager.getInstance().getCurrentScene() instanceof GameScene) {
+			SceneManager.getInstance().loadPauseScene(mEngine);	
 		}
+		
+		super.onPauseGame();
 	}
 	
 	private void showHUD() {

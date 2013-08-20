@@ -30,6 +30,7 @@ import topplintowers.scenes.gamescene.hud.MyHUD;
 public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	private Rectangle mRectangle;
 	private Text mText;
+	private WinScene instance;  //ugly hack
 	
 	private SpriteMenuItem mResumeButton, mRestartButton, mMainMenuButton, mLevelSelect;
 	private ArrayList<SpriteMenuItem> mButtons;
@@ -62,6 +63,8 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 		attachChild(mSubtext);
 		
 		createMenuChildScene();
+		
+		instance = this;
 	}
 	
 	private void createMenuChildScene()
@@ -123,13 +126,10 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
             	MenuButtonsEnum button = MenuButtonsEnum.values()[pMenuItem.getID()];
             	switch (button) {
 	    	        case RESTART:
-	    	        	deleteExistingCrates();
-	    	        	reinitializeContainers();
-	    	        	((MainActivity)activity).onResumeGame();
+	    	        	SceneManager.getInstance().restartGameScene(instance);
 	    	    		break;
 	    	        case LEVEL_SELECT:
 	    	        	SceneManager.getInstance().loadLevelSelect(engine);
-	    	        	//SceneManager.getInstance().loadOptionsScene(engine, false);
 	    	        	break;
 	    	        case MAIN_MENU:
 	    	        	SceneManager.getInstance().loadMenuScene(engine);
@@ -137,48 +137,11 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	    	        default:
 						break;
             	}
-            	
             }
         }));
 	    return true;
 	}
-	
-	private void deleteExistingCrates() {
-		GameScene gameScene = ((GameScene)getParent());
-		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
-		while (crateTypes.hasMoreElements()) {
-			CrateType type = (CrateType) crateTypes.nextElement();
-			ArrayList<Crate> currentList = GameScene.activeCrates.get(type);
-			for (Crate currentCrate : currentList) {
-				gameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
-				currentCrate.getSprite().detachSelf();
-				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
-			}
-			currentList.clear();
-		}
-		gameScene.mPhysicsWorld.clearPhysicsConnectors();
-	}	
-	
-	private void reinitializeContainers() {
-		GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
-		CrateContainer left = gameScene.mHud.getLeft();
-		CrateContainer right = gameScene.mHud.getRight();
 		
-		expandHiddenCrates(left);
-		expandHiddenCrates(right);
-	}
-	
-	private void expandHiddenCrates(CrateContainer container) {
-		for (int i = 0; i < container.thumbs.size(); i++) {
-			CrateThumbnail current = container.thumbs.get(i);
-			if (current.isHidden())
-				current.expandThumbnail();
-		}
-		
-		container.resizeContainer(container.getSprite().getHeight());
-		container.repositionCrates();
-	}
-	
 	public void fadeIn() {
 		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
 		SceneCommon.applyFadeModifier(mButtons, 0, 1);

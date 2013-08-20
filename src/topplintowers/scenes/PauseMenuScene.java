@@ -24,6 +24,8 @@ import topplintowers.scenes.gamescene.hud.CrateContainer;
 import topplintowers.scenes.gamescene.hud.CrateThumbnail;
 import topplintowers.scenes.gamescene.hud.MyHUD;
 
+import android.util.Log;
+
 import com.topplintowers.R;
 
 public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListener {
@@ -32,6 +34,7 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	private Rectangle mRectangle;
 	private Text mText;
 	private MenuScene mMenuChildScene;
+	private PauseMenuScene instance;
 	
 	public ArrayList<SpriteMenuItem> getButtons() { return mButtons; }
 	public Rectangle getRectangle() { return mRectangle; }
@@ -48,6 +51,8 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 
 		mText = SceneCommon.createLargeText(this, activity.getString(R.string.paused));		
 		createMenuChildScene();
+		
+		instance = this;
 	}
 	
 	public Camera getCamera() { return camera; }
@@ -81,27 +86,12 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	}
 
 	@Override
-	public void onBackKeyPressed() { returnToGameScene();}
+	public void onBackKeyPressed() { SceneManager.getInstance().returnToGameScene(instance);}
 	
 	@Override
-	public void onMenuKeyPressed() { returnToGameScene(); }
+	public void onMenuKeyPressed() { SceneManager.getInstance().returnToGameScene(instance); }
 	
-	private void returnToGameScene() { 
-		final GameScene gs = (GameScene)SceneManager.getInstance().getCurrentScene();		
-		
-		fadeOut();
-		
-		engine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback()
-        {                      
-            @Override
-            public void onTimePassed(final TimerHandler pTimerHandler)
-            {   
-            	gs.clearChildScene();
-            	gs.mHud.setVisible(true);
-        		SceneCommon.repositionButtons(mResumeButton.getWidth(), mResumeButton.getHeight(), mButtons);
-            }
-        }));
-	}
+
 
 	@Override
 	public SceneType getSceneType() { return SceneType.PAUSED; }
@@ -130,12 +120,10 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
             	MenuButtonsEnum button = MenuButtonsEnum.values()[pMenuItem.getID()];
             	switch (button) {
             	 	case RESUME:  
-            	 		((MainActivity)activity).onResumeGame();
+            	 		SceneManager.getInstance().returnToGameScene(instance);
 	    	        	break;
 	    	        case RESTART:
-	    	        	deleteExistingCrates();
-	    	        	reinitializeContainers();
-	    	        	((MainActivity)activity).onResumeGame();
+	    	        	SceneManager.getInstance().restartGameScene(instance);
 	    	    		break;
 	    	        case MAIN_MENU:
 	    	        	SceneManager.getInstance().loadMenuScene(engine);
@@ -152,39 +140,6 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	    return true;
 	}
 	
-	private void deleteExistingCrates() {
-		GameScene gameScene = ((GameScene)getParent());
-		
-		Enumeration<CrateType> crateTypes = GameScene.activeCrates.keys();
-		while (crateTypes.hasMoreElements()) {
-			CrateType type = (CrateType) crateTypes.nextElement();
-			ArrayList<Crate> currentList = GameScene.activeCrates.get(type);
-			for (Crate currentCrate : currentList) {
-				gameScene.mPhysicsWorld.destroyBody(currentCrate.getBox());
-				currentCrate.getSprite().detachSelf();
-				MyHUD.mAvailableCrateCounts.put(type, MyHUD.mAvailableCrateCounts.get(type) + 1);
-			}
-			currentList.clear();
-		}
-		
-		for (WoodCratePiece piece : gameScene.activeWoodCratePieces) {
-			gameScene.mPhysicsWorld.destroyBody(piece.getBody());
-			piece.getSprite().detachSelf();
-		}
-		gameScene.activeWoodCratePieces.clear();
-		
-		gameScene.mPhysicsWorld.clearPhysicsConnectors();
-	}	
-	
-	private void reinitializeContainers() {
-		GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
-		CrateContainer left = gameScene.mHud.getLeft();
-		CrateContainer right = gameScene.mHud.getRight();
-		
-		expandHiddenCrates(left);
-		expandHiddenCrates(right);
-	}
-	
 	private void expandHiddenCrates(CrateContainer container) {
 		for (int i = 0; i < container.thumbs.size(); i++) {
 			CrateThumbnail current = container.thumbs.get(i);
@@ -197,12 +152,14 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	}
 	
 	public void fadeIn() {
+		Log.e("", "Fading in pause menu...");
 		SceneCommon.applyFadeModifier(mRectangle, 0, 0.75f);
 		SceneCommon.applyFadeModifier(mButtons, 0, 1);
 		SceneCommon.applyFadeModifier(mText, 0, 1);
 	}
 	
 	public void fadeOut() {
+		Log.e("", "Fading out pause menu...");
 		SceneCommon.applyFadeModifier(mRectangle, 0.75f, 0);
 		SceneCommon.applyFadeModifier(mButtons, 1, 0);
 		SceneCommon.applyFadeModifier(mText, 1, 0);

@@ -88,6 +88,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
     public VertexBufferObjectManager getVBOM() { return vbom; }
     public static GameScene getScene() { return (GameScene)SceneManager.getInstance().getCurrentScene(); }
     public Entity getContainer() { return container; }
+    public Level getLevel() { return level; }
     public MainActivity getActivity() { return activity; }
     
 	@Override
@@ -145,8 +146,6 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IScro
 			@Override
 			public void onUpdate(float pSecondsElapsed) {
 				mHud.updateCounts();
-				
-				
 			}
 
 			@Override
