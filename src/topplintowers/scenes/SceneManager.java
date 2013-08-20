@@ -210,7 +210,8 @@ public class SceneManager
     	
     	ws.setBackgroundPosition(0, ws.getCamera().getCenterY() - 240);
     	//ws.setTextPosition(10, ws.getCamera().getCenterY() - ws.getText().getHeight()/2);
-    	
+    	Integer ordinal = currentScene.getLevel().getLevelType().ordinal();
+    	ws.setLevelSubtext(ordinal.toString());
     	currentScene.setChildScene(mWinScene, false, true, true);
     	
     	ws.fadeIn();

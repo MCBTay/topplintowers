@@ -1,8 +1,6 @@
 package topplintowers.scenes;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -17,19 +15,12 @@ import org.andengine.entity.text.Text;
 
 import com.topplintowers.R;
 
-import topplintowers.MainActivity;
-import topplintowers.crates.Crate;
-import topplintowers.crates.CrateType;
 import topplintowers.resources.ResourceManager;
 import topplintowers.scenes.SceneManager.SceneType;
-import topplintowers.scenes.gamescene.GameScene;
-import topplintowers.scenes.gamescene.hud.CrateContainer;
-import topplintowers.scenes.gamescene.hud.CrateThumbnail;
-import topplintowers.scenes.gamescene.hud.MyHUD;
 
 public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	private Rectangle mRectangle;
-	private Text mText;
+	private Text mText, mSubtext;
 	private WinScene instance;  //ugly hack
 	
 	private SpriteMenuItem mResumeButton, mRestartButton, mMainMenuButton, mLevelSelect;
@@ -40,6 +31,7 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 	public ArrayList<SpriteMenuItem> getButtons() { return mButtons; }
 	public Rectangle getRectangle() { return mRectangle; }
 	public Text getText() { return mText; }
+	public Text getSubtext() { return mSubtext; }
 	public void setBackgroundPosition(float x, float y) { mRectangle.setPosition(x, y); }
 	public void setTextPosition(float x, float y) { mText.setPosition(x, y); }
 	
@@ -56,11 +48,7 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 		mText.setPosition(fontX, fontY);
 		attachChild(mText);
 		
-		Text mSubtext = new Text(0, 0, ResourceManager.mFont64, "You beat level 1.", vbom);
-		fontX = 35;
-		fontY = camera.getHeight()/2 - mSubtext.getHeight()/2 + 40;
-		mSubtext.setPosition(fontX, fontY);
-		attachChild(mSubtext);
+		
 		
 		createMenuChildScene();
 		
@@ -88,6 +76,15 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 		
 		mMenuChildScene.setOnMenuItemClickListener(this);
 		setChildScene(mMenuChildScene);
+	}
+	
+	public void setLevelSubtext(CharSequence level) {
+		CharSequence levelText = "You beat level " + level + ".";
+		mSubtext = new Text(0, 0, ResourceManager.mFont64, levelText, vbom);
+		float fontX = 35;
+		float fontY = camera.getHeight()/2 - mSubtext.getHeight()/2 + 40;
+		mSubtext.setPosition(fontX, fontY);
+		attachChild(mSubtext);
 	}
 
 	@Override
@@ -153,5 +150,4 @@ public class WinScene extends BaseScene implements IOnMenuItemClickListener {
 		SceneCommon.applyFadeModifier(mButtons, 1, 0);
 		SceneCommon.applyFadeModifier(mText, 1, 0);
 	}
-
 }

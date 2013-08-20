@@ -1,8 +1,6 @@
 package topplintowers.scenes;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -14,16 +12,7 @@ import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.text.Text;
-import topplintowers.MainActivity;
-import topplintowers.crates.Crate;
-import topplintowers.crates.CrateType;
-import topplintowers.crates.WoodCratePiece;
 import topplintowers.scenes.SceneManager.SceneType;
-import topplintowers.scenes.gamescene.GameScene;
-import topplintowers.scenes.gamescene.hud.CrateContainer;
-import topplintowers.scenes.gamescene.hud.CrateThumbnail;
-import topplintowers.scenes.gamescene.hud.MyHUD;
-
 import android.util.Log;
 
 import com.topplintowers.R;
@@ -134,21 +123,9 @@ public class PauseMenuScene extends BaseScene implements IOnMenuItemClickListene
 	    	        default:
 						break;
             	}
-            	
             }
         }));
 	    return true;
-	}
-	
-	private void expandHiddenCrates(CrateContainer container) {
-		for (int i = 0; i < container.thumbs.size(); i++) {
-			CrateThumbnail current = container.thumbs.get(i);
-			if (current.isHidden())
-				current.expandThumbnail();
-		}
-		
-		container.resizeContainer(container.getSprite().getHeight());
-		container.repositionCrates();
 	}
 	
 	public void fadeIn() {
