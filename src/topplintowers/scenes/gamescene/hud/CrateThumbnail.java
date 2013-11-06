@@ -155,10 +155,9 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 	@Override
 	public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 		float curX = pSceneTouchEvent.getX() - 5;
-      float curY = pSceneTouchEvent.getY() - 5;
-      float offset = instance.mCamera.getCenterY() - 240;
-      curY += offset;
-      float dX = 0, dY = 0, lastX = 0, lastY = 0;
+		float curY = pSceneTouchEvent.getY() - 5;
+		float offset = instance.mCamera.getCenterY() - 240;
+		curY += offset;
       
 		if (pSceneTouchEvent.isActionDown()) {
 			
@@ -181,6 +180,8 @@ public class CrateThumbnail implements IOnSceneTouchListener, IClickDetectorList
 					
 					float jointX = pSceneTouchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 					float jointY = pSceneTouchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+					jointY += offset / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+					
 					Vector2 vector = new Vector2(jointX, jointY);
 					
 					BodyDef groundBodyDef = new BodyDef();
